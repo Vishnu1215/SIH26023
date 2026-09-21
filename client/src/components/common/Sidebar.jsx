@@ -16,44 +16,37 @@ const NAV_ITEMS = [
   {
     path: ROUTES.DASHBOARD,
     label: 'Dashboard',
-    icon: LayoutDashboard,
-    badge: null
+    icon: LayoutDashboard
   },
   {
     path: ROUTES.DOCUMENTS,
     label: 'Documents',
-    icon: FileText,
-    badge: 'Module 1'
+    icon: FileText
   },
   {
     path: ROUTES.REPORTS,
     label: 'Report Generator',
-    icon: ClipboardList,
-    badge: 'Module 1'
+    icon: ClipboardList
   },
   {
     path: ROUTES.TOPICS,
     label: 'Topic Modeling',
-    icon: Sparkles,
-    badge: 'Module 2'
+    icon: Sparkles
   },
   {
     path: ROUTES.QA,
     label: 'Hybrid Q&A (SQL+RAG)',
-    icon: MessageSquareQuote,
-    badge: 'Module 3'
+    icon: MessageSquareQuote
   },
   {
     path: ROUTES.RECOMMENDATIONS,
     label: 'AI Recommendations',
-    icon: Lightbulb,
-    badge: 'Module 4'
+    icon: Lightbulb
   },
   {
     path: ROUTES.SETTINGS,
     label: 'System & Audit',
-    icon: Settings,
-    badge: null
+    icon: Settings
   }
 ];
 
@@ -70,7 +63,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <div className="sidebar-section-title">PLATFORM MODULES</div>
+      <div className="sidebar-section-title">NAVIGATION</div>
 
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => {
@@ -85,7 +78,6 @@ export default function Sidebar() {
             >
               <Icon size={18} className="nav-icon" />
               <span className="nav-label">{item.label}</span>
-              {item.badge && <span className="nav-badge">{item.badge}</span>}
             </NavLink>
           );
         })}

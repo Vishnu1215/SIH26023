@@ -1,39 +1,47 @@
-import React from 'react';
-import { FileText, CheckCircle2, AlertTriangle, FileCheck, Layers } from 'lucide-react';
+import React, { useState } from 'react';
+import { FileText, CheckCircle2, AlertTriangle, FileCheck, UploadCloud } from 'lucide-react';
 import StatCard from '../components/common/StatCard.jsx';
 
 export default function DashboardPage() {
-  const stats = [
+  // Dynamic statistics initialized to 0 awaiting document ingestion/DB
+  const [dashboardStats] = useState({
+    totalIngestedDocuments: 0,
+    validatedStructuredRecords: 0,
+    flaggedDiscrepancies: 0,
+    generatedReports: 0
+  });
+
+  const statsConfig = [
     {
       title: 'Total Ingested Documents',
-      value: '42',
-      subtitle: 'Across 8 CIL Subsidiaries & CMPDI',
+      value: dashboardStats.totalIngestedDocuments,
+      subtitle: 'Across CIL Subsidiaries & CMPDI',
       icon: FileText,
-      badge: '+12 this week',
+      badge: null,
       color: 'blue'
     },
     {
       title: 'Validated Structured Records',
-      value: '1,480',
-      subtitle: 'Normalized to canonical units (Tonnes)',
+      value: dashboardStats.validatedStructuredRecords,
+      subtitle: 'Normalized to canonical units',
       icon: CheckCircle2,
-      badge: '98.2% valid',
+      badge: null,
       color: 'emerald'
     },
     {
       title: 'Flagged Discrepancies',
-      value: '14',
-      subtitle: 'Requiring review (Rules V1–V13)',
+      value: dashboardStats.flaggedDiscrepancies,
+      subtitle: 'Pending review (Rules V1–V13)',
       icon: AlertTriangle,
-      badge: 'Action required',
+      badge: null,
       color: 'amber'
     },
     {
-      title: 'Approved Reports & Briefs',
-      value: '9',
-      subtitle: 'Parliamentary Q&A & Monthly production',
+      title: 'Generated Reports',
+      value: dashboardStats.generatedReports,
+      subtitle: 'Parliamentary & monthly briefs',
       icon: FileCheck,
-      badge: 'Ready for export',
+      badge: null,
       color: 'purple'
     }
   ];
@@ -52,7 +60,7 @@ export default function DashboardPage() {
 
       {/* Four Statistic Cards */}
       <div className="stats-grid">
-        {stats.map((stat, idx) => (
+        {statsConfig.map((stat, idx) => (
           <StatCard
             key={idx}
             title={stat.title}
@@ -65,20 +73,25 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Empty Main Content Area */}
+      {/* Empty Main Content Workspace Area */}
       <section className="main-content-card">
         <div className="empty-workspace-state">
           <div className="empty-icon-box">
-            <Layers size={36} color="#64748b" />
+            <UploadCloud size={38} color="#94a3b8" />
           </div>
-          <h3 className="empty-title">Main Content Area</h3>
+          <h3 className="empty-title">No documents have been uploaded yet.</h3>
           <p className="empty-description">
-            This workspace area is reserved for document ingestion, tabular validation queues,
-            report generation previews, and hybrid Q&A sessions.
+            Upload your first geological, mining, or production document to begin processing.
           </p>
-          <div className="empty-guidance">
-            <span>Ready for upcoming modules: Ingestion Pipeline &bull; Validation Catalog &bull; Report Generator</span>
-          </div>
+          <button
+            type="button"
+            className="empty-action-btn"
+            disabled
+            title="Upload functionality will be enabled in the ingestion phase"
+          >
+            <UploadCloud size={16} />
+            <span>Upload Documents</span>
+          </button>
         </div>
       </section>
     </div>
