@@ -1,0 +1,63 @@
+# =========================
+# Node.js
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Python
+# =========================
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.local
+.env.*
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# Build folders
+# =========================
+dist/
+build/
+
+# =========================
+# Python caches
+# =========================
+.pytest_cache/
+.mypy_cache/
+
+# =========================
+# Uploads & Generated Files
+# =========================
+uploads/*
+reports/*
+
+# Keep folders
+!uploads/.gitkeep
+!reports/.gitkeep
