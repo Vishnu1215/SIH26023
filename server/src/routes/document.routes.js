@@ -3,6 +3,7 @@ import {
   uploadDocument,
   getDocuments,
   getDocument,
+  processDocument,
   loadSamples
 } from '../controllers/document.controller.js';
 import { handleUpload } from '../middleware/upload.middleware.js';
@@ -21,4 +22,8 @@ router.post('/load-sample', loadSamples);
 // GET /api/documents/:documentId - Retrieve single document by ID
 router.get('/:documentId', getDocument);
 
+// POST /api/documents/:documentId/process - Process / extract text from document
+router.post('/:documentId/process', processDocument);
+
 export default router;
+

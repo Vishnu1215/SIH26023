@@ -140,11 +140,13 @@ export const loadSampleDataset = () => {
       {
         originalname: fileName,
         filename: fileName,
+        path: filePath,
         mimetype: MIME_TYPE_MAP[ext] || 'application/octet-stream',
         size: stats.size
       },
       category,
-      DOCUMENT_STATUSES.UPLOADED
+      DOCUMENT_STATUSES.UPLOADED,
+      { filePath }
     );
 
     documentModel.addDocument(metadata);

@@ -92,7 +92,7 @@ SIH26023/
 
 ## Current Phase
 
-✅ **Phase 3 – Document Upload & Ingestion Pipeline**
+✅ **Phase 4 – OCR & Document Text Extraction Pipeline**
 
 ---
 
@@ -101,17 +101,18 @@ SIH26023/
 - ✅ Phase 1 – Project Setup
 - ✅ Phase 2 – Authentication & Dashboard Foundation
 - ✅ Phase 3 – Document Upload & Ingestion Pipeline
+- ✅ Phase 4 – OCR & Document Text Extraction Pipeline
 
 ---
 
 ## Upcoming Phases
 
-- ⏳ Phase 4 – OCR & AI Extraction
-- ⏳ Phase 5 – Validation & Traceability
+- ⏳ Phase 5 – Entity Extraction, Validation & Traceability
 - ⏳ Phase 6 – Report Generation
 - ⏳ Phase 7 – Topic Modeling
 - ⏳ Phase 8 – Hybrid Q&A (SQL + RAG)
 - ⏳ Phase 9 – AI Recommendations
+
 
 ---
 
@@ -232,60 +233,110 @@ Categories
 
 ---
 
-# Upload Workflow
+## Phase 4: OCR & Document Text Extraction Pipeline
+
+### Supported Formats & Engines
+
+- **Searchable PDF**: Native text layer extraction via PyMuPDF (`fitz`). Directly extracts clean digital text. **Never OCRs searchable PDFs**.
+- **Scanned PDF**: Dual-mode fallback. When no searchable text layer is found, rasterizes pages into 200 DPI images and invokes Tesseract OCR per page.
+- **Word Documents (`.docx`)**: Paragraph and table-cell extraction via `python-docx`.
+- **Excel Spreadsheets (`.xlsx`, `.xlsm`)**: Multi-worksheet tabular data extraction via `openpyxl`.
+- **CSV Data (`.csv`)**: Tabular parsing with automatic multi-encoding fallback (`utf-8`, `latin1`, `cp1252`) via `pandas`.
+- **Scanned Images (`.jpg`, `.jpeg`, `.png`)**: Image loading and OCR extraction via Pillow and Tesseract.
+
+### Searchable PDF Optimization
 
 ```
-User
-
-↓
-
-Documents Page
-
-↓
-
-Drag & Drop / Browse
-
-↓
-
-POST /api/documents/upload
-
-↓
-
-Express + Multer
-
-↓
-
-uploads/documents/
-
-↓
-
-Generate Metadata
-
-↓
-
-POST /ingest
-
-↓
-
-FastAPI
-
-↓
-
-Uploaded
-
-↓
-
-History Table
+                      Upload PDF
+                          │
+                          ▼
+            Does PDF contain searchable text?
+                          │
+            ┌─────────────┴─────────────┐
+           YES                          NO
+            │                            │
+            ▼                            ▼
+  Extract directly via PyMuPDF    Rasterize pages (200 DPI)
+  (loaderUsed: PDF_TEXT_LAYER)           │
+  (confidence: null)                     ▼
+  (NEVER run OCR)                 Execute Tesseract OCR
+                                  (loaderUsed: OCR)
+                                  (confidence: avg OCR score)
 ```
 
-If FastAPI is offline
+### Comprehensive Document Metadata Model
+
+Every processed document stores:
+- `pageCount`: Total pages or sheet/section count
+- `processingStartedAt`: ISO 8601 UTC start timestamp
+- `processingCompletedAt`: ISO 8601 UTC completion timestamp
+- `processingTime`: Duration in seconds
+- `loaderUsed`: Engine identifier (`PDF_TEXT_LAYER`, `OCR`, `CSV`, `XLSX`, `DOCX`, `IMAGE`)
+- `language`: Primary language model (`eng`, `eng+hin`)
+- `confidence`: Average recognition confidence percentage or `null` if not applicable
+- `errorCode`: Standardized failure code (`OCR_ENGINE_NOT_FOUND`, `UNSUPPORTED_FORMAT`, `CORRUPTED_DOCUMENT`, `PASSWORD_PROTECTED`, `EMPTY_DOCUMENT`, `UNKNOWN_ERROR`)
+- `errorMessage`: Detailed human-readable error explanation
+- `textPreview`: First 500 characters of extracted text for UI inspection
+
+### Status Lifecycle
+
+The document status progresses cleanly through:
+1. **Uploaded**: Initial ingestion
+2. **Queued**: Awaiting dispatch to AI Service
+3. **Processing**: Active text extraction & OCR execution
+4. **OCR Complete**: Text extracted successfully and stored internally
+5. **Failed**: Extraction failed (with `errorCode` and `errorMessage` stored; upload never broken)
+
+### Environment Configuration & Logging
+
+- **Tesseract Configuration**: Configured via `TESSERACT_PATH` in `.env` (falls back to system `PATH` if unspecified). No hardcoded paths.
+- **OCR Logging**: Processing events are automatically appended to `ai-service/logs/ocr.log` with `timestamp`, `documentId`, `filename`, `loaderUsed`, `pageCount`, `processingTime`, `status`, and `errorCode`.
+- **Internal Text Storage**: Full extracted text is persisted to `ai-service/storage/extracted_text/{documentId}.txt` for downstream pipeline phases.
+
+---
+
+# Document Processing & Ingestion Workflow
 
 ```
-Uploaded
+User Upload (Documents Page)
+            │
+            ▼
+POST /api/documents/upload (Express + Multer)
+            │
+            ├─► Save file to disk (uploads/documents/)
+            ├─► Register DocumentModel (status: Queued -> Processing)
+            │
+            ▼
+POST /ingest (FastAPI AI Service)
+            │
+            ▼
+Document Loader Dispatcher (app/services/document_loader.py)
+            ├── .pdf (Searchable) ──► PyMuPDF direct text (PDF_TEXT_LAYER)
+            ├── .pdf (Scanned)    ──► Rasterize + Tesseract OCR (OCR)
+            ├── .docx             ──► python-docx (DOCX)
+            ├── .xlsx             ──► openpyxl (XLSX)
+            ├── .csv              ──► pandas (CSV)
+            └── .png/.jpg         ──► Pillow + Tesseract (IMAGE)
+            │
+            ├─► Persist full text: storage/extracted_text/{documentId}.txt
+            ├─► Append event log: logs/ocr.log
+            │
+            ▼
+FastAPI returns metadata only: { status, documentId, processingTime, pageCount, confidence, loaderUsed }
+            │
+            ▼
+Express DocumentModel updated (status: OCR Complete / Failed)
+            │
+            ▼
+Frontend Table displays Pages, Duration, Engine, Confidence, Status Badge & View Modal
+```
 
-↓
-
-Uploaded (Pending AI)
+If FastAPI or OCR encounters an error:
+```
+File Upload Succeeded (HTTP 201)
+            │
+            ▼
+Document Status set to 'Failed' with errorCode and errorMessage logged
 ```
 
 ---
@@ -308,7 +359,7 @@ Uploaded (Pending AI)
 
 ---
 
-## Documents
+## Documents (Express)
 
 ### POST
 
@@ -316,9 +367,7 @@ Uploaded (Pending AI)
 /api/documents/upload
 ```
 
-Upload a document.
-
----
+Upload a document and trigger text extraction. Always returns HTTP 201.
 
 ### GET
 
@@ -328,8 +377,6 @@ Upload a document.
 
 Retrieve uploaded document metadata.
 
----
-
 ### GET
 
 ```
@@ -338,7 +385,13 @@ Retrieve uploaded document metadata.
 
 Retrieve a single uploaded document.
 
----
+### POST
+
+```
+/api/documents/:documentId/process
+```
+
+On-demand trigger for text extraction & OCR on an existing document.
 
 ### POST
 
@@ -346,11 +399,11 @@ Retrieve a single uploaded document.
 /api/documents/load-sample
 ```
 
-Load representative datasets.
+Load representative datasets into memory.
 
 ---
 
-## AI Service
+## AI Service (FastAPI)
 
 ### POST
 
@@ -358,7 +411,33 @@ Load representative datasets.
 /ingest
 ```
 
-Mock ingestion endpoint.
+Document Ingestion & Text Extraction endpoint.
+- **Request**: `{ documentId, filePath, mimeType }`
+- **Response**:
+  ```json
+  {
+    "status": "OCR Complete",
+    "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
+    "processingTime": 0.42,
+    "pageCount": 2,
+    "confidence": null,
+    "loaderUsed": "PDF_TEXT_LAYER",
+    "language": "eng",
+    "textPreview": "...",
+    "errorCode": null,
+    "errorMessage": null
+  }
+  ```
+
+### GET
+
+```
+/ingest/{document_id}/text
+```
+
+Internal endpoint to retrieve stored text for downstream pipeline phases.
+
+
 
 ---
 
@@ -487,20 +566,16 @@ admin123
 
 # Current Limitations
 
-The following features are intentionally **not implemented** yet:
+The following features are intentionally **not implemented** yet (scheduled for future phases):
 
-- OCR
-- AI Extraction
-- OpenCV Processing
-- Gemini Integration
-- Data Validation
-- Rule Engine
-- MongoDB
-- PostgreSQL
-- Report Generation
-- Topic Modeling
-- Hybrid SQL + RAG
-- AI Recommendations
+- AI Entity Extraction (Named Entity Recognition)
+- Multi-Source Cross-Validation & Validation Rules
+- Discrepancy Flagging & Traceability Engine
+- Database Integration (MongoDB / PostgreSQL)
+- Report Generation (PDF / Excel)
+- Topic Modeling (BERTopic / LDA)
+- Hybrid SQL + RAG Conversational Assistant
+- Predictive AI Recommendations
 
 ---
 
@@ -511,12 +586,13 @@ The following features are intentionally **not implemented** yet:
 | Phase 1 – Project Setup | ✅ |
 | Phase 2 – Authentication & Dashboard | ✅ |
 | Phase 3 – Document Upload & Ingestion | ✅ |
-| Phase 4 – OCR & AI Extraction | ⏳ |
-| Phase 5 – Validation & Traceability | ⏳ |
+| Phase 4 – OCR & Document Text Extraction | ✅ |
+| Phase 5 – Entity Extraction, Validation & Traceability | ⏳ |
 | Phase 6 – Report Generation | ⏳ |
 | Phase 7 – Topic Modeling | ⏳ |
 | Phase 8 – Hybrid Q&A | ⏳ |
 | Phase 9 – AI Recommendations | ⏳ |
+
 
 ---
 

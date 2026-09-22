@@ -16,10 +16,13 @@ export const DOCUMENT_CATEGORIES = {
 
 export const DOCUMENT_STATUSES = {
   UPLOADED: 'Uploaded',
-  UPLOADED_PENDING_AI: 'Uploaded (Pending AI)',
+  QUEUED: 'Queued',
   PROCESSING: 'Processing',
-  COMPLETED: 'Completed',
-  FAILED: 'Failed'
+  OCR_COMPLETE: 'OCR Complete',
+  FAILED: 'Failed',
+  // Backward compatibility alias
+  COMPLETED: 'OCR Complete',
+  UPLOADED_PENDING_AI: 'Uploaded (Pending AI)'
 };
 
 /**
@@ -27,21 +30,38 @@ export const DOCUMENT_STATUSES = {
  * @param {Object} file - Multer file object or file stats object
  * @param {string} [category=Unknown] - Document domain category
  * @param {string} [status=Uploaded] - Ingestion status
+ * @param {Object} [extra={}] - Additional custom properties
  * @returns {Object} Standardized document metadata
  */
 export const createDocumentMetadata = (
   file,
   category = DOCUMENT_CATEGORIES.UNKNOWN,
-  status = DOCUMENT_STATUSES.UPLOADED
+  status = DOCUMENT_STATUSES.UPLOADED,
+  extra = {}
 ) => {
   return {
     documentId: uuidv4(),
     originalName: file.originalname || file.name,
     storedName: file.filename || file.storedName,
+    filePath: file.path || extra.filePath || null,
     category: category || DOCUMENT_CATEGORIES.UNKNOWN,
     mimeType: file.mimetype || 'application/octet-stream',
     size: file.size,
     uploadedAt: new Date().toISOString(),
-    status
+    status,
+    pageCount: null,
+    processingStartedAt: null,
+    processingCompletedAt: null,
+    processingTime: null,
+    loaderUsed: null,
+    language: 'eng',
+    confidence: null,
+    errorCode: null,
+    errorMessage: null,
+    textPreview: null,
+    extractedText: null,
+    ...extra
   };
 };
+
+

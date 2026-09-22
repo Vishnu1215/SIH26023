@@ -34,11 +34,13 @@ function formatFileSize(bytes) {
 export default function DocumentsPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [documents, setDocuments] = useState([]);
+  const [viewingDoc, setViewingDoc] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingSamples, setIsLoadingSamples] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
+
 
   const fileInputRef = useRef(null);
 
@@ -142,9 +144,13 @@ export default function DocumentsPage() {
 
     try {
       const response = await uploadDocumentFile(selectedFile);
+      const isOcrComplete = response.document?.status === 'OCR Complete';
+      const isFailed = response.document?.status === 'Failed';
       setToast({
-        type: 'success',
-        message: `"${selectedFile.name}" uploaded successfully! Status: ${response.document?.status || 'Uploaded'}`
+        type: isFailed ? 'error' : 'success',
+        message: isOcrComplete
+          ? `"${selectedFile.name}" processed successfully via ${response.document?.loaderUsed || 'OCR'} (${response.document?.processingTime || 0}s).`
+          : `"${selectedFile.name}" uploaded. Status: ${response.document?.status || 'Uploaded'}.`
       });
       handleClearSelected();
       await loadDocuments();
@@ -364,7 +370,10 @@ export default function DocumentsPage() {
                   <th>Category</th>
                   <th>Type</th>
                   <th>Size</th>
-                  <th>Upload Time</th>
+                  <th>Pages</th>
+                  <th>Processing Time</th>
+                  <th>OCR Engine</th>
+                  <th>Confidence</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -372,8 +381,9 @@ export default function DocumentsPage() {
               <tbody>
                 {documents.map((doc) => {
                   const ext = doc.originalName.split('.').pop()?.toUpperCase() || 'FILE';
-                  const isUploadedOk = doc.status === 'Uploaded';
                   const shortId = doc.documentId ? doc.documentId.slice(0, 8) : 'N/A';
+                  const status = doc.status || 'Uploaded';
+                  const failureMsg = doc.errorMessage || doc.error || 'Text extraction failed';
 
                   return (
                     <tr key={doc.documentId}>
@@ -400,31 +410,65 @@ export default function DocumentsPage() {
                         <span className="type-badge">{ext}</span>
                       </td>
                       <td className="col-size">{formatFileSize(doc.size)}</td>
-                      <td className="col-time">
-                        <div className="time-wrapper">
-                          <Clock size={13} color="#94a3b8" />
-                          <span>{new Date(doc.uploadedAt).toLocaleString()}</span>
-                        </div>
+                      <td className="col-pages">{doc.pageCount != null ? doc.pageCount : '-'}</td>
+                      <td className="col-proc-time">
+                        {doc.processingTime != null ? `${doc.processingTime}s` : '-'}
+                      </td>
+                      <td className="col-engine">
+                        <span className="engine-badge">{doc.loaderUsed || '-'}</span>
+                      </td>
+                      <td className="col-conf">
+                        {doc.confidence != null ? `${doc.confidence}%` : '-'}
                       </td>
                       <td>
-                        <span
-                          className={`status-pill ${
-                            isUploadedOk ? 'status-pill-success' : 'status-pill-pending'
-                          }`}
-                        >
-                          {isUploadedOk ? (
+                        {(status === 'OCR Complete' || status === 'Completed') && (
+                          <span
+                            className="status-pill status-pill-ocr-complete"
+                            title={`Completed in ${doc.processingTime || 0}s via ${doc.loaderUsed || 'OCR'}`}
+                          >
                             <CheckCircle2 size={13} />
-                          ) : (
+                            <span>OCR Complete</span>
+                          </span>
+                        )}
+                        {status === 'Processing' && (
+                          <span className="status-pill status-pill-processing" title="Processing text extraction & OCR...">
+                            <Loader2 size={13} className="animate-spin" />
+                            <span>Processing</span>
+                          </span>
+                        )}
+                        {status === 'Queued' && (
+                          <span className="status-pill status-pill-queued" title="Queued for text extraction">
+                            <Clock size={13} />
+                            <span>Queued</span>
+                          </span>
+                        )}
+                        {status === 'Failed' && (
+                          <span
+                            className="status-pill status-pill-failed"
+                            title={failureMsg}
+                          >
                             <AlertCircle size={13} />
-                          )}
-                          <span>{doc.status}</span>
-                        </span>
+                            <span>Failed</span>
+                          </span>
+                        )}
+                        {status === 'Uploaded' && (
+                          <span className="status-pill status-pill-success">
+                            <CheckCircle2 size={13} />
+                            <span>Uploaded</span>
+                          </span>
+                        )}
+                        {!['OCR Complete', 'Completed', 'Processing', 'Queued', 'Failed', 'Uploaded'].includes(status) && (
+                          <span className="status-pill status-pill-pending">
+                            <AlertCircle size={13} />
+                            <span>{status}</span>
+                          </span>
+                        )}
                       </td>
                       <td>
                         <button
-                          className="btn-view-disabled"
-                          disabled
-                          title="View document details will be available in Phase 4"
+                          className="btn-view-action"
+                          onClick={() => setViewingDoc(doc)}
+                          title="View document details and text preview"
                         >
                           <Eye size={13} />
                           <span>View</span>
@@ -438,6 +482,102 @@ export default function DocumentsPage() {
           </div>
         )}
       </section>
+
+      {/* Document Details & Text Preview Modal */}
+      {viewingDoc && (
+        <div className="modal-backdrop" onClick={() => setViewingDoc(null)}>
+          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title-box">
+                <FileText size={20} color="#0284c7" />
+                <h3 className="modal-title">{viewingDoc.originalName}</h3>
+              </div>
+              <button className="modal-close-btn" onClick={() => setViewingDoc(null)} title="Close">
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="modal-grid">
+                <div className="meta-item">
+                  <label>Document Name</label>
+                  <span title={viewingDoc.originalName}>{viewingDoc.originalName}</span>
+                </div>
+                <div className="meta-item">
+                  <label>Category</label>
+                  <span>{viewingDoc.category || 'Unknown'}</span>
+                </div>
+                <div className="meta-item">
+                  <label>Upload Time</label>
+                  <span>{new Date(viewingDoc.uploadedAt).toLocaleString()}</span>
+                </div>
+                <div className="meta-item">
+                  <label>Status</label>
+                  <span>{viewingDoc.status}</span>
+                </div>
+                <div className="meta-item">
+                  <label>Pages</label>
+                  <span>{viewingDoc.pageCount != null ? viewingDoc.pageCount : '-'}</span>
+                </div>
+                <div className="meta-item">
+                  <label>Processing Time</label>
+                  <span>{viewingDoc.processingTime != null ? `${viewingDoc.processingTime}s` : '-'}</span>
+                </div>
+                <div className="meta-item">
+                  <label>OCR Engine</label>
+                  <span>{viewingDoc.loaderUsed || '-'}</span>
+                </div>
+                <div className="meta-item">
+                  <label>Language</label>
+                  <span>{viewingDoc.language || 'eng'}</span>
+                </div>
+                <div className="meta-item">
+                  <label>Confidence</label>
+                  <span>{viewingDoc.confidence != null ? `${viewingDoc.confidence}%` : '-'}</span>
+                </div>
+              </div>
+
+              {viewingDoc.status === 'Failed' && (viewingDoc.errorMessage || viewingDoc.error) && (
+                <div
+                  style={{
+                    padding: '10px 14px',
+                    backgroundColor: '#fef2f2',
+                    border: '1px solid #fecaca',
+                    borderRadius: '8px',
+                    color: '#991b1b',
+                    fontSize: '12px'
+                  }}
+                >
+                  <strong>Error [{viewingDoc.errorCode || 'UNKNOWN_ERROR'}]:</strong>{' '}
+                  {viewingDoc.errorMessage || viewingDoc.error}
+                </div>
+              )}
+
+              <div className="preview-section">
+                <div className="preview-header">
+                  <label>First 500 characters of extracted text</label>
+                  <span className="char-count">
+                    {((viewingDoc.textPreview || viewingDoc.extractedText || '').slice(0, 500)).length} / 500 chars
+                  </span>
+                </div>
+                <pre className="text-preview-box">
+                  {(viewingDoc.textPreview || viewingDoc.extractedText || '').slice(0, 500) ||
+                    (viewingDoc.status === 'Failed'
+                      ? 'Extraction failed. No text available.'
+                      : 'No text extracted for this record.')}
+                </pre>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button className="btn-modal-close" onClick={() => setViewingDoc(null)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

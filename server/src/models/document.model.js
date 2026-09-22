@@ -52,6 +52,21 @@ class DocumentModel {
   }
 
   /**
+   * Update arbitrary properties on a document (e.g. extractedText, processingTime, error)
+   * @param {string} documentId
+   * @param {Object} updates
+   * @returns {Object|null}
+   */
+  updateDocument(documentId, updates) {
+    const doc = this.getDocumentById(documentId);
+    if (doc) {
+      Object.assign(doc, updates);
+      return doc;
+    }
+    return null;
+  }
+
+  /**
    * Backward-compatible aliases
    */
   create(document) {

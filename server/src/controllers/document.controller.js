@@ -1,43 +1,83 @@
+import path from 'path';
 import {
   createDocumentMetadata,
-  DOCUMENT_CATEGORIES
+  DOCUMENT_CATEGORIES,
+  DOCUMENT_STATUSES
 } from '../utils/documentMetadata.js';
 import documentModel from '../models/document.model.js';
 import {
   saveDocument,
   getAllDocuments,
-  notifyAiService,
   loadSampleDataset
 } from '../services/document.service.js';
+import { processDocumentExtraction } from '../services/documentProcessing.service.js';
 
 /**
- * Handle document upload
+ * Handle document upload & trigger text extraction
  * POST /api/documents/upload
  */
 export const uploadDocument = async (req, res, next) => {
   try {
     const category = req.body?.category || DOCUMENT_CATEGORIES.UNKNOWN;
-    const metadata = createDocumentMetadata(req.file, category);
+    const absPath = path.resolve(req.file.path);
 
-    // Notify FastAPI service
-    const finalStatus = await notifyAiService(metadata);
-    metadata.status = finalStatus;
+    // Create metadata initially marked as Queued
+    const metadata = createDocumentMetadata(
+      req.file,
+      category,
+      DOCUMENT_STATUSES.QUEUED,
+      { filePath: absPath }
+    );
 
-    // Save to in-memory DocumentModel
-    const savedDoc = saveDocument(metadata);
+    // Save initial record to in-memory DocumentModel
+    const initialDoc = saveDocument(metadata);
 
+    // Trigger text extraction pipeline via AI service
+    const processedDoc = await processDocumentExtraction(initialDoc);
+
+    const isSuccess = processedDoc.status === DOCUMENT_STATUSES.OCR_COMPLETE;
     return res.status(201).json({
       success: true,
-      message:
-        finalStatus === 'Uploaded'
-          ? 'Document uploaded and registered successfully.'
-          : 'Document uploaded successfully (FastAPI notification pending).',
-      document: savedDoc
+      message: isSuccess
+        ? 'Document uploaded and OCR complete.'
+        : `Document uploaded successfully, but OCR processing encountered an issue: ${processedDoc.errorMessage || 'Failed'}.`,
+      document: processedDoc
     });
   } catch (error) {
     next(error);
   }
 };
+
+
+/**
+ * Trigger text extraction for an existing registered document
+ * POST /api/documents/:documentId/process
+ */
+export const processDocument = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const document = documentModel.getDocumentById(documentId);
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found.'
+      });
+    }
+
+    const processedDoc = await processDocumentExtraction(document);
+    return res.status(200).json({
+      success: true,
+      message:
+        processedDoc.status === DOCUMENT_STATUSES.COMPLETED
+          ? 'Text extraction completed successfully.'
+          : 'Text extraction failed.',
+      document: processedDoc
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 /**
  * Get all documents sorted newest first
