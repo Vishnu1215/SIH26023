@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
+import DocumentsPage from './pages/DocumentsPage.jsx';
 import PlaceholderModulePage from './pages/PlaceholderModulePage.jsx';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
@@ -24,16 +25,7 @@ export default function App() {
           }
         >
           <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
-          <Route
-            path={ROUTES.DOCUMENTS}
-            element={
-              <PlaceholderModulePage
-                title="Documents Ingestion Pipeline"
-                moduleNumber="Module 1"
-                description="Direct parsing of born-digital PDFs, DOCX, XLSX, and OpenCV + bilingual OCR for scanned sources."
-              />
-            }
-          />
+          <Route path={ROUTES.DOCUMENTS} element={<DocumentsPage />} />
           <Route
             path={ROUTES.REPORTS}
             element={

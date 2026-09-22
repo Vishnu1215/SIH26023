@@ -61,3 +61,8 @@ reports/*
 # Keep folders
 !uploads/.gitkeep
 !reports/.gitkeep
+# Large sample datasets
+sample-data/**/*.pdf
+sample-data/**/*.csv
+sample-data/**/*.xlsx
+sample-data/**/*.xls

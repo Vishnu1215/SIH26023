@@ -1,241 +1,412 @@
-# SIH26023 – AI-Assisted Geological, Mining & Reporting Platform
+# SIH26023 – AI-Assisted Geological, Mining & Production Monitoring System
 
-## Smart India Hackathon 2026
-
-An AI-powered enterprise platform for **CMPDI (Central Mine Planning & Design Institute)** and **Coal India Limited (CIL)** subsidiaries to automate geological document processing, structured data extraction, validation, reporting, hybrid AI-based query answering, and policy recommendation generation.
-
----
-
-# Problem Statement
-
-CMPDI and CIL subsidiaries process large volumes of geological reports, borehole logs, production records, parliamentary replies, spreadsheets, scanned documents, and historical archives.
-
-The current workflow is largely manual, resulting in:
-
-- High dependence on domain experts
-- Slow report generation
-- Manual errors
-- Difficult historical data retrieval
-- Limited analytical capabilities
-
-This project aims to build an AI-assisted platform that automates document processing while maintaining traceability, validation, and human review.
+> **Smart India Hackathon (SIH) 2026 Project**
+>
+> AI-powered platform for geological, mining, production monitoring, parliamentary reporting, and intelligent document processing for **CMPDI**, **Coal India Limited (CIL)**, and the **Ministry of Coal**.
 
 ---
 
-# Project Objectives
+# Project Overview
 
-- Automate document ingestion
-- Process PDFs, Images, DOCX, XLSX and CSV files
-- OCR scanned documents
-- Extract mining-domain entities
-- Validate extracted information
-- Generate automated reports
-- Hybrid AI Query System (Text-to-SQL + RAG)
-- Topic Modeling & Word Cloud
-- AI-assisted Recommendations
-- Human-in-the-loop review
-- Complete Audit Trail
+This project digitizes and automates the processing of geological, mining, and production documents.
+
+The system allows authorized users to upload mining documents, process them through an AI pipeline, validate extracted information, generate reports, perform topic modeling, answer parliamentary queries, and provide AI-powered recommendations.
+
+The implementation follows the SIH26023 PRD in incremental phases.
 
 ---
 
-# Tech Stack
+# Technology Stack
 
 ## Frontend
 
-- React
+- React 18
 - Vite
 - React Router
 - Lucide React
-- CSS
 
 ## Backend
 
 - Node.js
 - Express.js
 - JWT Authentication
+- Multer
 
 ## AI Service
 
 - FastAPI
 - Python
 
-## Database (Upcoming)
+## Current Storage
 
-- MongoDB
-- FAISS / ChromaDB
+- Local Upload Directory
+- In-memory Metadata Storage
 
-## AI & NLP (Upcoming)
-
-- Gemini API
-- Sentence Transformers
-- OCR
-- OpenCV
-- PaddleOCR
-- BERTopic
+*(Database integration will be introduced in later phases.)*
 
 ---
 
 # Project Structure
 
-```text
+```
 SIH26023/
 
 ├── ai-service/
+│   ├── app/
+│   ├── requirements.txt
+│   └── README.md
 │
 ├── client/
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   └── vite.config.js
 │
 ├── server/
-│
-├── docs/
-│   ├── api/
-│   ├── architecture/
-│   └── prompts/
-│
-├── uploads/
-│
-├── reports/
+│   ├── src/
+│   ├── uploads/
+│   ├── package.json
+│   └── .env.example
 │
 ├── sample-data/
+│   ├── 01_Production/
+│   ├── 02_Subsidiary_Production/
+│   ├── 03_Geological_Resources/
+│   ├── 04_CMPDI_Documents/
+│   ├── 05_Parliamentary_QA/
+│   ├── 06_Ministry_of_Coal_Reports/
+│   ├── 07_Coal_Quality_Validation/
+│   ├── 08_Official_CCO_Excel/
+│   ├── 09_Mine_Master/
+│   └── 10_Historical_Data/
 │
-├── README.md
-└── .gitignore
+├── uploads/
+│   └── documents/
+│
+└── README.md
 ```
 
 ---
 
-# Development Progress
+# Current Project Status
 
-- [x] Phase 1 – Project Foundation
-- [x] Phase 2 – Authentication & Dashboard Foundation
-- [ ] Phase 3 – Document Upload & Ingestion Pipeline
-- [ ] Phase 4 – OCR & Entity Extraction
-- [ ] Phase 5 – Validation & Traceability Engine
-- [ ] Phase 6 – Report Generation
-- [ ] Phase 7 – Topic Modeling & Word Cloud
-- [ ] Phase 8 – Hybrid AI Query (Text-to-SQL + RAG)
-- [ ] Phase 9 – AI Recommendations
-- [ ] Phase 10 – Testing, Evaluation & Final Demo
+## Current Phase
+
+✅ **Phase 3 – Document Upload & Ingestion Pipeline**
 
 ---
 
-# Completed Features
+## Completed Phases
 
-## Phase 1 – Project Foundation
+- ✅ Phase 1 – Project Setup
+- ✅ Phase 2 – Authentication & Dashboard Foundation
+- ✅ Phase 3 – Document Upload & Ingestion Pipeline
 
-### Project Setup
+---
 
-- Modular project architecture
-- React + Vite frontend
+## Upcoming Phases
+
+- ⏳ Phase 4 – OCR & AI Extraction
+- ⏳ Phase 5 – Validation & Traceability
+- ⏳ Phase 6 – Report Generation
+- ⏳ Phase 7 – Topic Modeling
+- ⏳ Phase 8 – Hybrid Q&A (SQL + RAG)
+- ⏳ Phase 9 – AI Recommendations
+
+---
+
+# Features
+
+## Phase 1
+
+- Project architecture
+- React frontend
 - Express backend
 - FastAPI AI service
-- Git repository
-- GitHub integration
-- Professional folder structure
+- Health APIs
+- Environment configuration
+
+---
+
+## Phase 2
+
+- JWT Authentication
+- Login page
+- Protected routes
+- Dashboard
+- Sidebar navigation
+- Navbar
+- Dashboard layout
+- Authentication middleware
+
+---
+
+## Phase 3
+
+### Document Upload
+
+- Drag & Drop Upload
+- Browse Files
+- File Preview
+- Upload Button
+- Clear Button
+
+Supported Formats
+
+- PDF
+- JPG
+- PNG
+- DOCX
+- XLSX
+- CSV
+
+Maximum File Size
+
+20 MB
+
+---
+
+### Upload History
+
+Displays
+
+- Document Name
+- File Type
+- File Size
+- Upload Time
+- Status
+
+Status values
+
+- Uploaded
+- Uploaded (Pending AI)
+
+---
 
 ### Backend
 
-- Express server
-- Health APIs
-
-### AI Service
-
-- FastAPI
-- Swagger documentation
-- Health endpoint
-
-### Documentation
-
-- Project documentation folders
-- Sample data folder
-- Root README
-- .gitignore
+- Multer File Upload
+- Local File Storage
+- Metadata Generation
+- UUID Document IDs
+- In-Memory Storage
 
 ---
 
-## Phase 2 – Authentication & Dashboard Foundation
+### FastAPI Integration
 
-### Authentication
+Express automatically notifies the AI Service after every upload.
 
-- JWT Authentication
-- Mock Admin Login
-- Protected Routes
-- Logout
-- Session Persistence
-- Authentication Middleware
-- `/api/auth/login`
-- `/api/auth/me`
+If AI Service is available
 
-### Dashboard
+```
+Uploaded
+```
 
-- Professional Government-style Login Page
-- Dashboard Layout
-- Sidebar Navigation
-- Top Navigation Bar
-- Responsive Layout
-- Empty Workspace
-- Dynamic Statistic Cards
-- Empty-state Dashboard
+If AI Service is unavailable
 
-### Dashboard Modules
+```
+Uploaded (Pending AI)
+```
 
-- Dashboard
-- Documents
-- Report Generator
-- Topic Modeling
-- Hybrid Q&A
-- AI Recommendations
-- Settings
-
-### UI Improvements
-
-- Removed development module badges
-- Replaced hardcoded statistics with dynamic placeholders
-- Added professional empty-state message
-- Upload button placeholder for future phases
+Uploads never fail because of AI service downtime.
 
 ---
 
-# Current Dashboard Status
+### Sample Dataset Loader
 
-| Feature | Status |
-|----------|--------|
-| Authentication | ✅ |
-| Dashboard | ✅ |
-| Protected Routes | ✅ |
-| Sidebar | ✅ |
-| Navbar | ✅ |
-| Statistics Cards | ✅ |
-| Empty State | ✅ |
-| Upload Module | ⏳ |
-| OCR | ⏳ |
-| Reports | ⏳ |
-| Hybrid AI | ⏳ |
+Representative mining datasets can be loaded directly into the application.
+
+Categories
+
+- Production
+- Subsidiary Production
+- Geological Resources
+- CMPDI Documents
+- Parliamentary QA
+- Ministry Reports
+- Coal Quality
+- Official CCO Excel
+- Mine Master
+- Historical Data
+
+---
+
+# Upload Workflow
+
+```
+User
+
+↓
+
+Documents Page
+
+↓
+
+Drag & Drop / Browse
+
+↓
+
+POST /api/documents/upload
+
+↓
+
+Express + Multer
+
+↓
+
+uploads/documents/
+
+↓
+
+Generate Metadata
+
+↓
+
+POST /ingest
+
+↓
+
+FastAPI
+
+↓
+
+Uploaded
+
+↓
+
+History Table
+```
+
+If FastAPI is offline
+
+```
+Uploaded
+
+↓
+
+Uploaded (Pending AI)
+```
 
 ---
 
 # API Endpoints
 
-## Backend
+## Authentication
 
-| Method | Endpoint | Description |
-|----------|----------|-------------|
-| GET | `/health` | Backend Health |
-| GET | `/api/health` | API Health |
-| POST | `/api/auth/login` | Login |
-| GET | `/api/auth/me` | Authenticated User |
+### POST
+
+```
+/api/auth/login
+```
+
+### GET
+
+```
+/api/auth/me
+```
+
+---
+
+## Documents
+
+### POST
+
+```
+/api/documents/upload
+```
+
+Upload a document.
+
+---
+
+### GET
+
+```
+/api/documents
+```
+
+Retrieve uploaded document metadata.
+
+---
+
+### GET
+
+```
+/api/documents/:documentId
+```
+
+Retrieve a single uploaded document.
+
+---
+
+### POST
+
+```
+/api/documents/load-sample
+```
+
+Load representative datasets.
+
+---
 
 ## AI Service
 
-| Method | Endpoint | Description |
-|----------|----------|-------------|
-| GET | `/health` | AI Service Health |
-| GET | `/docs` | Swagger Documentation |
+### POST
+
+```
+/ingest
+```
+
+Mock ingestion endpoint.
+
+---
+
+### GET
+
+```
+/health
+```
+
+Health check.
+
+---
+
+# Sample Dataset
+
+The repository includes representative datasets for demonstration.
+
+```
+sample-data/
+
+01_Production
+
+02_Subsidiary_Production
+
+03_Geological_Resources
+
+04_CMPDI_Documents
+
+05_Parliamentary_QA
+
+06_Ministry_of_Coal_Reports
+
+07_Coal_Quality_Validation
+
+08_Official_CCO_Excel
+
+09_Mine_Master
+
+10_Historical_Data
+```
+
+These datasets are used only for development and demonstration.
 
 ---
 
 # Running the Project
 
-## Backend
+## 1. Backend
 
 ```bash
 cd server
@@ -243,9 +414,31 @@ npm install
 npm start
 ```
 
+Runs on
+
+```
+http://localhost:5000
+```
+
 ---
 
-## Frontend
+## 2. AI Service
+
+```bash
+cd ai-service
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+Runs on
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## 3. Frontend
 
 ```bash
 cd client
@@ -253,116 +446,80 @@ npm install
 npm run dev
 ```
 
----
+Runs on
 
-## AI Service
-
-```bash
-cd ai-service
-
-py -m venv .venv
-
-.venv\Scripts\activate
-
-pip install -r requirements.txt
-
-uvicorn app.main:app --reload
+```
+http://localhost:5173
 ```
 
 ---
 
 # Demo Credentials
 
-## Administrator
+Username
 
 ```
-Username : admin
-Password : admin123
+admin
+```
+
+Password
+
+```
+admin123
 ```
 
 ---
 
-# Upcoming Features
+# Manual Testing
 
-## Phase 3
+- Login using demo credentials
+- Navigate to **Documents**
+- Upload a supported file
+- Verify upload success
+- Verify upload history
+- Verify files are stored in `uploads/documents`
+- Test unsupported file types
+- Test files larger than 20 MB
+- Stop the AI service and verify upload fallback
+- Load sample datasets
 
-- Document Upload
-- File Validation
-- Upload History
-- Metadata Generation
-- Express ↔ FastAPI Integration
+---
 
-## Phase 4
+# Current Limitations
 
-- OCR Pipeline
-- PDF Parsing
-- Image Processing
-- Table Detection
-- Hindi OCR
-- Entity Extraction
+The following features are intentionally **not implemented** yet:
 
-## Phase 5
-
-- Validation Rules Engine
-- Traceability
-- Confidence Scores
-- Source Mapping
-
-## Phase 6
-
-- Automated Report Generation
-- PDF Export
-- DOCX Export
-- XLSX Export
-
-## Phase 7
-
+- OCR
+- AI Extraction
+- OpenCV Processing
+- Gemini Integration
+- Data Validation
+- Rule Engine
+- MongoDB
+- PostgreSQL
+- Report Generation
 - Topic Modeling
-- BERTopic
-- TF-IDF
-- Word Cloud
-- Trend Analysis
-
-## Phase 8
-
-- Hybrid AI Query
-- Text-to-SQL
-- RAG
-- Parliamentary Query Support
-
-## Phase 9
-
+- Hybrid SQL + RAG
 - AI Recommendations
-- Trend Detection
-- Policy Suggestions
-- Human Review Workflow
 
 ---
 
-# Future Enhancements
+# Roadmap
 
-- MongoDB Integration
-- OCR Optimization
-- Local LLM Support (Ollama)
-- Cloud Deployment
-- Role-Based Access Control (RBAC)
-- Audit Logging
-- Analytics Dashboard
-- Multi-language Support
-- Performance Optimization
-
----
-
-# Team
-
-**Smart India Hackathon 2026**
-
-Problem Statement: **SIH26023**
+| Phase | Status |
+|--------|--------|
+| Phase 1 – Project Setup | ✅ |
+| Phase 2 – Authentication & Dashboard | ✅ |
+| Phase 3 – Document Upload & Ingestion | ✅ |
+| Phase 4 – OCR & AI Extraction | ⏳ |
+| Phase 5 – Validation & Traceability | ⏳ |
+| Phase 6 – Report Generation | ⏳ |
+| Phase 7 – Topic Modeling | ⏳ |
+| Phase 8 – Hybrid Q&A | ⏳ |
+| Phase 9 – AI Recommendations | ⏳ |
 
 ---
 
-# Project Status
+# License
 
-**Current Version:** Phase 2 Complete ✅
-
-Next Milestone: **Phase 3 – Document Upload & Ingestion Pipeline**
+This project is being developed as part of **Smart India Hackathon (SIH) 2026** for educational and research purposes.
