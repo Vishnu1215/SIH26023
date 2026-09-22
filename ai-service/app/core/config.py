@@ -18,10 +18,15 @@ class Settings:
         "TEXT_STORAGE_DIR",
         os.path.join(BASE_DIR, "storage", "extracted_text")
     )
+    STRUCTURED_DATA_DIR: str = os.getenv(
+        "STRUCTURED_DATA_DIR",
+        os.path.join(BASE_DIR, "storage", "structured_data")
+    )
     OCR_LOG_FILE: str = os.getenv(
         "OCR_LOG_FILE",
         os.path.join(BASE_DIR, "logs", "ocr.log")
     )
+
 
 
 settings = Settings()

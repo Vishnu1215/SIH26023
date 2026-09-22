@@ -1,0 +1,22 @@
+{
+  "documentId": "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+  "reportTitle": "Cmpdi Annual Report 2025 26",
+  "reportType": "Annual Report",
+  "financialYear": null,
+  "reportDate": null,
+  "issuingOrganization": "CMPDIL",
+  "subsidiary": "CIL",
+  "mineName": "Gevra",
+  "mineType": "Opencast",
+  "region": "Jharia Coalfield",
+  "district": "Korba",
+  "state": "Chhattisgarh",
+  "coalProduction": 1.21,
+  "overburdenRemoval": 1.2,
+  "targetProduction": 2025,
+  "achievedProduction": 1.21,
+  "percentageAchievement": 0.06,
+  "productionUnit": "T",
+  "extractedFieldsCount": 15,
+  "extractedAt": "2026-09-22T14:33:06.048540+00:00"
+}

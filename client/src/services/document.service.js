@@ -103,3 +103,36 @@ export async function loadSampleDataset() {
     throw error;
   }
 }
+
+/**
+ * Trigger structured information extraction explicitly for a document
+ * @param {string} documentId
+ * @returns {Promise<Object>} Updated document record
+ */
+export async function extractDocument(documentId) {
+  const headers = {};
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/documents/${documentId}/extract`, {
+      method: 'POST',
+      headers
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || `Structured extraction failed (HTTP ${response.status})`);
+    }
+
+    return data.document;
+  } catch (error) {
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Server unavailable. Unable to connect to backend.');
+    }
+    throw error;
+  }
+}
+

@@ -1,0 +1,22 @@
+{
+  "documentId": "test-fastapi-extract-001",
+  "reportTitle": "Secl Annual Report",
+  "reportType": "General Mining Document",
+  "financialYear": "2023-24",
+  "reportDate": null,
+  "issuingOrganization": "SECL",
+  "subsidiary": "SECL",
+  "mineName": null,
+  "mineType": null,
+  "region": null,
+  "district": "Korba",
+  "state": "Chhattisgarh",
+  "coalProduction": 185.5,
+  "overburdenRemoval": null,
+  "targetProduction": 190,
+  "achievedProduction": null,
+  "percentageAchievement": 97.63,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 11,
+  "extractedAt": "2026-09-22T14:20:33.917911+00:00"
+}

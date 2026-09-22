@@ -92,7 +92,7 @@ SIH26023/
 
 ## Current Phase
 
-✅ **Phase 4 – OCR & Document Text Extraction Pipeline**
+✅ **Phase 5 – Structured Information Extraction & Normalization**
 
 ---
 
@@ -102,16 +102,17 @@ SIH26023/
 - ✅ Phase 2 – Authentication & Dashboard Foundation
 - ✅ Phase 3 – Document Upload & Ingestion Pipeline
 - ✅ Phase 4 – OCR & Document Text Extraction Pipeline
+- ✅ Phase 5 – Structured Information Extraction & Normalization
 
 ---
 
 ## Upcoming Phases
 
-- ⏳ Phase 5 – Entity Extraction, Validation & Traceability
-- ⏳ Phase 6 – Report Generation
-- ⏳ Phase 7 – Topic Modeling
-- ⏳ Phase 8 – Hybrid Q&A (SQL + RAG)
-- ⏳ Phase 9 – AI Recommendations
+- ⏳ Phase 6 – Validation Engine & Discrepancy Flagging
+- ⏳ Phase 7 – Report Generation
+- ⏳ Phase 8 – Topic Modeling
+- ⏳ Phase 9 – Hybrid Q&A (SQL + RAG)
+- ⏳ Phase 10 – AI Recommendations
 
 
 ---
@@ -295,6 +296,51 @@ The document status progresses cleanly through:
 
 ---
 
+## Phase 5: Structured Information Extraction & Normalization
+
+Converts raw extracted document text into clean, structured mining records without LLMs or heavy ML models. Uses deterministic regex patterns, dictionary lookup, and standard normalization routines.
+
+### Extraction Capabilities
+
+1. **Document Metadata**:
+   - `reportTitle`: Extracted from document title headers or clean file names.
+   - `reportType`: Categorized into Annual Report, Monthly Production Report, Geological Exploration, Parliamentary Q&A, Ministry Report, etc.
+   - `financialYear`: Normalized into canonical `YYYY-YY` (e.g., `2023-24`).
+   - `reportDate`: Normalized into ISO `YYYY-MM-DD`.
+   - `issuingOrganization`: Mapped to CMPDIL, CIL, Ministry of Coal, CCO, etc.
+
+2. **Mining Entities & Location**:
+   - `subsidiary`: Identifies operating subsidiaries (BCCL, CCL, ECL, WCL, SECL, MCL, NCL, SCCL, NEC) or CMPDIL.
+   - `mineName`: Matches against known Indian coal mines (e.g., Gevra, Kusmunda, Jharia, Jayant).
+   - `mineType`: Classifies as `Opencast` or `Underground`.
+   - `district` & `state`: Geographic mapping for major mining clusters (e.g. Korba -> Chhattisgarh, Dhanbad -> Jharkhand).
+   - `region`: Coalfield identification (e.g., Jharia Coalfield, Korba Coalfield).
+
+3. **Production Metrics**:
+   - `coalProduction`: Actual or raw coal production value.
+   - `targetProduction`: Prescribed production target.
+   - `achievedProduction`: Realized production output.
+   - `percentageAchievement`: Calculated or extracted achievement percentage.
+   - `productionUnit`: Canonical unit representation (`MT`, `LT`, `T`).
+   - `overburdenRemoval`: OBR volume in `M.Cu.M` or `Cu.M`.
+
+### Normalization Pipeline
+
+- **Number Normalization**: Strips comma separators (e.g., `1,25,000` ➔ `125000.0`).
+- **Unit Normalization**: Standardizes `Million Tonnes` ➔ `MT`, `Cubic Metres` ➔ `Cu.M`, `Million Cu M` ➔ `M.Cu.M`, `Hectare` ➔ `ha`.
+- **Date Normalization**: Converts dates into ISO `YYYY-MM-DD`.
+- **Financial Year Normalization**: Transforms `2023-2024`, `FY 2023-24`, `FY24` into standard `2023-24`.
+- **Whitespace Normalization**: Cleans non-breaking spaces, excessive spaces, and consecutive newlines.
+
+### Structured JSON Storage
+
+Normalized records are persisted as standalone JSON artifacts in:
+```
+ai-service/storage/structured_data/{documentId}.json
+```
+
+---
+
 # Document Processing & Ingestion Workflow
 
 ```
@@ -322,21 +368,23 @@ Document Loader Dispatcher (app/services/document_loader.py)
             ├─► Append event log: logs/ocr.log
             │
             ▼
-FastAPI returns metadata only: { status, documentId, processingTime, pageCount, confidence, loaderUsed }
+Phase 5 Structured Extraction (app/services/information_extractor.py)
+            │
+            ├─► Regex & entity lookup (metadata, mine, location, production)
+            ├─► Normalization (units, dates, numbers, financial years)
+            ├─► Persist structured JSON: storage/structured_data/{documentId}.json
             │
             ▼
-Express DocumentModel updated (status: OCR Complete / Failed)
+FastAPI returns OCR metadata + Structured Record to Express
             │
             ▼
-Frontend Table displays Pages, Duration, Engine, Confidence, Status Badge & View Modal
-```
-
-If FastAPI or OCR encounters an error:
-```
-File Upload Succeeded (HTTP 201)
+Express DocumentModel updated (status: OCR Complete, structuredData, normalizationStatus)
             │
             ▼
-Document Status set to 'Failed' with errorCode and errorMessage logged
+Frontend Dashboard & Table updated:
+- Dashboard: Validated Records count, Awaiting Validation count
+- History Table: Structured Records badge, Normalization pill
+- View Modal: Displays Normalized JSON side-by-side with OCR metadata & text preview
 ```
 
 ---
@@ -396,6 +444,14 @@ On-demand trigger for text extraction & OCR on an existing document.
 ### POST
 
 ```
+/api/documents/:documentId/extract
+```
+
+On-demand trigger for structured information extraction & normalization on an existing document.
+
+### POST
+
+```
 /api/documents/load-sample
 ```
 
@@ -436,6 +492,55 @@ Document Ingestion & Text Extraction endpoint.
 ```
 
 Internal endpoint to retrieve stored text for downstream pipeline phases.
+
+### POST
+
+```
+/extract
+```
+
+Phase 5 Structured Information Extraction & Normalization endpoint.
+- **Request**: `{ documentId, text, filename }`
+- **Response**:
+  ```json
+  {
+    "status": "success",
+    "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
+    "structuredRecordCount": 1,
+    "structuredDataAvailable": true,
+    "extractionTime": 0.05,
+    "data": {
+      "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
+      "reportTitle": "Annual Coal Production Report",
+      "reportType": "Ministry Report",
+      "financialYear": "2023-24",
+      "reportDate": "2024-04-15",
+      "issuingOrganization": "BCCL",
+      "subsidiary": "BCCL",
+      "mineName": "Jharia",
+      "mineType": "Opencast",
+      "region": "Jharia Coalfield",
+      "district": "Dhanbad",
+      "state": "Jharkhand",
+      "coalProduction": 142500,
+      "overburdenRemoval": 320000,
+      "targetProduction": 150000,
+      "achievedProduction": 142500,
+      "percentageAchievement": 95.0,
+      "productionUnit": "MT",
+      "extractedFieldsCount": 16,
+      "extractedAt": "2026-09-22T14:15:00Z"
+    }
+  }
+  ```
+
+### GET
+
+```
+/extract/{document_id}
+```
+
+Retrieve stored structured JSON record from `ai-service/storage/structured_data/{documentId}.json`.
 
 
 

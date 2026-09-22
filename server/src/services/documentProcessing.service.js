@@ -68,6 +68,9 @@ export const processDocumentExtraction = async (document) => {
 
     if (isSuccess) {
       const pageCount = response.data.pageCount || response.data.pages || 1;
+      const structuredDataAvailable = response.data.structuredDataAvailable || (response.data.structuredData ? true : false);
+      const structuredRecordCount = response.data.structuredRecordCount || (structuredDataAvailable ? 1 : 0);
+
       const updated = documentModel.updateDocument(documentId, {
         status: DOCUMENT_STATUSES.OCR_COMPLETE,
         pageCount,
@@ -82,11 +85,17 @@ export const processDocumentExtraction = async (document) => {
         errorMessage: null,
         // Backward-compatible properties
         pages: pageCount,
-        error: null
+        error: null,
+        // Phase 5 Structured Information fields
+        structuredDataAvailable,
+        structuredRecordCount,
+        extractionCompletedAt: new Date().toISOString(),
+        normalizationStatus: structuredDataAvailable ? 'Normalized' : 'Pending',
+        structuredData: response.data.structuredData || null
       });
 
       console.log(
-        `[DocumentProcessing] Success for ${document.originalName} via ${response.data.loaderUsed} in ${response.data.processingTime}s (confidence: ${response.data.confidence})`
+        `[DocumentProcessing] Success for ${document.originalName} via ${response.data.loaderUsed} in ${response.data.processingTime}s (Structured Data: ${structuredDataAvailable ? 'Extracted & Normalized' : 'None'})`
       );
       return updated;
     } else {
@@ -100,7 +109,8 @@ export const processDocumentExtraction = async (document) => {
         errorCode,
         errorMessage,
         error: errorMessage,
-        processingCompletedAt: new Date().toISOString()
+        processingCompletedAt: new Date().toISOString(),
+        normalizationStatus: 'Failed'
       });
     }
   } catch (error) {
@@ -121,12 +131,53 @@ export const processDocumentExtraction = async (document) => {
       errorCode,
       errorMessage,
       error: errorMessage,
-      processingCompletedAt: new Date().toISOString()
+      processingCompletedAt: new Date().toISOString(),
+      normalizationStatus: 'Failed'
     });
   }
 };
 
+/**
+ * Explicit on-demand structured information extraction trigger.
+ * POST /api/documents/:documentId/extract
+ * @param {string} documentId
+ * @returns {Promise<Object>} Updated document record
+ */
+export const processStructuredExtraction = async (documentId) => {
+  const document = documentModel.getDocumentById(documentId);
+  if (!document) {
+    throw new Error(`Document '${documentId}' not found.`);
+  }
+
+  try {
+    const payload = {
+      documentId: document.documentId,
+      filename: document.originalName
+    };
+
+    const response = await axios.post(`${config.aiServiceUrl}/extract`, payload, {
+      timeout: 30000
+    });
+
+    if (response.data && response.data.status === 'success') {
+      const structuredData = response.data.data;
+      return documentModel.updateDocument(documentId, {
+        structuredDataAvailable: true,
+        structuredRecordCount: response.data.structuredRecordCount || 1,
+        extractionCompletedAt: new Date().toISOString(),
+        normalizationStatus: 'Normalized',
+        structuredData
+      });
+    }
+    return document;
+  } catch (err) {
+    console.error(`[DocumentProcessing] Structured extraction on-demand error for ${documentId}:`, err.message);
+    return document;
+  }
+};
 
 export default {
-  processDocumentExtraction
+  processDocumentExtraction,
+  processStructuredExtraction
 };
+

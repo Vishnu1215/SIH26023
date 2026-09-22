@@ -1,48 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FileText, CheckCircle2, AlertTriangle, FileCheck, UploadCloud } from 'lucide-react';
 import StatCard from '../components/common/StatCard.jsx';
+import { getDocumentList } from '../services/document.service.js';
 
 export default function DashboardPage() {
-  // Dynamic statistics initialized to 0 awaiting document ingestion/DB
-  const [dashboardStats] = useState({
-    totalIngestedDocuments: 0,
-    validatedStructuredRecords: 0,
-    flaggedDiscrepancies: 0,
-    generatedReports: 0
-  });
+  const [documents, setDocuments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    async function loadStats() {
+      setIsLoading(true);
+      try {
+        const docs = await getDocumentList();
+        setDocuments(docs || []);
+      } catch (err) {
+        console.error('Failed to load dashboard documents:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadStats();
+  }, []);
+
+  // Compute Phase 5 dynamic metrics
+  const totalDocuments = documents.length;
+  const ocrCompleteCount = documents.filter(
+    (d) => d.status === 'OCR Complete' || d.status === 'Completed'
+  ).length;
+  const structuredRecordsCount = documents.filter(
+    (d) => d.structuredDataAvailable === true
+  ).length;
+  const awaitingValidationCount = documents.filter(
+    (d) => d.structuredDataAvailable === true
+  ).length;
 
   const statsConfig = [
     {
-      title: 'Total Ingested Documents',
-      value: dashboardStats.totalIngestedDocuments,
-      subtitle: 'Across CIL Subsidiaries & CMPDI',
+      title: 'Total Documents',
+      value: totalDocuments,
+      subtitle: 'Ingested mining & geological files',
       icon: FileText,
       badge: null,
       color: 'blue'
     },
     {
-      title: 'Validated Structured Records',
-      value: dashboardStats.validatedStructuredRecords,
-      subtitle: 'Normalized to canonical units',
+      title: 'OCR Complete',
+      value: ocrCompleteCount,
+      subtitle: 'Text extracted & cached',
       icon: CheckCircle2,
       badge: null,
       color: 'emerald'
     },
     {
-      title: 'Flagged Discrepancies',
-      value: dashboardStats.flaggedDiscrepancies,
-      subtitle: 'Pending review (Rules V1–V13)',
-      icon: AlertTriangle,
-      badge: null,
-      color: 'amber'
-    },
-    {
-      title: 'Generated Reports',
-      value: dashboardStats.generatedReports,
-      subtitle: 'Parliamentary & monthly briefs',
+      title: 'Structured Records',
+      value: structuredRecordsCount,
+      subtitle: 'Normalized mining JSON records',
       icon: FileCheck,
       badge: null,
       color: 'purple'
+    },
+    {
+      title: 'Documents Awaiting Validation',
+      value: awaitingValidationCount,
+      subtitle: 'Ready for validation engine',
+      icon: AlertTriangle,
+      badge: null,
+      color: 'amber'
     }
   ];
 
@@ -57,6 +80,7 @@ export default function DashboardPage() {
           </p>
         </div>
       </div>
+
 
       {/* Four Statistic Cards */}
       <div className="stats-grid">

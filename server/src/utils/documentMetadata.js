@@ -60,8 +60,15 @@ export const createDocumentMetadata = (
     errorMessage: null,
     textPreview: null,
     extractedText: null,
+    // Phase 5 Structured Information & Normalization
+    structuredDataAvailable: false,
+    structuredRecordCount: 0,
+    extractionCompletedAt: null,
+    normalizationStatus: 'Pending',
+    structuredData: null,
     ...extra
   };
 };
+
 
 

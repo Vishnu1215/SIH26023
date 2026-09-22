@@ -1,12 +1,13 @@
-import { Router } from 'express';
 import {
   uploadDocument,
   getDocuments,
   getDocument,
   processDocument,
+  extractDocumentStructured,
   loadSamples
 } from '../controllers/document.controller.js';
 import { handleUpload } from '../middleware/upload.middleware.js';
+import express, { Router } from "express";
 
 const router = Router();
 
@@ -25,5 +26,9 @@ router.get('/:documentId', getDocument);
 // POST /api/documents/:documentId/process - Process / extract text from document
 router.post('/:documentId/process', processDocument);
 
+// POST /api/documents/:documentId/extract - Trigger structured information extraction explicitly
+router.post('/:documentId/extract', extractDocumentStructured);
+
 export default router;
+
 

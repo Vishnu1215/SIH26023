@@ -1,0 +1,22 @@
+{
+  "documentId": "test-csv-doc",
+  "reportTitle": "Annual Coal Production",
+  "reportType": "General Mining Document",
+  "financialYear": "2014-15",
+  "reportDate": null,
+  "issuingOrganization": "Coal India Limited",
+  "subsidiary": null,
+  "mineName": null,
+  "mineType": null,
+  "region": null,
+  "district": null,
+  "state": null,
+  "coalProduction": 57.45,
+  "overburdenRemoval": null,
+  "targetProduction": null,
+  "achievedProduction": null,
+  "percentageAchievement": null,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 6,
+  "extractedAt": "2026-09-22T14:20:33.366116+00:00"
+}

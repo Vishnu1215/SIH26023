@@ -374,6 +374,8 @@ export default function DocumentsPage() {
                   <th>Processing Time</th>
                   <th>OCR Engine</th>
                   <th>Confidence</th>
+                  <th>Structured Records</th>
+                  <th>Normalization</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -419,6 +421,24 @@ export default function DocumentsPage() {
                       </td>
                       <td className="col-conf">
                         {doc.confidence != null ? `${doc.confidence}%` : '-'}
+                      </td>
+                      <td className="col-records">
+                        {doc.structuredDataAvailable ? (
+                          <span className="records-badge">
+                            {doc.structuredRecordCount || 1} Record
+                          </span>
+                        ) : (
+                          <span style={{ color: '#94a3b8' }}>-</span>
+                        )}
+                      </td>
+                      <td className="col-norm">
+                        {doc.normalizationStatus === 'Normalized' ? (
+                          <span className="status-pill status-pill-normalized">
+                            Normalized
+                          </span>
+                        ) : (
+                          <span style={{ color: '#94a3b8' }}>-</span>
+                        )}
                       </td>
                       <td>
                         {(status === 'OCR Complete' || status === 'Completed') && (
@@ -550,6 +570,20 @@ export default function DocumentsPage() {
                 >
                   <strong>Error [{viewingDoc.errorCode || 'UNKNOWN_ERROR'}]:</strong>{' '}
                   {viewingDoc.errorMessage || viewingDoc.error}
+                </div>
+              )}
+
+              {viewingDoc.structuredData && (
+                <div className="preview-section">
+                  <div className="preview-header">
+                    <label>Structured Record (Normalized Mining Data)</label>
+                    <span className="status-pill status-pill-normalized" style={{ fontSize: '11px', padding: '2px 8px' }}>
+                      {viewingDoc.normalizationStatus || 'Normalized'}
+                    </span>
+                  </div>
+                  <pre className="json-preview-box">
+                    {JSON.stringify(viewingDoc.structuredData, null, 2)}
+                  </pre>
                 </div>
               )}
 

@@ -1,10 +1,11 @@
 import os
 import logging
-from typing import Optional
+from typing import Optional, Dict, Any
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from app.core.config import settings
 from app.services.document_loader import extract_document_text
+from app.services.information_extractor import extract_structured_information
 
 router = APIRouter()
 logger = logging.getLogger("ai_service.ingest")
@@ -33,14 +34,18 @@ class IngestResponse(BaseModel):
     textPreview: Optional[str] = None
     errorCode: Optional[str] = None
     errorMessage: Optional[str] = None
+    # Phase 5 Structured Information fields
+    structuredDataAvailable: bool = False
+    structuredRecordCount: int = 0
+    structuredData: Optional[Dict[str, Any]] = None
 
 
 @router.post("/ingest", response_model=IngestResponse, tags=["Ingestion"])
 async def ingest_document(payload: IngestRequest):
     """
-    Phase 4: Document Ingestion & Text Extraction Endpoint.
-    Extracts text, persists it to internal storage, and returns metadata only
-    (omits full text from HTTP response per Phase 4 refinement specifications).
+    Phase 4 & 5: Document Ingestion, Text Extraction & Structured Information Pipeline.
+    Extracts text, persists it to internal storage, automatically normalizes structured records,
+    and returns complete metadata and structured data summary.
     """
     logger.info(f"Received ingest request for documentId: {payload.documentId}, path: {payload.filePath}")
     try:
@@ -49,6 +54,24 @@ async def ingest_document(payload: IngestRequest):
             file_path=payload.filePath,
             mime_type=payload.mimeType or ""
         )
+
+        # Phase 5: Automatically extract and normalize structured information
+        structured_data = None
+        structured_data_available = False
+        structured_record_count = 0
+
+        try:
+            structured_data = extract_structured_information(
+                document_id=payload.documentId,
+                text=result.get("text", ""),
+                filename=payload.originalName or ""
+            )
+            structured_data_available = True
+            structured_record_count = 1
+            logger.info(f"Structured information extracted successfully for {payload.documentId}")
+        except Exception as struct_err:
+            logger.warning(f"Structured extraction warning for {payload.documentId}: {struct_err}")
+
         return IngestResponse(
             status="OCR Complete",
             documentId=payload.documentId,
@@ -61,8 +84,12 @@ async def ingest_document(payload: IngestRequest):
             language=result.get("language"),
             textPreview=result.get("textPreview"),
             errorCode=None,
-            errorMessage=None
+            errorMessage=None,
+            structuredDataAvailable=structured_data_available,
+            structuredRecordCount=structured_record_count,
+            structuredData=structured_data
         )
+
     except Exception as exc:
         error_code = getattr(exc, "error_code", "UNKNOWN_ERROR")
         logger.error(f"Text extraction failed for documentId {payload.documentId} [{error_code}]: {str(exc)}", exc_info=True)

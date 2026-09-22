@@ -65,18 +65,46 @@ export const processDocument = async (req, res, next) => {
     }
 
     const processedDoc = await processDocumentExtraction(document);
+    const isSuccess = processedDoc.status === DOCUMENT_STATUSES.OCR_COMPLETE;
     return res.status(200).json({
       success: true,
-      message:
-        processedDoc.status === DOCUMENT_STATUSES.COMPLETED
-          ? 'Text extraction completed successfully.'
-          : 'Text extraction failed.',
+      message: isSuccess
+        ? 'Text extraction and structured information extraction completed successfully.'
+        : 'Text extraction failed.',
       document: processedDoc
     });
   } catch (error) {
     next(error);
   }
 };
+
+/**
+ * Trigger structured information extraction explicitly
+ * POST /api/documents/:documentId/extract
+ */
+export const extractDocumentStructured = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const document = documentModel.getDocumentById(documentId);
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found.'
+      });
+    }
+
+    const { processStructuredExtraction } = await import('../services/documentProcessing.service.js');
+    const updated = await processStructuredExtraction(documentId);
+    return res.status(200).json({
+      success: true,
+      message: 'Structured information extraction completed.',
+      document: updated
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 /**
