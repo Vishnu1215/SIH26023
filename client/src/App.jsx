@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import DocumentsPage from './pages/DocumentsPage.jsx';
+import ReportsPage from './pages/ReportsPage.jsx';
 import PlaceholderModulePage from './pages/PlaceholderModulePage.jsx';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
@@ -26,16 +27,7 @@ export default function App() {
         >
           <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
           <Route path={ROUTES.DOCUMENTS} element={<DocumentsPage />} />
-          <Route
-            path={ROUTES.REPORTS}
-            element={
-              <PlaceholderModulePage
-                title="Automated Report Generator"
-                moduleNumber="Module 1"
-                description="Standard templates for Monthly Production, Geological Survey Summaries, and Parliamentary Q&A briefs."
-              />
-            }
-          />
+          <Route path={ROUTES.REPORTS} element={<ReportsPage />} />
           <Route
             path={ROUTES.TOPICS}
             element={

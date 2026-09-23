@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Mining & Analytics Report - Ministry of Coal</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e3a8a;
+            --accent: #d97706;
+            --border: #cbd5e1;
+            --bg-light: #f8fafc;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --success: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: var(--text);
+            background: #ffffff;
+            line-height: 1.5;
+            padding: 30px;
+        }
+        .report-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            padding: 36px 40px;
+            background: #fff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            border-bottom: 3px double var(--secondary);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .header-left {
+            flex: 1;
+        }
+        .republic {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        .ministry {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--secondary);
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        .institution {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+        .report-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 12px;
+        }
+        .header-meta {
+            text-align: right;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-left: 1px solid var(--border);
+            padding-left: 20px;
+            min-width: 220px;
+        }
+        .classification-badge {
+            display: inline-block;
+            background: #fee2e2;
+            color: #991b1b;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 3px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        .meta-item { margin-top: 3px; }
+        .meta-item strong { color: var(--text); }
+        
+        .filter-container {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-chip {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.75px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 6px;
+            margin-top: 28px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* KPI Card Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .kpi-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 12px 14px;
+            border-top: 3px solid var(--secondary);
+        }
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kpi-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 4px;
+        }
+        .kpi-subtext {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Tables */
+        table.report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+        }
+        table.report-table th {
+            background: #f1f5f9;
+            color: var(--primary);
+            text-align: left;
+            padding: 8px 10px;
+            font-weight: 700;
+            border: 1px solid var(--border);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        table.report-table td {
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        table.report-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+        table.report-table tr:hover {
+            background: #f1f5f9;
+        }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+        .badge-valid { background: #dcfce7; color: #15803d; }
+        .badge-warning { background: #fef3c7; color: #b45309; }
+        .badge-error { background: #fee2e2; color: #b91c1c; }
+
+        /* Two column layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 16px;
+        }
+
+        .footer {
+            border-top: 1px solid var(--border);
+            padding-top: 14px;
+            margin-top: 36px;
+            font-size: 10px;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media print {
+            body { padding: 0; background: #fff; }
+            .report-page { border: none; box-shadow: none; padding: 0; max-width: 100%; }
+            .section-title { page-break-after: avoid; }
+            table.report-table { page-break-inside: auto; }
+            tr { page-break-inside: avoid; page-break-after: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-page">
+        <!-- Official Ministry Header -->
+        <div class="header">
+            <div class="header-left">
+                <div class="republic">GOVERNMENT OF INDIA</div>
+                <div class="ministry">MINISTRY OF COAL</div>
+                <div class="institution">Central Mine Planning & Design Institute Limited (CMPDI)</div>
+                <div class="report-title">Executive Mining & Analytics Report</div>
+            </div>
+            <div class="header-meta">
+                <div class="classification-badge">OFFICIAL USE ONLY</div>
+                <div class="meta-item"><strong>Generated:</strong> 23-Sep-2026 09:59:44 UTC</div>
+                <div class="meta-item"><strong>Analytics Ver:</strong> v1</div>
+                <div class="meta-item"><strong>Records Analyzed:</strong> 11</div>
+                <div class="meta-item"><strong>Engine:</strong> Phase 8 Deterministic</div>
+            </div>
+        </div>
+
+        
+    
+        <div class="section-title">
+            <span>Executive Overview & Key Performance Indicators</span>
+            <span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">Deterministic Aggregation</span>
+        </div>
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Total Coal Production</div>
+                <div class="kpi-value">0.00 <span style="font-size:12px; font-weight:normal;">MT</span></div>
+                <div class="kpi-subtext">Cumulative extracted production</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Target Production</div>
+                <div class="kpi-value">0.00 <span style="font-size:12px; font-weight:normal;">MT</span></div>
+                <div class="kpi-subtext">Statutory allocation</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Target Variance</div>
+                <div class="kpi-value">0.00 <span style="font-size:12px; font-weight:normal;">MT</span></div>
+                <div class="kpi-subtext">Production vs Target</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Achievement %</div>
+                <div class="kpi-value">0.0%</div>
+                <div class="kpi-subtext">Target fulfillment rate</div>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card" style="border-top-color: var(--accent);">
+                <div class="kpi-label">Total Documents</div>
+                <div class="kpi-value">1</div>
+                <div class="kpi-subtext">Uploaded & ingested</div>
+            </div>
+            <div class="kpi-card" style="border-top-color: var(--success);">
+                <div class="kpi-label">Valid Documents</div>
+                <div class="kpi-value">0</div>
+                <div class="kpi-subtext">100% checks passed</div>
+            </div>
+            <div class="kpi-card" style="border-top-color: var(--warning);">
+                <div class="kpi-label">Warning Records</div>
+                <div class="kpi-value">1</div>
+                <div class="kpi-subtext">Minor discrepancies</div>
+            </div>
+            <div class="kpi-card" style="border-top-color: var(--primary);">
+                <div class="kpi-label">Quality Score</div>
+                <div class="kpi-value">90.0<span style="font-size: 13px;">/100</span></div>
+                <div class="kpi-subtext">Rating: Excellent</div>
+            </div>
+        </div>
+    
+        <div class="section-title">
+            <span>Subsidiary Performance & Production Leaderboard</span>
+        </div>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;" class="text-center">Rank</th>
+                    <th>Subsidiary Enterprise</th>
+                    <th class="text-center">Documents</th>
+                    <th class="text-right">Total Production (MT)</th>
+                    <th class="text-right">Avg / Record (MT)</th>
+                    <th class="text-right">National Share %</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+                <tr>
+                    <td class="text-center"><b>#1</b></td>
+                    <td><b>SCCL</b></td>
+                    <td class="text-center">1</td>
+                    <td class="text-right"><b>0.00</b></td>
+                    <td class="text-right">0.00</td>
+                    <td class="text-right">0.0%</td>
+                </tr>
+            
+            </tbody>
+        </table>
+        
+        <div class="grid-2">
+            <div>
+                <div class="section-title" style="margin-top: 14px;">
+                    <span>Financial Year Trends</span>
+                </div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>FY</th>
+                            <th class="text-right">Production (MT)</th>
+                            <th class="text-center">Records</th>
+                            <th class="text-right">Quality</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                <tr>
+                    <td><b>2025–26</b></td>
+                    <td class="text-right"><b>0.00</b></td>
+                    <td class="text-center">1</td>
+                    <td class="text-right">Excellent</td>
+                </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <div class="section-title" style="margin-top: 14px;">
+                    <span>Geographical / State Breakdown</span>
+                </div>
+                <table class="report-table">
+                    <thead>
+                        <tr>
+                            <th>State</th>
+                            <th class="text-right">Production (MT)</th>
+                            <th class="text-center">Records</th>
+                            <th class="text-right">Share %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    
+                <tr>
+                    <td><b>Not Available</b></td>
+                    <td class="text-right"><b>0.00</b></td>
+                    <td class="text-center">1</td>
+                    <td class="text-right">0.0%</td>
+                </tr>
+            
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    
+        <div class="section-title">
+            <span>Deterministic Validation Rules Violations (VAL001 - VAL010)</span>
+            <span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">10-Rule Audit Matrix</span>
+        </div>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Rule ID</th>
+                    <th>Validation Rule Name</th>
+                    <th style="width: 80px;" class="text-center">Severity</th>
+                    <th>Rule Specification</th>
+                    <th style="width: 90px;" class="text-right">Violations</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+                <tr>
+                    <td><b>VAL001</b></td>
+                    <td><b>Missing Mandatory Fields</b></td>
+                    <td class="text-center"><span class="badge badge-error">Error</span></td>
+                    <td style="color: #475569; font-size: 11px;">Verification that mandatory fields (Title, Organization, Production) are present.</td>
+                    <td class="text-right" style="color: #dc2626; font-weight: 700;">18</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL002</b></td>
+                    <td><b>Invalid Numeric Values</b></td>
+                    <td class="text-center"><span class="badge badge-error">Error</span></td>
+                    <td style="color: #475569; font-size: 11px;">Detects negative, non-numeric, or corrupt numeric quantities.</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL003</b></td>
+                    <td><b>Unknown Measurement Units</b></td>
+                    <td class="text-center"><span class="badge badge-warning">Warning</span></td>
+                    <td style="color: #475569; font-size: 11px;">Verifies unit normalization to standardized units (MT, Tonnes, CuM).</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL004</b></td>
+                    <td><b>Invalid Date Formats</b></td>
+                    <td class="text-center"><span class="badge badge-warning">Warning</span></td>
+                    <td style="color: #475569; font-size: 11px;">Ensures dates match ISO 8601 YYYY-MM-DD standard format.</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL005</b></td>
+                    <td><b>Financial Year Format Mismatch</b></td>
+                    <td class="text-center"><span class="badge badge-warning">Warning</span></td>
+                    <td style="color: #475569; font-size: 11px;">Validates Indian financial year format (e.g. 2024-25 or 2024–25).</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL006</b></td>
+                    <td><b>Percentage Calculation Mismatch</b></td>
+                    <td class="text-center"><span class="badge badge-warning">Warning</span></td>
+                    <td style="color: #475569; font-size: 11px;">Verifies achievement % = (Achieved / Target) * 100 within tolerance.</td>
+                    <td class="text-right" style="color: #d97706; font-weight: 700;">2</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL007</b></td>
+                    <td><b>Duplicate Document Detection</b></td>
+                    <td class="text-center"><span class="badge badge-error">Error</span></td>
+                    <td style="color: #475569; font-size: 11px;">Identifies exact hash, duplicate filename, or duplicate title collisions.</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL008</b></td>
+                    <td><b>Production Inconsistency & Outliers</b></td>
+                    <td class="text-center"><span class="badge badge-warning">Warning</span></td>
+                    <td style="color: #475569; font-size: 11px;">Flags production values exceeding statutory limits or negative variance.</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL009</b></td>
+                    <td><b>Low OCR Confidence</b></td>
+                    <td class="text-center"><span class="badge badge-warning">Warning</span></td>
+                    <td style="color: #475569; font-size: 11px;">Flags scanned records with average OCR confidence below threshold (80%).</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+                <tr>
+                    <td><b>VAL010</b></td>
+                    <td><b>Low Information Document</b></td>
+                    <td class="text-center"><span class="badge badge-warning">Warning</span></td>
+                    <td style="color: #475569; font-size: 11px;">Identifies records extracting fewer than 3 standard mining fields.</td>
+                    <td class="text-right" style="color: #64748b; font-weight: 700;">0</td>
+                </tr>
+            
+            </tbody>
+        </table>
+        
+        <div class="section-title">
+            <span>Mine Performance & Extraction Register</span>
+            <span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">Mine-level deterministic metrics</span>
+        </div>
+        <table class="report-table">
+            <thead>
+                <tr>
+                    <th>Mine Name</th>
+                    <th>Subsidiary</th>
+                    <th>District / State</th>
+                    <th>Mine Type</th>
+                    <th class="text-right">Production (MT)</th>
+                    <th class="text-center">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+        
+                <tr>
+                    <td><b>Jharia Open Cast</b></td>
+                    <td>BCCL</td>
+                    <td>Dhanbad, Jharkhand</td>
+                    <td>Opencast</td>
+                    <td class="text-right"><b>142,500.00</b></td>
+                    <td class="text-center"><span class="badge badge-error">Unvalidated</span></td>
+                </tr>
+            
+                <tr>
+                    <td><b>Gevra</b></td>
+                    <td>CIL</td>
+                    <td>Korba, Chhattisgarh</td>
+                    <td>Opencast</td>
+                    <td class="text-right"><b>4.31</b></td>
+                    <td class="text-center"><span class="badge badge-valid">Valid</span></td>
+                </tr>
+            
+                <tr>
+                    <td><b>Kusmunda</b></td>
+                    <td>CIL</td>
+                    <td>N/A, Chhattisgarh</td>
+                    <td>Opencast</td>
+                    <td class="text-right"><b>0.00</b></td>
+                    <td class="text-center"><span class="badge badge-error">Error</span></td>
+                </tr>
+            
+            </tbody>
+        </table>
+        
+        <div class="footer">
+            <div>
+                <strong>Central Mine Planning & Design Institute Limited (CMPDI)</strong> &bull; AI-Powered Geological, Mining & Reporting Analytics Platform
+            </div>
+            <div>
+                OFFICIAL / FOR STATUTORY & ADMINISTRATIVE USE ONLY
+            </div>
+            <div>
+                Page 1 of 1 &bull; 23-Sep-2026 09:59:44 UTC
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    

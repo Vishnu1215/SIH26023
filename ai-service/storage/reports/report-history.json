@@ -1,0 +1,416 @@
+[
+  {
+    "reportId": "16937669-fa9a-442f-8ead-f1bf213e0987",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "xlsx",
+    "fileName": "16937669-fa9a-442f-8ead-f1bf213e0987_executive_20260923_100032.xlsx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\excel\\16937669-fa9a-442f-8ead-f1bf213e0987_executive_20260923_100032.xlsx",
+    "fileSize": 9038,
+    "fileSizeFormatted": "8.8 KB",
+    "createdAt": "2026-09-23T10:00:32.748237+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "c8b4b31c-4714-413d-a968-907b1dc67c63",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "docx",
+    "fileName": "c8b4b31c-4714-413d-a968-907b1dc67c63_executive_20260923_100032.docx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\docx\\c8b4b31c-4714-413d-a968-907b1dc67c63_executive_20260923_100032.docx",
+    "fileSize": 38365,
+    "fileSizeFormatted": "37.5 KB",
+    "createdAt": "2026-09-23T10:00:32.631552+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "e2dedb1f-d4eb-4ca1-8cfd-a1a41de43f4f",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "pdf",
+    "fileName": "e2dedb1f-d4eb-4ca1-8cfd-a1a41de43f4f_executive_20260923_100032.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\e2dedb1f-d4eb-4ca1-8cfd-a1a41de43f4f_executive_20260923_100032.pdf",
+    "fileSize": 5727,
+    "fileSizeFormatted": "5.6 KB",
+    "createdAt": "2026-09-23T10:00:32.516061+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "05520216-54ad-4e40-9d76-a32473f2984d",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "html",
+    "fileName": "05520216-54ad-4e40-9d76-a32473f2984d_executive_20260923_100020.html",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\html\\05520216-54ad-4e40-9d76-a32473f2984d_executive_20260923_100020.html",
+    "fileSize": 22189,
+    "fileSizeFormatted": "21.7 KB",
+    "createdAt": "2026-09-23T10:00:20.628122+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "35d1b3e0-c399-41cd-8755-16ff47536105",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "xlsx",
+    "fileName": "35d1b3e0-c399-41cd-8755-16ff47536105_executive_20260923_100020.xlsx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\excel\\35d1b3e0-c399-41cd-8755-16ff47536105_executive_20260923_100020.xlsx",
+    "fileSize": 9037,
+    "fileSizeFormatted": "8.8 KB",
+    "createdAt": "2026-09-23T10:00:20.609329+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "034cd869-f781-4a8d-97ee-d98ec13ae084",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "docx",
+    "fileName": "034cd869-f781-4a8d-97ee-d98ec13ae084_executive_20260923_100020.docx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\docx\\034cd869-f781-4a8d-97ee-d98ec13ae084_executive_20260923_100020.docx",
+    "fileSize": 38365,
+    "fileSizeFormatted": "37.5 KB",
+    "createdAt": "2026-09-23T10:00:20.540115+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "9cc523d1-ec3e-4c96-87dd-9b572f23dd1a",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "pdf",
+    "fileName": "9cc523d1-ec3e-4c96-87dd-9b572f23dd1a_executive_20260923_100020.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\9cc523d1-ec3e-4c96-87dd-9b572f23dd1a_executive_20260923_100020.pdf",
+    "fileSize": 5727,
+    "fileSizeFormatted": "5.6 KB",
+    "createdAt": "2026-09-23T10:00:20.395065+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "e006a501-47c5-4ea4-aa07-c39412c299af",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "html",
+    "fileName": "e006a501-47c5-4ea4-aa07-c39412c299af_executive_20260923_100012.html",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\html\\e006a501-47c5-4ea4-aa07-c39412c299af_executive_20260923_100012.html",
+    "fileSize": 22189,
+    "fileSizeFormatted": "21.7 KB",
+    "createdAt": "2026-09-23T10:00:12.190559+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "3613981b-b7da-4bb6-aacc-d4f3509b763a",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "xlsx",
+    "fileName": "3613981b-b7da-4bb6-aacc-d4f3509b763a_executive_20260923_100012.xlsx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\excel\\3613981b-b7da-4bb6-aacc-d4f3509b763a_executive_20260923_100012.xlsx",
+    "fileSize": 9037,
+    "fileSizeFormatted": "8.8 KB",
+    "createdAt": "2026-09-23T10:00:12.142388+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "2b45053c-3db7-453d-8481-4ba3994fd8fd",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "docx",
+    "fileName": "2b45053c-3db7-453d-8481-4ba3994fd8fd_executive_20260923_100011.docx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\docx\\2b45053c-3db7-453d-8481-4ba3994fd8fd_executive_20260923_100011.docx",
+    "fileSize": 38365,
+    "fileSizeFormatted": "37.5 KB",
+    "createdAt": "2026-09-23T10:00:12.042623+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "7d9b69ba-b0a0-472a-a6f3-f965749a0f4c",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "pdf",
+    "fileName": "7d9b69ba-b0a0-472a-a6f3-f965749a0f4c_executive_20260923_100011.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\7d9b69ba-b0a0-472a-a6f3-f965749a0f4c_executive_20260923_100011.pdf",
+    "fileSize": 5727,
+    "fileSizeFormatted": "5.6 KB",
+    "createdAt": "2026-09-23T10:00:11.928647+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "cab67e34-3e18-4dd1-bf03-be9f202e0753",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "html",
+    "fileName": "cab67e34-3e18-4dd1-bf03-be9f202e0753_executive_20260923_095954.html",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\html\\cab67e34-3e18-4dd1-bf03-be9f202e0753_executive_20260923_095954.html",
+    "fileSize": 22189,
+    "fileSizeFormatted": "21.7 KB",
+    "createdAt": "2026-09-23T09:59:54.847743+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "6b717ab2-c04f-44d3-84e1-3bdceb4150a5",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "xlsx",
+    "fileName": "6b717ab2-c04f-44d3-84e1-3bdceb4150a5_executive_20260923_095954.xlsx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\excel\\6b717ab2-c04f-44d3-84e1-3bdceb4150a5_executive_20260923_095954.xlsx",
+    "fileSize": 9040,
+    "fileSizeFormatted": "8.8 KB",
+    "createdAt": "2026-09-23T09:59:54.801064+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "3e54a42c-e243-4cf5-a2f9-780dbbb631b0",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "docx",
+    "fileName": "3e54a42c-e243-4cf5-a2f9-780dbbb631b0_executive_20260923_095954.docx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\docx\\3e54a42c-e243-4cf5-a2f9-780dbbb631b0_executive_20260923_095954.docx",
+    "fileSize": 38368,
+    "fileSizeFormatted": "37.5 KB",
+    "createdAt": "2026-09-23T09:59:54.733123+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "8236ec2b-4587-4d53-a0de-d92fab473396",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "pdf",
+    "fileName": "8236ec2b-4587-4d53-a0de-d92fab473396_executive_20260923_095954.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\8236ec2b-4587-4d53-a0de-d92fab473396_executive_20260923_095954.pdf",
+    "fileSize": 5728,
+    "fileSizeFormatted": "5.6 KB",
+    "createdAt": "2026-09-23T09:59:54.631462+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "ba9e0886-835c-448b-8ace-afccae5f7510",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "html",
+    "fileName": "ba9e0886-835c-448b-8ace-afccae5f7510_executive_20260923_095944.html",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\html\\ba9e0886-835c-448b-8ace-afccae5f7510_executive_20260923_095944.html",
+    "fileSize": 22189,
+    "fileSizeFormatted": "21.7 KB",
+    "createdAt": "2026-09-23T09:59:44.840523+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "9d2fd4c4-a875-48f6-b721-12b98d8d104b",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "xlsx",
+    "fileName": "9d2fd4c4-a875-48f6-b721-12b98d8d104b_executive_20260923_095944.xlsx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\excel\\9d2fd4c4-a875-48f6-b721-12b98d8d104b_executive_20260923_095944.xlsx",
+    "fileSize": 9040,
+    "fileSizeFormatted": "8.8 KB",
+    "createdAt": "2026-09-23T09:59:44.821490+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "000e4cea-7c57-4a38-9f8f-93e72679ca6f",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "docx",
+    "fileName": "000e4cea-7c57-4a38-9f8f-93e72679ca6f_executive_20260923_095944.docx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\docx\\000e4cea-7c57-4a38-9f8f-93e72679ca6f_executive_20260923_095944.docx",
+    "fileSize": 38367,
+    "fileSizeFormatted": "37.5 KB",
+    "createdAt": "2026-09-23T09:59:44.628560+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "189db404-c4c7-4dd0-82a8-b5cd03f1998a",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "pdf",
+    "fileName": "189db404-c4c7-4dd0-82a8-b5cd03f1998a_executive_20260923_095944.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\189db404-c4c7-4dd0-82a8-b5cd03f1998a_executive_20260923_095944.pdf",
+    "fileSize": 5728,
+    "fileSizeFormatted": "5.6 KB",
+    "createdAt": "2026-09-23T09:59:44.499033+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "5b180432-d88e-42da-af10-e049aa843924",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "html",
+    "fileName": "5b180432-d88e-42da-af10-e049aa843924_executive_20260923_095557.html",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\html\\5b180432-d88e-42da-af10-e049aa843924_executive_20260923_095557.html",
+    "fileSize": 22189,
+    "fileSizeFormatted": "21.7 KB",
+    "createdAt": "2026-09-23T09:55:57.898328+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "9b039acd-87ae-4129-a9ce-cd40611165e8",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "xlsx",
+    "fileName": "9b039acd-87ae-4129-a9ce-cd40611165e8_executive_20260923_095557.xlsx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\excel\\9b039acd-87ae-4129-a9ce-cd40611165e8_executive_20260923_095557.xlsx",
+    "fileSize": 9040,
+    "fileSizeFormatted": "8.8 KB",
+    "createdAt": "2026-09-23T09:55:57.878622+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "c951315d-2bcb-4494-9528-088347c86c62",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "docx",
+    "fileName": "c951315d-2bcb-4494-9528-088347c86c62_executive_20260923_095556.docx",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\docx\\c951315d-2bcb-4494-9528-088347c86c62_executive_20260923_095556.docx",
+    "fileSize": 38367,
+    "fileSizeFormatted": "37.5 KB",
+    "createdAt": "2026-09-23T09:55:57.578044+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
+    "reportId": "3d008402-1499-47a2-a885-10778ac6b0f5",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "pdf",
+    "fileName": "3d008402-1499-47a2-a885-10778ac6b0f5_executive_20260923_095556.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\3d008402-1499-47a2-a885-10778ac6b0f5_executive_20260923_095556.pdf",
+    "fileSize": 5728,
+    "fileSizeFormatted": "5.6 KB",
+    "createdAt": "2026-09-23T09:55:56.273176+00:00",
+    "generatedBy": "System Executive",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 11,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  }
+]
