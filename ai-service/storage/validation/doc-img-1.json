@@ -1,0 +1,41 @@
+{
+  "documentId": "doc-img-1",
+  "validationStatus": "Warning",
+  "validationScore": 95,
+  "validationSummary": "Validation completed with warnings.\n\nStatus: Warning (Score: 95/100)\n\nWarnings:\n• Poor OCR quality (confidence: 45.0%).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL009",
+      "rule": "VAL009",
+      "field": "ocrConfidence",
+      "severity": "Warning",
+      "message": "Poor OCR quality (confidence: 45.0%)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL009",
+      "rule": "VAL009",
+      "field": "ocrConfidence",
+      "severity": "Warning",
+      "message": "Poor OCR quality (confidence: 45.0%)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL009"
+  ],
+  "errorCount": 0,
+  "warningCount": 1,
+  "infoCount": 0,
+  "validationTime": 0.0109,
+  "validatedAt": "2026-09-22T15:46:21.579218+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.579218+00:00",
+      "score": 95,
+      "status": "Warning",
+      "errorCount": 0,
+      "warningCount": 1
+    }
+  ]
+}

@@ -9,14 +9,15 @@ ai-service/
 ├── app/
 │   ├── api/          # API endpoints & route handlers
 │   │   ├── __init__.py
-│   │   ├── health.py  # Health-check endpoint
-│   │   ├── ingest.py  # Phase 4: Ingestion & OCR pipeline endpoint
-│   │   └── extract.py # Phase 5: Structured extraction & normalization endpoint
+│   │   ├── health.py    # Health-check endpoint
+│   │   ├── ingest.py    # Phase 4: Ingestion, OCR, and automated extraction/validation
+│   │   ├── extract.py   # Phase 5: Structured extraction & normalization endpoint
+│   │   └── validate.py  # Phase 6: Deterministic validation engine endpoint
 │   ├── core/         # Core settings and configuration
 │   │   ├── __init__.py
 │   │   └── config.py
 │   ├── models/       # Pydantic schemas and domain models
-│   ├── services/     # AI/ML business logic, loaders & extractors
+│   ├── services/     # AI/ML business logic, loaders, extractors & validators
 │   │   ├── ocr_service.py           # Tesseract OCR engine wrapper
 │   │   ├── pdf_loader.py            # Dual-mode (PyMuPDF digital + scanned OCR)
 │   │   ├── docx_loader.py           # Word document paragraph & table parser
@@ -26,7 +27,10 @@ ai-service/
 │   │   ├── document_loader.py       # Document loader dispatcher service
 │   │   ├── normalizer.py            # Phase 5: Unit, date, number, FY normalizer
 │   │   ├── json_storage.py          # Phase 5: Disk storage for structured JSON
-│   │   └── information_extractor.py # Phase 5: Rule & regex-based structured extractor
+│   │   ├── information_extractor.py # Phase 5: Rule & regex-based structured extractor
+│   │   ├── validation_rules.py      # Phase 6: Reusable validation rules (VAL001-VAL010)
+│   │   ├── validation_storage.py    # Phase 6: Disk storage for validation JSON & history
+│   │   └── validation_engine.py     # Phase 6: Main validation engine & scoring orchestrator
 │   ├── utils/        # Helper utility functions
 │   ├── __init__.py
 │   └── main.py       # FastAPI application entry point
@@ -34,7 +38,8 @@ ai-service/
 │   └── ocr.log       # Extraction & OCR log audit trail
 ├── storage/
 │   ├── extracted_text/  # Raw text files ({documentId}.txt)
-│   └── structured_data/ # Phase 5: Normalized JSON ({documentId}.json)
+│   ├── structured_data/ # Phase 5: Normalized JSON ({documentId}.json)
+│   └── validation/      # Phase 6: Validation reports ({documentId}.json)
 ├── .env.example
 ├── requirements.txt
 └── README.md
@@ -49,7 +54,7 @@ ai-service/
 - **Scanned PDF Fallback**: Page rasterization + Tesseract OCR per page (`loaderUsed: OCR`) with recognition confidence scoring.
 - **Raw Text Storage**: Full extracted text is persisted to `storage/extracted_text/{documentId}.txt`.
 - **File Logging**: Each extraction event is recorded in `logs/ocr.log` with timestamp, documentId, filename, loaderUsed, pageCount, duration, status, and errorCode.
-- **Ingestion Endpoint**: `POST /ingest` receives `{ documentId, filePath, mimeType }` and triggers extraction and initial normalization.
+- **Ingestion Endpoint**: `POST /ingest` receives `{ documentId, filePath, mimeType }` and triggers extraction, normalization, and validation.
 
 ---
 
@@ -81,28 +86,44 @@ Converts raw extracted document text into clean, normalized JSON mining records 
    - `productionUnit`: Canonical unit representation (`MT`, `LT`, `T`).
    - `overburdenRemoval`: OBR volume in `M.Cu.M` or `Cu.M`.
 
-### Normalization Rules
+---
 
-- **Number Normalization**: Strips comma separators (e.g., `1,25,000` -> `125000.0`).
-- **Unit Normalization**: Standardizes `Million Tonnes` / `MT` -> `MT`, `Cubic Metres` -> `Cu.M`, `Million Cu M` -> `M.Cu.M`, `Hectare` -> `ha`.
-- **Date Normalization**: Converts various Indian and international date formats (`DD/MM/YYYY`, `DD-MM-YYYY`, `31 March 2025`, `March 31, 2025`) into standard `YYYY-MM-DD`.
-- **Financial Year Normalization**: Transforms `2023-2024`, `FY 2023-24`, `FY24` into standard `2023-24`.
-- **Whitespace Normalization**: Cleans non-breaking spaces, excessive spaces, and consecutive newlines.
+## Phase 6: Validation Engine & Discrepancy Detection
 
-### Structured JSON Storage
+Evaluates extracted structured records through a deterministic validation engine to guarantee completeness, consistency, and compliance with CIL/CMPDI standards.
 
-Normalized records are persisted as standalone JSON artifacts in:
-```
-ai-service/storage/structured_data/{documentId}.json
-```
+### Standardized Validation Rules
 
-### Phase 5 API Endpoints
+| Rule ID | Name | Description | Severity |
+| :--- | :--- | :--- | :--- |
+| **VAL001** | Missing Mandatory Field | Flags missing `financialYear`, `coalProduction`, `mineName`, `state`, `productionUnit`, `reportType`. | Error / Warning |
+| **VAL002** | Invalid Numeric Value | Rejects negative values for coal production, targets, overburden removal, or achieved production. | Error |
+| **VAL003** | Unknown Unit | Normalizes and validates against supported units (`MT`, `Tonnes`, `Cu.M`, `M.Cu.M`, `ha`, `LT`, `sq km`, etc.). | Warning |
+| **VAL004** | Invalid Date | Verifies calendar validity (flags e.g. Feb 31st) and rejects future dates beyond the current year. | Error |
+| **VAL005** | Financial Year Format | Checks standard `YYYY-YY` format and validates consecutive annual sequence (e.g. `2023-24`). | Error |
+| **VAL006** | Percentage Mismatch | Recalculates `(achieved / target) * 100` and flags discrepancy if reported percentage differs by > 1%. | Warning |
+| **VAL007** | Duplicate Document | Flags duplicate document IDs, identical filenames, or matching SHA-256 file content hashes. | Warning / Info |
+| **VAL008** | Production Inconsistency | Detects zero targets with positive production, or discrepancies between coal and achieved production. | Warning |
+| **VAL009** | OCR Confidence | Checks OCR confidence (<50% Warning, 50-80% Info/Medium, >80% or digital layer Info/High). | Warning / Info |
+| **VAL010** | Low Information Document | Flags documents where fewer than 5 structured fields could be populated. | Warning |
 
-- **`POST /extract`**:
-  - Request: `{ "documentId": "...", "text": "...", "filename": "..." }`
-  - Response: `{ "status": "success", "documentId": "...", "structuredRecordCount": 1, "structuredDataAvailable": true, "data": { ... } }`
-- **`GET /extract/{document_id}`**:
-  - Retrieves persisted structured JSON for a given document.
+### Scoring & Status Model
+
+- **Base Score**: 100 points
+- **Deductions**: -20 points per Error, -5 points per Warning
+- **Status Classification**:
+  - `Error`: If `errorCount > 0`
+  - `Warning`: If `errorCount == 0` and `warningCount > 0`
+  - `Valid`: If `errorCount == 0` and `warningCount == 0`
+- **Validation History**: Every validation execution snapshot (`validatedAt`, `score`, `status`, `errorCount`, `warningCount`) is prepended to `validationHistory` in `storage/validation/{documentId}.json`.
+
+### Phase 6 API Endpoints
+
+- **`POST /validate`**:
+  - Request: `{ "documentId": "...", "structuredData": { ... }, "confidence": 92.5, "filename": "...", "fileHash": "..." }`
+  - Response: `{ "status": "success", "validationStatus": "Valid", "validationScore": 100, "validationMessages": [], "rulesTriggered": [], "validationTime": 0.005, "validationHistory": [...] }`
+- **`GET /validate/{document_id}`**:
+  - Retrieves persisted validation JSON report from `storage/validation/{documentId}.json`.
 
 ---
 

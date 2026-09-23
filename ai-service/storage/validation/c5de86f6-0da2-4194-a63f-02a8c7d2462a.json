@@ -1,0 +1,43 @@
+{
+  "documentId": "c5de86f6-0da2-4194-a63f-02a8c7d2462a",
+  "validationStatus": "Error",
+  "validationScore": 70,
+  "validationSummary": "Validation flagged 1 error(s) and 2 warning(s) across 1 rule(s) (Score: 70/100).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Production value missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine Name missing."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001"
+  ],
+  "errorCount": 1,
+  "warningCount": 2,
+  "infoCount": 0,
+  "validationTime": 0.0002,
+  "validatedAt": "2026-09-22T15:10:39.898340+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:10:39.898340+00:00",
+      "score": 70,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 2
+    }
+  ]
+}

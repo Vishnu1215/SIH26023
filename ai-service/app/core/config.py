@@ -22,12 +22,26 @@ class Settings:
         "STRUCTURED_DATA_DIR",
         os.path.join(BASE_DIR, "storage", "structured_data")
     )
+    VALIDATION_STORAGE_DIR: str = os.getenv(
+        "VALIDATION_STORAGE_DIR",
+        os.path.join(BASE_DIR, "storage", "validation")
+    )
+    LOGS_STORAGE_DIR: str = os.getenv(
+        "LOGS_STORAGE_DIR",
+        os.path.join(BASE_DIR, "storage", "logs")
+    )
     OCR_LOG_FILE: str = os.getenv(
         "OCR_LOG_FILE",
         os.path.join(BASE_DIR, "logs", "ocr.log")
     )
 
 
-
 settings = Settings()
+
+# Ensure storage directories exist
+os.makedirs(settings.TEXT_STORAGE_DIR, exist_ok=True)
+os.makedirs(settings.STRUCTURED_DATA_DIR, exist_ok=True)
+os.makedirs(settings.VALIDATION_STORAGE_DIR, exist_ok=True)
+os.makedirs(settings.LOGS_STORAGE_DIR, exist_ok=True)
+os.makedirs(os.path.dirname(settings.OCR_LOG_FILE), exist_ok=True)
 

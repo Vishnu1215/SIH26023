@@ -4,6 +4,7 @@ from app.core.config import settings
 from app.api.health import router as health_router
 from app.api.ingest import router as ingest_router
 from app.api.extract import router as extract_router
+from app.api.validate import router as validate_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -24,6 +25,7 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(ingest_router)
 app.include_router(extract_router)
+app.include_router(validate_router)
 
 
 

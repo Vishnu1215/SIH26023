@@ -1,0 +1,63 @@
+{
+  "documentId": "doc-geo-1",
+  "validationStatus": "Error",
+  "validationScore": 75,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 75/100)\n\nPrimary Issue:\nMandatory field 'issuingOrganization' is missing for Geological Report.\n\nWarnings:\n• Low information document (only 2 structured fields detected).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "issuingOrganization",
+      "severity": "Error",
+      "message": "Mandatory field 'issuingOrganization' is missing for Geological Report."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 2 structured fields detected)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "issuingOrganization",
+      "severity": "Error",
+      "message": "Mandatory field 'issuingOrganization' is missing for Geological Report."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 2 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL010"
+  ],
+  "errorCount": 1,
+  "warningCount": 1,
+  "infoCount": 0,
+  "validationTime": 0.012,
+  "validatedAt": "2026-09-22T15:46:21.231955+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.231955+00:00",
+      "score": 75,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 1
+    },
+    {
+      "validatedAt": "2026-09-22T15:45:47.650721+00:00",
+      "score": 75,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 1
+    }
+  ]
+}

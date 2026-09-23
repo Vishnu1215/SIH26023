@@ -136,3 +136,35 @@ export async function extractDocument(documentId) {
   }
 }
 
+/**
+ * Trigger validation engine explicitly for a document (Re-Validate)
+ * @param {string} documentId
+ * @returns {Promise<Object>} Updated document record
+ */
+export async function validateDocument(documentId) {
+  const headers = {};
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/documents/${documentId}/validate`, {
+      method: 'POST',
+      headers
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || `Validation failed (HTTP ${response.status})`);
+    }
+
+    return data.document;
+  } catch (error) {
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Server unavailable. Unable to connect to backend.');
+    }
+    throw error;
+  }
+}
+

@@ -1,0 +1,98 @@
+{
+  "documentId": "doc-low-1",
+  "validationStatus": "Error",
+  "validationScore": 60,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 60/100)\n\nPrimary Issue:\nMandatory field 'coalProduction' is missing.\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Specific Report Type missing or unspecified.\n• Low information document (only 2 structured fields detected).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "reportType",
+      "severity": "Warning",
+      "message": "Specific Report Type missing or unspecified."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 2 structured fields detected)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "reportType",
+      "severity": "Warning",
+      "message": "Specific Report Type missing or unspecified."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 2 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL010"
+  ],
+  "errorCount": 1,
+  "warningCount": 4,
+  "infoCount": 0,
+  "validationTime": 0.0145,
+  "validatedAt": "2026-09-22T15:46:21.630735+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.630735+00:00",
+      "score": 60,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 4
+    }
+  ]
+}

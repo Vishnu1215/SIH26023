@@ -1,0 +1,92 @@
+{
+  "documentId": "test-val-clean-001",
+  "validationStatus": "Error",
+  "validationScore": 75,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 75/100)\n\nPrimary Issue:\nProduction cannot be negative (-50.0).\n\nWarnings:\n• Achieved production (150000.0) differs from reported coal production (-50.0).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL002",
+      "rule": "VAL002",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Production cannot be negative (-50.0)."
+    },
+    {
+      "ruleId": "VAL008",
+      "rule": "VAL008",
+      "field": "productionInconsistency",
+      "severity": "Warning",
+      "message": "Achieved production (150000.0) differs from reported coal production (-50.0)."
+    },
+    {
+      "ruleId": "VAL009",
+      "rule": "VAL009",
+      "field": "ocrConfidence",
+      "severity": "Info",
+      "message": "High OCR recognition quality (confidence: 95.0%)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL002",
+      "rule": "VAL002",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Production cannot be negative (-50.0)."
+    },
+    {
+      "ruleId": "VAL008",
+      "rule": "VAL008",
+      "field": "productionInconsistency",
+      "severity": "Warning",
+      "message": "Achieved production (150000.0) differs from reported coal production (-50.0)."
+    },
+    {
+      "ruleId": "VAL009",
+      "rule": "VAL009",
+      "field": "ocrConfidence",
+      "severity": "Info",
+      "message": "High OCR recognition quality (confidence: 95.0%)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL002",
+    "VAL008",
+    "VAL009"
+  ],
+  "errorCount": 1,
+  "warningCount": 1,
+  "infoCount": 1,
+  "validationTime": 0.0248,
+  "validatedAt": "2026-09-22T16:01:06.538258+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T16:01:06.538258+00:00",
+      "score": 75,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 1
+    },
+    {
+      "validatedAt": "2026-09-22T16:01:06.502890+00:00",
+      "score": 100,
+      "status": "Valid",
+      "errorCount": 0,
+      "warningCount": 0
+    },
+    {
+      "validatedAt": "2026-09-22T14:56:01.381979+00:00",
+      "score": 75,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 1
+    },
+    {
+      "validatedAt": "2026-09-22T14:56:01.379391+00:00",
+      "score": 100,
+      "status": "Valid",
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "documentId": "test-id",
+  "validationStatus": "Error",
+  "validationScore": 45,
+  "validationSummary": "Validation flagged 2 error(s) and 3 warning(s) across 2 rule(s) (Score: 45/100).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Financial Year missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Production value missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "field": "reportType",
+      "severity": "Warning",
+      "message": "Specific Report Type missing or unspecified."
+    },
+    {
+      "ruleId": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 1 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL010"
+  ],
+  "errorCount": 2,
+  "warningCount": 3,
+  "infoCount": 0,
+  "validationTime": 0.0002,
+  "validatedAt": "2026-09-22T15:17:18.675153+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:17:18.675153+00:00",
+      "score": 45,
+      "status": "Error",
+      "errorCount": 2,
+      "warningCount": 3
+    }
+  ]
+}

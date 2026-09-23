@@ -105,6 +105,33 @@ export const extractDocumentStructured = async (req, res, next) => {
   }
 };
 
+/**
+ * Trigger validation engine explicitly
+ * POST /api/documents/:documentId/validate
+ */
+export const validateDocumentAction = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const document = documentModel.getDocumentById(documentId);
+    if (!document) {
+      return res.status(404).json({
+        success: false,
+        message: 'Document not found.'
+      });
+    }
+
+    const { processDocumentValidation } = await import('../services/documentProcessing.service.js');
+    const updated = await processDocumentValidation(documentId);
+    return res.status(200).json({
+      success: true,
+      message: 'Document validation completed successfully.',
+      document: updated
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 
 /**

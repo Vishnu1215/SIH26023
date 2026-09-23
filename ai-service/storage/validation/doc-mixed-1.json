@@ -1,0 +1,122 @@
+{
+  "documentId": "doc-mixed-1",
+  "validationStatus": "Error",
+  "validationScore": 40,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 40/100)\n\nPrimary Issue:\nProduction cannot be negative (-500).\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Unknown production unit: 'Gallons'.\n• Low information document (only 4 structured fields detected).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL002",
+      "rule": "VAL002",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Production cannot be negative (-500)."
+    },
+    {
+      "ruleId": "VAL005",
+      "rule": "VAL005",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Invalid Financial Year format: '2023-2025'. Expected YYYY-YY (e.g. 2023-24)."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL003",
+      "rule": "VAL003",
+      "field": "productionUnit",
+      "severity": "Warning",
+      "message": "Unknown production unit: 'Gallons'."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 4 structured fields detected)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL002",
+      "rule": "VAL002",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Production cannot be negative (-500)."
+    },
+    {
+      "ruleId": "VAL005",
+      "rule": "VAL005",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Invalid Financial Year format: '2023-2025'. Expected YYYY-YY (e.g. 2023-24)."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL003",
+      "rule": "VAL003",
+      "field": "productionUnit",
+      "severity": "Warning",
+      "message": "Unknown production unit: 'Gallons'."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 4 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL002",
+    "VAL003",
+    "VAL005",
+    "VAL010"
+  ],
+  "errorCount": 2,
+  "warningCount": 4,
+  "infoCount": 0,
+  "validationTime": 0.0128,
+  "validatedAt": "2026-09-22T15:46:21.261261+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.261261+00:00",
+      "score": 40,
+      "status": "Error",
+      "errorCount": 2,
+      "warningCount": 4
+    },
+    {
+      "validatedAt": "2026-09-22T15:45:47.666260+00:00",
+      "score": 40,
+      "status": "Error",
+      "errorCount": 2,
+      "warningCount": 4
+    }
+  ]
+}

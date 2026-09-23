@@ -1,0 +1,105 @@
+{
+  "documentId": "doc-prod-1",
+  "validationStatus": "Error",
+  "validationScore": 45,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 45/100)\n\nPrimary Issue:\nMandatory field 'coalProduction' is missing.\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Low information document (only 3 structured fields detected).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "productionUnit",
+      "severity": "Error",
+      "message": "Mandatory field 'productionUnit' is missing for Production Report."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 3 structured fields detected)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "productionUnit",
+      "severity": "Error",
+      "message": "Mandatory field 'productionUnit' is missing for Production Report."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 3 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL010"
+  ],
+  "errorCount": 2,
+  "warningCount": 3,
+  "infoCount": 0,
+  "validationTime": 0.0132,
+  "validatedAt": "2026-09-22T15:46:21.171879+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.171879+00:00",
+      "score": 45,
+      "status": "Error",
+      "errorCount": 2,
+      "warningCount": 3
+    },
+    {
+      "validatedAt": "2026-09-22T15:45:47.621351+00:00",
+      "score": 45,
+      "status": "Error",
+      "errorCount": 2,
+      "warningCount": 3
+    }
+  ]
+}

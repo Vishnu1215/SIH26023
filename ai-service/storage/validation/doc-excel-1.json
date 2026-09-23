@@ -1,0 +1,23 @@
+{
+  "documentId": "doc-excel-1",
+  "validationStatus": "Valid",
+  "validationScore": 100,
+  "validationSummary": "Validation completed successfully.\n\nStatus: Valid (Score: 100/100)\n\nAll integrity, formatting, and consistency checks passed.",
+  "validationMessages": [],
+  "messages": [],
+  "rulesTriggered": [],
+  "errorCount": 0,
+  "warningCount": 0,
+  "infoCount": 0,
+  "validationTime": 0.01,
+  "validatedAt": "2026-09-22T15:46:21.566035+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.566035+00:00",
+      "score": 100,
+      "status": "Valid",
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  ]
+}

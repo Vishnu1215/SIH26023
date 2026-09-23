@@ -4,6 +4,7 @@ import {
   getDocument,
   processDocument,
   extractDocumentStructured,
+  validateDocumentAction,
   loadSamples
 } from '../controllers/document.controller.js';
 import { handleUpload } from '../middleware/upload.middleware.js';
@@ -28,6 +29,9 @@ router.post('/:documentId/process', processDocument);
 
 // POST /api/documents/:documentId/extract - Trigger structured information extraction explicitly
 router.post('/:documentId/extract', extractDocumentStructured);
+
+// POST /api/documents/:documentId/validate - Trigger validation engine explicitly
+router.post('/:documentId/validate', validateDocumentAction);
 
 export default router;
 

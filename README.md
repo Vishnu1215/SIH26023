@@ -92,7 +92,7 @@ SIH26023/
 
 ## Current Phase
 
-✅ **Phase 5 – Structured Information Extraction & Normalization**
+✅ **Phase 6 – Validation Engine & Discrepancy Detection**
 
 ---
 
@@ -103,12 +103,12 @@ SIH26023/
 - ✅ Phase 3 – Document Upload & Ingestion Pipeline
 - ✅ Phase 4 – OCR & Document Text Extraction Pipeline
 - ✅ Phase 5 – Structured Information Extraction & Normalization
+- ✅ Phase 6 – Validation Engine & Discrepancy Detection
 
 ---
 
 ## Upcoming Phases
 
-- ⏳ Phase 6 – Validation Engine & Discrepancy Flagging
 - ⏳ Phase 7 – Report Generation
 - ⏳ Phase 8 – Topic Modeling
 - ⏳ Phase 9 – Hybrid Q&A (SQL + RAG)
@@ -341,6 +341,49 @@ ai-service/storage/structured_data/{documentId}.json
 
 ---
 
+## Phase 6
+
+### Validation Engine & Discrepancy Detection
+
+Every structured mining record automatically passes through a deterministic validation engine immediately after extraction. The engine evaluates integrity, consistency, and completeness across 10 standardized validation rules.
+
+#### Standardized Validation Rules
+
+| Rule ID | Rule Name | Severity | Description |
+| :--- | :--- | :--- | :--- |
+| **VAL001** | Missing Mandatory Field | Error | Triggers if mandatory fields (`mineName`, `subsidiary`, `coalProduction`, `financialYear`) are missing. |
+| **VAL002** | Invalid Numeric Value | Error | Triggers if numeric production or overburden removal fields are negative. |
+| **VAL003** | Unknown Unit | Warning | Triggers if production or overburden unit is non-standard or missing. |
+| **VAL004** | Invalid Date | Error | Triggers if `reportDate` is not in canonical `YYYY-MM-DD` format or is an invalid calendar date. |
+| **VAL005** | Financial Year Format | Warning | Triggers if `financialYear` does not match the canonical `YYYY-YY` format. |
+| **VAL006** | Percentage Mismatch | Warning | Triggers if `percentageAchievement` deviates by > 2% from `(achieved / target) * 100`. |
+| **VAL007** | Duplicate Document | Error | Triggers if the file matches an existing record by documentId, original filename, or SHA-256 file hash. |
+| **VAL008** | Production Inconsistency | Warning | Triggers if `achievedProduction` exceeds `targetProduction` by > 150% without commentary. |
+| **VAL009** | Low OCR Confidence | Warning | Triggers if OCR average confidence score falls below 60%. |
+| **VAL010** | Low Information Document | Warning | Triggers if the structured record contains fewer than 5 extracted non-empty fields. |
+
+#### Scoring & Status Classification
+
+- **Base Score**: 100
+- **Deductions**:
+  - `-20` points per **Error**
+  - `-5` points per **Warning**
+- **Score Range**: Clamped to `[0, 100]`
+- **Status Classification**:
+  - `Valid`: 0 Errors and Score $\ge 80$
+  - `Warning`: 0 Errors and Score $< 80$
+  - `Error`: 1 or more Errors (regardless of numeric score)
+
+#### Traceability & History
+- **Validation History**: Every validation run prepends a historical snapshot (`validationHistory`) containing `{ validatedAt, score, status, errorCount, warningCount, rulesTriggered, validationTime }`.
+- **Execution Timing**: Each run records high-resolution runtime in seconds (`validationTime`).
+- **Validation Storage**: Stored as persistent JSON artifacts in:
+  ```
+  ai-service/storage/validation/{documentId}.json
+  ```
+
+---
+
 # Document Processing & Ingestion Workflow
 
 ```
@@ -350,6 +393,7 @@ User Upload (Documents Page)
 POST /api/documents/upload (Express + Multer)
             │
             ├─► Save file to disk (uploads/documents/)
+            ├─► Compute SHA-256 Content Hash
             ├─► Register DocumentModel (status: Queued -> Processing)
             │
             ▼
@@ -375,16 +419,29 @@ Phase 5 Structured Extraction (app/services/information_extractor.py)
             ├─► Persist structured JSON: storage/structured_data/{documentId}.json
             │
             ▼
-FastAPI returns OCR metadata + Structured Record to Express
+Phase 6 Validation Engine (app/services/validation_engine.py)
+            │
+            ├─► Runs 10 deterministic rules (VAL001 - VAL010)
+            ├─► Computes validation score (0-100) & status (Valid/Warning/Error)
+            ├─► Tracks validation history & execution time (validationTime)
+            ├─► Persist validation JSON: storage/validation/{documentId}.json
             │
             ▼
-Express DocumentModel updated (status: OCR Complete, structuredData, normalizationStatus)
+FastAPI returns OCR metadata + Structured Data + Validation Report to Express
+            │
+            ▼
+Express DocumentModel updated:
+- status: "Validated" / "Validation Warning" / "Validation Error"
+- validationStatus, validationScore, rulesTriggered, validationMessages, validationHistory
             │
             ▼
 Frontend Dashboard & Table updated:
-- Dashboard: Validated Records count, Awaiting Validation count
-- History Table: Structured Records badge, Normalization pill
-- View Modal: Displays Normalized JSON side-by-side with OCR metadata & text preview
+- 9 Executive KPI Cards: Total Docs, OCR Complete, Structured Records, Validated Docs,
+  Docs with Errors, Docs with Warnings, Validation Accuracy, Average Validation Score, Awaiting Review
+- History Table: Status Pill, Score Badge, Rule Trigger Chips, Error/Warning Counts, Validated At
+- View Modal (6 Sequential Sections): 1. Document Metadata (SHA-256) ➔ 2. OCR Info ➔
+  3. Structured JSON ➔ 4. Validation Summary ➔ 5. Validation Messages ➔ 6. Raw Extracted Text
+- On-Demand Re-Validation: "Re-Validate" button in Table & Modal
 ```
 
 ---
@@ -452,6 +509,14 @@ On-demand trigger for structured information extraction & normalization on an ex
 ### POST
 
 ```
+/api/documents/:documentId/validate
+```
+
+On-demand trigger for Phase 6 deterministic validation & discrepancy detection on an existing document.
+
+### POST
+
+```
 /api/documents/load-sample
 ```
 
@@ -467,12 +532,12 @@ Load representative datasets into memory.
 /ingest
 ```
 
-Document Ingestion & Text Extraction endpoint.
-- **Request**: `{ documentId, filePath, mimeType }`
+Document Ingestion & Text Extraction endpoint. Automatically chains Phase 5 extraction and Phase 6 validation when available.
+- **Request**: `{ documentId, filePath, mimeType, fileHash, existingDocuments }`
 - **Response**:
   ```json
   {
-    "status": "OCR Complete",
+    "status": "Validated",
     "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
     "processingTime": 0.42,
     "pageCount": 2,
@@ -480,8 +545,10 @@ Document Ingestion & Text Extraction endpoint.
     "loaderUsed": "PDF_TEXT_LAYER",
     "language": "eng",
     "textPreview": "...",
-    "errorCode": null,
-    "errorMessage": null
+    "structuredDataAvailable": true,
+    "validationStatus": "Valid",
+    "validationScore": 100,
+    "rulesTriggered": []
   }
   ```
 
@@ -500,39 +567,6 @@ Internal endpoint to retrieve stored text for downstream pipeline phases.
 ```
 
 Phase 5 Structured Information Extraction & Normalization endpoint.
-- **Request**: `{ documentId, text, filename }`
-- **Response**:
-  ```json
-  {
-    "status": "success",
-    "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
-    "structuredRecordCount": 1,
-    "structuredDataAvailable": true,
-    "extractionTime": 0.05,
-    "data": {
-      "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
-      "reportTitle": "Annual Coal Production Report",
-      "reportType": "Ministry Report",
-      "financialYear": "2023-24",
-      "reportDate": "2024-04-15",
-      "issuingOrganization": "BCCL",
-      "subsidiary": "BCCL",
-      "mineName": "Jharia",
-      "mineType": "Opencast",
-      "region": "Jharia Coalfield",
-      "district": "Dhanbad",
-      "state": "Jharkhand",
-      "coalProduction": 142500,
-      "overburdenRemoval": 320000,
-      "targetProduction": 150000,
-      "achievedProduction": 142500,
-      "percentageAchievement": 95.0,
-      "productionUnit": "MT",
-      "extractedFieldsCount": 16,
-      "extractedAt": "2026-09-22T14:15:00Z"
-    }
-  }
-  ```
 
 ### GET
 
@@ -541,6 +575,62 @@ Phase 5 Structured Information Extraction & Normalization endpoint.
 ```
 
 Retrieve stored structured JSON record from `ai-service/storage/structured_data/{documentId}.json`.
+
+### POST
+
+```
+/validate
+```
+
+Phase 6 Deterministic Validation & Discrepancy Detection endpoint.
+- **Request**:
+  ```json
+  {
+    "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
+    "filename": "BCCL_Production_Report.pdf",
+    "fileHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "structuredData": { ... },
+    "ocrMetadata": { "confidence": 92.5 },
+    "existingDocuments": []
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "status": "success",
+    "documentId": "4a7c062c-633b-486a-bebf-5fafeea71d60",
+    "validationStatus": "Valid",
+    "validationScore": 100,
+    "validationTime": 0.003,
+    "validatedAt": "2026-09-22T14:30:00Z",
+    "summary": {
+      "errorCount": 0,
+      "warningCount": 0,
+      "infoCount": 0,
+      "rulesTriggered": []
+    },
+    "messages": [],
+    "validationHistory": [
+      {
+        "validatedAt": "2026-09-22T14:30:00Z",
+        "score": 100,
+        "status": "Valid",
+        "errorCount": 0,
+        "warningCount": 0,
+        "rulesTriggered": [],
+        "validationTime": 0.003
+      }
+    ]
+  }
+  ```
+
+### GET
+
+```
+/validate/{document_id}
+```
+
+Retrieve stored validation report from `ai-service/storage/validation/{documentId}.json`.
 
 
 
@@ -656,16 +746,35 @@ admin123
 
 # Manual Testing
 
-- Login using demo credentials
+- Login using demo credentials (`admin` / `admin123`)
 - Navigate to **Documents**
-- Upload a supported file
-- Verify upload success
-- Verify upload history
-- Verify files are stored in `uploads/documents`
-- Test unsupported file types
-- Test files larger than 20 MB
-- Stop the AI service and verify upload fallback
-- Load sample datasets
+- Upload a supported mining report (PDF / XLSX / CSV / Image / DOCX)
+- Verify automatic OCR text extraction, structured normalization, and validation engine execution
+- Verify the document history table displays:
+  - Validation Status pill (`Valid`, `Warning`, `Error`)
+  - Validation Score badge (`0-100%`)
+  - Triggered Rule chips (`VAL001` - `VAL010`)
+  - Error and Warning counts
+  - Execution timestamp
+- Click **Re-Validate** button to test on-demand re-execution and verify `validationHistory` growth
+- Click **View** to inspect the 6 sequential modal sections:
+  1. Document Metadata (including SHA-256 hash)
+  2. OCR Text Extraction Info
+  3. Structured Mining Record (Normalized JSON)
+  4. Validation Summary & Score Card
+  5. Validation Messages & Discrepancies Table
+  6. Raw Extracted Text Preview
+- Navigate to **Dashboard** and verify the 9 dynamic KPI cards:
+  - Total Ingested Documents
+  - OCR Complete
+  - Structured Records
+  - Validated Documents
+  - Documents with Errors
+  - Documents with Warnings
+  - Validation Accuracy (%)
+  - Average Validation Score
+  - Awaiting Review
+- Upload a duplicate file to verify `VAL007` duplicate detection (matching SHA-256 hash or filename)
 
 ---
 
@@ -673,14 +782,15 @@ admin123
 
 The following features are intentionally **not implemented** yet (scheduled for future phases):
 
-- AI Entity Extraction (Named Entity Recognition)
-- Multi-Source Cross-Validation & Validation Rules
-- Discrepancy Flagging & Traceability Engine
-- Database Integration (MongoDB / PostgreSQL)
-- Report Generation (PDF / Excel)
+- LLM Integration & AI Entity Extraction (Named Entity Recognition via LLMs)
+- RAG / Vector Databases (ChromaDB / FAISS / Pinecone)
+- Semantic Search & Similarity Matching
+- Text-to-SQL Query Generation
+- Recommendation Engine
+- Report Generation (Automated PDF / Excel export)
 - Topic Modeling (BERTopic / LDA)
-- Hybrid SQL + RAG Conversational Assistant
-- Predictive AI Recommendations
+- AI Chat Assistant & Conversational Agent
+- Database Integration (MongoDB / PostgreSQL)
 
 ---
 
@@ -689,14 +799,15 @@ The following features are intentionally **not implemented** yet (scheduled for 
 | Phase | Status |
 |--------|--------|
 | Phase 1 – Project Setup | ✅ |
-| Phase 2 – Authentication & Dashboard | ✅ |
-| Phase 3 – Document Upload & Ingestion | ✅ |
-| Phase 4 – OCR & Document Text Extraction | ✅ |
-| Phase 5 – Entity Extraction, Validation & Traceability | ⏳ |
-| Phase 6 – Report Generation | ⏳ |
-| Phase 7 – Topic Modeling | ⏳ |
-| Phase 8 – Hybrid Q&A | ⏳ |
-| Phase 9 – AI Recommendations | ⏳ |
+| Phase 2 – Authentication & Dashboard Foundation | ✅ |
+| Phase 3 – Document Upload & Ingestion Pipeline | ✅ |
+| Phase 4 – OCR & Document Text Extraction Pipeline | ✅ |
+| Phase 5 – Structured Information Extraction & Normalization | ✅ |
+| Phase 6 – Validation Engine & Discrepancy Detection | ✅ |
+| Phase 7 – Report Generation | ⏳ |
+| Phase 8 – Topic Modeling | ⏳ |
+| Phase 9 – Hybrid Q&A (SQL + RAG) | ⏳ |
+| Phase 10 – AI Recommendations | ⏳ |
 
 
 ---

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { config } from '../config/index.js';
 import documentModel from '../models/document.model.js';
 import { DOCUMENT_STATUSES } from '../utils/documentMetadata.js';
+import { computeFileSha256 } from '../utils/fileHash.js';
 
 /**
  * Trigger text extraction and OCR processing pipeline via FastAPI AI service.
@@ -48,6 +49,13 @@ export const processDocumentExtraction = async (document) => {
   try {
     console.log(`[DocumentProcessing] Dispatching text extraction for: ${document.originalName} (${documentId})`);
 
+    const fileHash = computeFileSha256(absoluteFilePath);
+    const existingDocs = documentModel.getAllDocuments().map((d) => ({
+      documentId: d.documentId,
+      filename: d.originalName,
+      fileHash: d.fileHash
+    }));
+
     const payload = {
       documentId: document.documentId,
       filePath: absoluteFilePath,
@@ -55,7 +63,9 @@ export const processDocumentExtraction = async (document) => {
       originalName: document.originalName,
       storedName: document.storedName,
       size: document.size,
-      uploadedAt: document.uploadedAt
+      uploadedAt: document.uploadedAt,
+      fileHash,
+      existingDocuments: existingDocs
     };
 
     const response = await axios.post(`${config.aiServiceUrl}/ingest`, payload, {
@@ -70,6 +80,20 @@ export const processDocumentExtraction = async (document) => {
       const pageCount = response.data.pageCount || response.data.pages || 1;
       const structuredDataAvailable = response.data.structuredDataAvailable || (response.data.structuredData ? true : false);
       const structuredRecordCount = response.data.structuredRecordCount || (structuredDataAvailable ? 1 : 0);
+
+      const validationStatus = response.data.validationStatus || 'Pending';
+      const validationScore = response.data.validationScore !== undefined ? response.data.validationScore : null;
+      const validatedAt = response.data.validatedAt || new Date().toISOString();
+
+      const existingHistory = document.validationHistory || [];
+      const historyItem = {
+        validatedAt,
+        score: validationScore,
+        status: validationStatus,
+        errorCount: response.data.errorCount || 0,
+        warningCount: response.data.warningCount || 0
+      };
+      const updatedHistory = validationScore !== null ? [historyItem, ...existingHistory] : existingHistory;
 
       const updated = documentModel.updateDocument(documentId, {
         status: DOCUMENT_STATUSES.OCR_COMPLETE,
@@ -91,7 +115,21 @@ export const processDocumentExtraction = async (document) => {
         structuredRecordCount,
         extractionCompletedAt: new Date().toISOString(),
         normalizationStatus: structuredDataAvailable ? 'Normalized' : 'Pending',
-        structuredData: response.data.structuredData || null
+        structuredData: response.data.structuredData || null,
+        // Phase 6 Validation fields
+        fileHash,
+        validationStatus,
+        validationScore,
+        validationSummary: response.data.validationSummary || null,
+        validationMessages: response.data.validationMessages || response.data.messages || [],
+        messages: response.data.validationMessages || response.data.messages || [],
+        rulesTriggered: response.data.rulesTriggered || [],
+        errorCount: response.data.errorCount || 0,
+        warningCount: response.data.warningCount || 0,
+        infoCount: response.data.infoCount || 0,
+        validationTime: response.data.validationTime || null,
+        validatedAt,
+        validationHistory: updatedHistory
       });
 
       console.log(
@@ -176,8 +214,82 @@ export const processStructuredExtraction = async (documentId) => {
   }
 };
 
+/**
+ * Explicit on-demand validation trigger.
+ * POST /api/documents/:documentId/validate
+ * @param {string} documentId
+ * @returns {Promise<Object>} Updated document record
+ */
+export const processDocumentValidation = async (documentId) => {
+  const document = documentModel.getDocumentById(documentId);
+  if (!document) {
+    throw new Error(`Document '${documentId}' not found.`);
+  }
+
+  // Ensure fileHash
+  let fileHash = document.fileHash;
+  if (!fileHash && document.filePath) {
+    fileHash = computeFileSha256(document.filePath);
+  }
+
+  const existingDocs = documentModel.getAllDocuments().map((d) => ({
+    documentId: d.documentId,
+    filename: d.originalName,
+    fileHash: d.fileHash
+  }));
+
+  try {
+    const payload = {
+      documentId: document.documentId,
+      structuredData: document.structuredData,
+      confidence: document.confidence,
+      filename: document.originalName,
+      fileHash,
+      existingDocuments: existingDocs
+    };
+
+    const response = await axios.post(`${config.aiServiceUrl}/validate`, payload, {
+      timeout: 30000
+    });
+
+    if (response.data && response.data.status === 'success') {
+      const valData = response.data;
+      const existingHistory = document.validationHistory || [];
+      const historyItem = {
+        validatedAt: valData.validatedAt || new Date().toISOString(),
+        score: valData.validationScore,
+        status: valData.validationStatus,
+        errorCount: valData.errorCount || 0,
+        warningCount: valData.warningCount || 0
+      };
+      const updatedHistory = [historyItem, ...existingHistory];
+
+      return documentModel.updateDocument(documentId, {
+        fileHash,
+        validationStatus: valData.validationStatus,
+        validationScore: valData.validationScore,
+        validationSummary: valData.validationSummary,
+        validationMessages: valData.validationMessages || valData.messages || [],
+        messages: valData.validationMessages || valData.messages || [],
+        rulesTriggered: valData.rulesTriggered || [],
+        errorCount: valData.errorCount || 0,
+        warningCount: valData.warningCount || 0,
+        infoCount: valData.infoCount || 0,
+        validationTime: valData.validationTime || null,
+        validatedAt: valData.validatedAt || new Date().toISOString(),
+        validationHistory: valData.validationHistory || updatedHistory
+      });
+    }
+    return document;
+  } catch (err) {
+    console.error(`[DocumentProcessing] Validation on-demand error for ${documentId}:`, err.message);
+    throw err;
+  }
+};
+
 export default {
   processDocumentExtraction,
-  processStructuredExtraction
+  processStructuredExtraction,
+  processDocumentValidation
 };
 

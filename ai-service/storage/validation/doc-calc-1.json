@@ -1,0 +1,91 @@
+{
+  "documentId": "doc-calc-1",
+  "validationStatus": "Error",
+  "validationScore": 65,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 65/100)\n\nPrimary Issue:\nMandatory field 'issuingOrganization' is missing for Annual Report.\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Low information document (only 3 structured fields detected).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "issuingOrganization",
+      "severity": "Error",
+      "message": "Mandatory field 'issuingOrganization' is missing for Annual Report."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 3 structured fields detected)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "issuingOrganization",
+      "severity": "Error",
+      "message": "Mandatory field 'issuingOrganization' is missing for Annual Report."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 3 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL010"
+  ],
+  "errorCount": 1,
+  "warningCount": 3,
+  "infoCount": 0,
+  "validationTime": 0.02,
+  "validatedAt": "2026-09-22T15:46:21.300764+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.300764+00:00",
+      "score": 65,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 3
+    },
+    {
+      "validatedAt": "2026-09-22T15:45:47.682699+00:00",
+      "score": 65,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 3
+    }
+  ]
+}

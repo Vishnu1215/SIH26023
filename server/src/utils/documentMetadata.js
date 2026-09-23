@@ -66,6 +66,20 @@ export const createDocumentMetadata = (
     extractionCompletedAt: null,
     normalizationStatus: 'Pending',
     structuredData: null,
+    // Phase 6 Validation & Discrepancy Detection
+    fileHash: null,
+    validationStatus: 'Pending',
+    validationScore: null,
+    validationSummary: null,
+    validationMessages: [],
+    messages: [],
+    rulesTriggered: [],
+    errorCount: 0,
+    warningCount: 0,
+    infoCount: 0,
+    validationTime: null,
+    validatedAt: null,
+    validationHistory: [],
     ...extra
   };
 };

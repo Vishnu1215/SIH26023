@@ -1,0 +1,77 @@
+{
+  "documentId": "doc-mine-1",
+  "validationStatus": "Error",
+  "validationScore": 55,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 55/100)\n\nPrimary Issue:\nMandatory field 'district' is missing for Mine Report.\n\nWarnings:\n• Low information document (only 2 structured fields detected).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "district",
+      "severity": "Error",
+      "message": "Mandatory field 'district' is missing for Mine Report."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Error",
+      "message": "Mandatory field 'state' is missing for Mine Report."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 2 structured fields detected)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "district",
+      "severity": "Error",
+      "message": "Mandatory field 'district' is missing for Mine Report."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Error",
+      "message": "Mandatory field 'state' is missing for Mine Report."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 2 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL010"
+  ],
+  "errorCount": 2,
+  "warningCount": 1,
+  "infoCount": 0,
+  "validationTime": 0.0111,
+  "validatedAt": "2026-09-22T15:46:21.198041+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.198041+00:00",
+      "score": 55,
+      "status": "Error",
+      "errorCount": 2,
+      "warningCount": 1
+    },
+    {
+      "validatedAt": "2026-09-22T15:45:47.635527+00:00",
+      "score": 55,
+      "status": "Error",
+      "errorCount": 2,
+      "warningCount": 1
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "documentId": "test-val-api-001",
+  "validationStatus": "Valid",
+  "validationScore": 100,
+  "validationSummary": "Validation completed successfully.\n\nStatus: Valid (Score: 100/100)\n\nAll integrity, formatting, and consistency checks passed.",
+  "validationMessages": [
+    {
+      "ruleId": "VAL009",
+      "rule": "VAL009",
+      "field": "ocrConfidence",
+      "severity": "Info",
+      "message": "High OCR recognition quality (confidence: 92.0%)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL009",
+      "rule": "VAL009",
+      "field": "ocrConfidence",
+      "severity": "Info",
+      "message": "High OCR recognition quality (confidence: 92.0%)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL009"
+  ],
+  "errorCount": 0,
+  "warningCount": 0,
+  "infoCount": 1,
+  "validationTime": 0.0325,
+  "validatedAt": "2026-09-22T16:01:06.664812+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T16:01:06.664812+00:00",
+      "score": 100,
+      "status": "Valid",
+      "errorCount": 0,
+      "warningCount": 0
+    },
+    {
+      "validatedAt": "2026-09-22T14:56:01.441297+00:00",
+      "score": 100,
+      "status": "Valid",
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  ]
+}

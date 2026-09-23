@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { FileText, CheckCircle2, AlertTriangle, FileCheck, UploadCloud } from 'lucide-react';
+import {
+  FileText,
+  CheckCircle2,
+  AlertTriangle,
+  AlertCircle,
+  FileCheck,
+  ShieldCheck,
+  Target,
+  Gauge,
+  Clock,
+  UploadCloud
+} from 'lucide-react';
 import StatCard from '../components/common/StatCard.jsx';
 import { getDocumentList } from '../services/document.service.js';
 
@@ -22,7 +33,7 @@ export default function DashboardPage() {
     loadStats();
   }, []);
 
-  // Compute Phase 5 dynamic metrics
+  // Compute Phase 6 dynamic metrics
   const totalDocuments = documents.length;
   const ocrCompleteCount = documents.filter(
     (d) => d.status === 'OCR Complete' || d.status === 'Completed'
@@ -30,8 +41,35 @@ export default function DashboardPage() {
   const structuredRecordsCount = documents.filter(
     (d) => d.structuredDataAvailable === true
   ).length;
-  const awaitingValidationCount = documents.filter(
-    (d) => d.structuredDataAvailable === true
+
+  const validatedDocs = documents.filter(
+    (d) => d.validationStatus && d.validationStatus !== 'Pending'
+  );
+  const validatedCount = validatedDocs.length;
+
+  const errorsCount = documents.filter(
+    (d) => d.validationStatus === 'Error' || (d.errorCount && d.errorCount > 0)
+  ).length;
+
+  const warningsCount = documents.filter(
+    (d) => d.validationStatus === 'Warning' || (d.warningCount && d.warningCount > 0)
+  ).length;
+
+  const validCount = documents.filter(
+    (d) => d.validationStatus === 'Valid'
+  ).length;
+
+  const validationAccuracy = validatedCount > 0
+    ? `${Math.round((validCount / validatedCount) * 100)}%`
+    : '0%';
+
+  const averageScoreNum = validatedCount > 0
+    ? (validatedDocs.reduce((acc, d) => acc + (d.validationScore != null ? d.validationScore : 0), 0) / validatedCount).toFixed(1)
+    : '0';
+  const averageValidationScore = `${averageScoreNum}%`;
+
+  const awaitingReviewCount = documents.filter(
+    (d) => d.validationStatus === 'Error' || d.validationStatus === 'Warning'
   ).length;
 
   const statsConfig = [
@@ -60,12 +98,52 @@ export default function DashboardPage() {
       color: 'purple'
     },
     {
-      title: 'Documents Awaiting Validation',
-      value: awaitingValidationCount,
-      subtitle: 'Ready for validation engine',
-      icon: AlertTriangle,
+      title: 'Validated Documents',
+      value: validatedCount,
+      subtitle: 'Evaluated by validation engine',
+      icon: ShieldCheck,
       badge: null,
+      color: 'indigo'
+    },
+    {
+      title: 'Documents with Errors',
+      value: errorsCount,
+      subtitle: 'Mandatory field / numeric errors',
+      icon: AlertCircle,
+      badge: errorsCount > 0 ? `${errorsCount} Err` : null,
+      color: 'rose'
+    },
+    {
+      title: 'Documents with Warnings',
+      value: warningsCount,
+      subtitle: 'Discrepancies & rule alerts',
+      icon: AlertTriangle,
+      badge: warningsCount > 0 ? `${warningsCount} Warn` : null,
       color: 'amber'
+    },
+    {
+      title: 'Validation Accuracy',
+      value: validationAccuracy,
+      subtitle: 'Completely clean valid records',
+      icon: Target,
+      badge: null,
+      color: 'emerald'
+    },
+    {
+      title: 'Average Validation Score',
+      value: averageValidationScore,
+      subtitle: 'Mean discrepancy score (0-100)',
+      icon: Gauge,
+      badge: null,
+      color: 'blue'
+    },
+    {
+      title: 'Awaiting Review',
+      value: awaitingReviewCount,
+      subtitle: 'Flagged for inspection',
+      icon: Clock,
+      badge: awaitingReviewCount > 0 ? 'Action Req' : null,
+      color: awaitingReviewCount > 0 ? 'amber' : 'emerald'
     }
   ];
 

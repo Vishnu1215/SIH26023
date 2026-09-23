@@ -1,0 +1,127 @@
+{
+  "documentId": "doc-new-copy",
+  "validationStatus": "Error",
+  "validationScore": 20,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 20/100)\n\nPrimary Issue:\nMandatory field 'financialYear' is missing.\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Specific Report Type missing or unspecified.\n• Low information document (only 0 structured fields detected).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Mandatory field 'financialYear' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL007",
+      "rule": "VAL007",
+      "field": "fileHash",
+      "severity": "Error",
+      "message": "Duplicate document: file content matches existing document 'doc-orig' (SHA-256 hash)."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "reportType",
+      "severity": "Warning",
+      "message": "Specific Report Type missing or unspecified."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 0 structured fields detected)."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Mandatory field 'financialYear' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL007",
+      "rule": "VAL007",
+      "field": "fileHash",
+      "severity": "Error",
+      "message": "Duplicate document: file content matches existing document 'doc-orig' (SHA-256 hash)."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "reportType",
+      "severity": "Warning",
+      "message": "Specific Report Type missing or unspecified."
+    },
+    {
+      "ruleId": "VAL010",
+      "rule": "VAL010",
+      "field": "structuredRichness",
+      "severity": "Warning",
+      "message": "Low information document (only 0 structured fields detected)."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001",
+    "VAL007",
+    "VAL010"
+  ],
+  "errorCount": 3,
+  "warningCount": 4,
+  "infoCount": 0,
+  "validationTime": 0.0128,
+  "validatedAt": "2026-09-22T15:46:21.593702+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:46:21.593702+00:00",
+      "score": 20,
+      "status": "Error",
+      "errorCount": 3,
+      "warningCount": 4
+    }
+  ]
+}

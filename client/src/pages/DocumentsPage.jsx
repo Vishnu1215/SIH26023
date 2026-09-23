@@ -5,6 +5,10 @@ import {
   FileText,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
+  ShieldCheck,
+  ShieldAlert,
+  Shield,
   X,
   Loader2,
   RefreshCw,
@@ -12,12 +16,15 @@ import {
   HardDrive,
   Database,
   Eye,
-  Tag
+  Tag,
+  Hash,
+  RotateCcw
 } from 'lucide-react';
 import {
   uploadDocumentFile,
   getDocumentList,
-  loadSampleDataset
+  loadSampleDataset,
+  validateDocument
 } from '../services/document.service.js';
 
 const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'docx', 'xlsx', 'csv'];
@@ -38,6 +45,7 @@ export default function DocumentsPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingSamples, setIsLoadingSamples] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [validatingDocId, setValidatingDocId] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
 
@@ -183,6 +191,35 @@ export default function DocumentsPage() {
       });
     } finally {
       setIsLoadingSamples(false);
+    }
+  };
+
+  // Re-run validation on demand for a document (Issue 7)
+  const handleRevalidate = async (docId) => {
+    setValidatingDocId(docId);
+    setToast(null);
+
+    try {
+      const updated = await validateDocument(docId);
+      // Reactive state update: update document list immediately in state without reloading
+      setDocuments((prev) => prev.map((d) => (d.documentId === docId ? updated : d)));
+      // If modal is currently open for this doc, immediately update viewingDoc state
+      if (viewingDoc && viewingDoc.documentId === docId) {
+        setViewingDoc(updated);
+      }
+      setToast({
+        type: 'success',
+        message: `Document re-validated: ${updated.validationStatus} (Score: ${updated.validationScore}/100, ${updated.rulesTriggered?.length || 0} rules triggered).`
+      });
+      // Synchronize full list from backend
+      await loadDocuments();
+    } catch (err) {
+      setToast({
+        type: 'error',
+        message: err.message || 'Validation failed for document.'
+      });
+    } finally {
+      setValidatingDocId(null);
     }
   };
 
@@ -371,13 +408,15 @@ export default function DocumentsPage() {
                   <th>Type</th>
                   <th>Size</th>
                   <th>Pages</th>
-                  <th>Processing Time</th>
-                  <th>OCR Engine</th>
-                  <th>Confidence</th>
-                  <th>Structured Records</th>
-                  <th>Normalization</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                  <th>Engine</th>
+                  <th>Structured</th>
+                  <th>Validation Status</th>
+                  <th>Score</th>
+                  <th>Rules Triggered</th>
+                  <th>Errors</th>
+                  <th>Warnings</th>
+                  <th>Validated At</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -386,6 +425,7 @@ export default function DocumentsPage() {
                   const shortId = doc.documentId ? doc.documentId.slice(0, 8) : 'N/A';
                   const status = doc.status || 'Uploaded';
                   const failureMsg = doc.errorMessage || doc.error || 'Text extraction failed';
+                  const isVal = validatingDocId === doc.documentId;
 
                   return (
                     <tr key={doc.documentId}>
@@ -413,14 +453,8 @@ export default function DocumentsPage() {
                       </td>
                       <td className="col-size">{formatFileSize(doc.size)}</td>
                       <td className="col-pages">{doc.pageCount != null ? doc.pageCount : '-'}</td>
-                      <td className="col-proc-time">
-                        {doc.processingTime != null ? `${doc.processingTime}s` : '-'}
-                      </td>
                       <td className="col-engine">
                         <span className="engine-badge">{doc.loaderUsed || '-'}</span>
-                      </td>
-                      <td className="col-conf">
-                        {doc.confidence != null ? `${doc.confidence}%` : '-'}
                       </td>
                       <td className="col-records">
                         {doc.structuredDataAvailable ? (
@@ -431,68 +465,91 @@ export default function DocumentsPage() {
                           <span style={{ color: '#94a3b8' }}>-</span>
                         )}
                       </td>
-                      <td className="col-norm">
-                        {doc.normalizationStatus === 'Normalized' ? (
-                          <span className="status-pill status-pill-normalized">
-                            Normalized
+                      <td>
+                        {doc.validationStatus === 'Valid' && (
+                          <span className="status-pill status-pill-valid" title={doc.validationSummary || 'Valid'}>
+                            <ShieldCheck size={13} />
+                            <span>Valid</span>
+                          </span>
+                        )}
+                        {doc.validationStatus === 'Warning' && (
+                          <span className="status-pill status-pill-warning" title={doc.validationSummary || 'Validation warning'}>
+                            <AlertTriangle size={13} />
+                            <span>Warning</span>
+                          </span>
+                        )}
+                        {doc.validationStatus === 'Error' && (
+                          <span className="status-pill status-pill-error" title={doc.validationSummary || 'Validation error'}>
+                            <ShieldAlert size={13} />
+                            <span>Error</span>
+                          </span>
+                        )}
+                        {(!doc.validationStatus || doc.validationStatus === 'Pending') && (
+                          <span className="status-pill status-pill-pending" title="Validation pending">
+                            <Clock size={13} />
+                            <span>Pending</span>
+                          </span>
+                        )}
+                      </td>
+                      <td className="col-score">
+                        {doc.validationScore != null ? (
+                          <span className={`score-badge score-${doc.validationScore >= 80 ? 'high' : doc.validationScore >= 50 ? 'med' : 'low'}`}>
+                            {doc.validationScore}/100
                           </span>
                         ) : (
                           <span style={{ color: '#94a3b8' }}>-</span>
                         )}
                       </td>
-                      <td>
-                        {(status === 'OCR Complete' || status === 'Completed') && (
-                          <span
-                            className="status-pill status-pill-ocr-complete"
-                            title={`Completed in ${doc.processingTime || 0}s via ${doc.loaderUsed || 'OCR'}`}
-                          >
-                            <CheckCircle2 size={13} />
-                            <span>OCR Complete</span>
-                          </span>
-                        )}
-                        {status === 'Processing' && (
-                          <span className="status-pill status-pill-processing" title="Processing text extraction & OCR...">
-                            <Loader2 size={13} className="animate-spin" />
-                            <span>Processing</span>
-                          </span>
-                        )}
-                        {status === 'Queued' && (
-                          <span className="status-pill status-pill-queued" title="Queued for text extraction">
-                            <Clock size={13} />
-                            <span>Queued</span>
-                          </span>
-                        )}
-                        {status === 'Failed' && (
-                          <span
-                            className="status-pill status-pill-failed"
-                            title={failureMsg}
-                          >
-                            <AlertCircle size={13} />
-                            <span>Failed</span>
-                          </span>
-                        )}
-                        {status === 'Uploaded' && (
-                          <span className="status-pill status-pill-success">
-                            <CheckCircle2 size={13} />
-                            <span>Uploaded</span>
-                          </span>
-                        )}
-                        {!['OCR Complete', 'Completed', 'Processing', 'Queued', 'Failed', 'Uploaded'].includes(status) && (
-                          <span className="status-pill status-pill-pending">
-                            <AlertCircle size={13} />
-                            <span>{status}</span>
-                          </span>
+                      <td className="col-rules">
+                        {doc.rulesTriggered && doc.rulesTriggered.length > 0 ? (
+                          <div className="rules-chip-group">
+                            {doc.rulesTriggered.map((rule) => (
+                              <span key={rule} className="rule-chip" title={rule}>
+                                {rule}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span style={{ color: '#94a3b8', fontSize: '12px' }}>None</span>
                         )}
                       </td>
                       <td>
-                        <button
-                          className="btn-view-action"
-                          onClick={() => setViewingDoc(doc)}
-                          title="View document details and text preview"
-                        >
-                          <Eye size={13} />
-                          <span>View</span>
-                        </button>
+                        {doc.errorCount > 0 ? (
+                          <span className="badge-count badge-error">{doc.errorCount} Err</span>
+                        ) : (
+                          <span style={{ color: '#94a3b8' }}>0</span>
+                        )}
+                      </td>
+                      <td>
+                        {doc.warningCount > 0 ? (
+                          <span className="badge-count badge-warning">{doc.warningCount} Warn</span>
+                        ) : (
+                          <span style={{ color: '#94a3b8' }}>0</span>
+                        )}
+                      </td>
+                      <td className="col-time">
+                        {doc.validatedAt ? new Date(doc.validatedAt).toLocaleTimeString() : '-'}
+                      </td>
+                      <td className="col-actions">
+                        <div className="action-buttons-group">
+                          <button
+                            className="btn-revalidate-action"
+                            onClick={() => handleRevalidate(doc.documentId)}
+                            disabled={isVal}
+                            title="Re-run validation engine"
+                          >
+                            <RotateCcw size={13} className={isVal ? 'animate-spin' : ''} />
+                            <span>Re-Validate</span>
+                          </button>
+                          <button
+                            className="btn-view-action"
+                            onClick={() => setViewingDoc(doc)}
+                            title="View complete document details and validation report"
+                          >
+                            <Eye size={13} />
+                            <span>View</span>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -518,6 +575,11 @@ export default function DocumentsPage() {
             </div>
 
             <div className="modal-body">
+              {/* 1. Document Metadata */}
+              <div className="modal-section-title">
+                <FileText size={16} />
+                <span>1. Document Metadata</span>
+              </div>
               <div className="modal-grid">
                 <div className="meta-item">
                   <label>Document Name</label>
@@ -531,6 +593,24 @@ export default function DocumentsPage() {
                   <label>Upload Time</label>
                   <span>{new Date(viewingDoc.uploadedAt).toLocaleString()}</span>
                 </div>
+                <div className="meta-item">
+                  <label>File Size</label>
+                  <span>{formatFileSize(viewingDoc.size)}</span>
+                </div>
+                <div className="meta-item" style={{ gridColumn: 'span 2' }}>
+                  <label>SHA-256 Content Hash</label>
+                  <span className="hash-code" title={viewingDoc.fileHash || 'Not calculated'}>
+                    {viewingDoc.fileHash ? `${viewingDoc.fileHash.slice(0, 24)}...` : 'N/A'}
+                  </span>
+                </div>
+              </div>
+
+              {/* 2. OCR Information */}
+              <div className="modal-section-title" style={{ marginTop: '16px' }}>
+                <CheckCircle2 size={16} />
+                <span>2. OCR & Text Extraction Information</span>
+              </div>
+              <div className="modal-grid">
                 <div className="meta-item">
                   <label>Status</label>
                   <span>{viewingDoc.status}</span>
@@ -553,13 +633,14 @@ export default function DocumentsPage() {
                 </div>
                 <div className="meta-item">
                   <label>Confidence</label>
-                  <span>{viewingDoc.confidence != null ? `${viewingDoc.confidence}%` : '-'}</span>
+                  <span>{viewingDoc.confidence != null ? `${viewingDoc.confidence}%` : 'N/A (Digital Layer)'}</span>
                 </div>
               </div>
 
               {viewingDoc.status === 'Failed' && (viewingDoc.errorMessage || viewingDoc.error) && (
                 <div
                   style={{
+                    margin: '12px 0',
                     padding: '10px 14px',
                     backgroundColor: '#fef2f2',
                     border: '1px solid #fecaca',
@@ -573,21 +654,187 @@ export default function DocumentsPage() {
                 </div>
               )}
 
-              {viewingDoc.structuredData && (
-                <div className="preview-section">
-                  <div className="preview-header">
-                    <label>Structured Record (Normalized Mining Data)</label>
-                    <span className="status-pill status-pill-normalized" style={{ fontSize: '11px', padding: '2px 8px' }}>
-                      {viewingDoc.normalizationStatus || 'Normalized'}
-                    </span>
-                  </div>
+              {/* 3. Structured Record (Normalized JSON) */}
+              <div className="modal-section-title" style={{ marginTop: '16px' }}>
+                <Database size={16} />
+                <span>3. Structured Record (Normalized JSON)</span>
+              </div>
+              {viewingDoc.structuredData ? (
+                <div className="preview-section" style={{ marginTop: '6px' }}>
                   <pre className="json-preview-box">
                     {JSON.stringify(viewingDoc.structuredData, null, 2)}
                   </pre>
                 </div>
+              ) : (
+                <div style={{ padding: '12px', color: '#64748b', fontSize: '13px', backgroundColor: '#f8fafc', borderRadius: '6px' }}>
+                  No structured record extracted for this document.
+                </div>
               )}
 
-              <div className="preview-section">
+              {/* 4. Validation Summary */}
+              {/* 4. Validation Summary & Score Explanation (Issues 3 & 5) */}
+              <div className="modal-section-title" style={{ marginTop: '16px' }}>
+                <ShieldCheck size={16} />
+                <span>4. Validation Summary & Discrepancy Scoring</span>
+              </div>
+              <div className="validation-summary-card">
+                <div className="validation-summary-header">
+                  <div className="val-badge-group">
+                    {viewingDoc.validationStatus === 'Valid' && (
+                      <span className="status-pill status-pill-valid">
+                        <ShieldCheck size={14} />
+                        <span>Valid Record</span>
+                      </span>
+                    )}
+                    {viewingDoc.validationStatus === 'Warning' && (
+                      <span className="status-pill status-pill-warning">
+                        <AlertTriangle size={14} />
+                        <span>Warning Record</span>
+                      </span>
+                    )}
+                    {viewingDoc.validationStatus === 'Error' && (
+                      <span className="status-pill status-pill-error">
+                        <ShieldAlert size={14} />
+                        <span>Error Record</span>
+                      </span>
+                    )}
+                    {(!viewingDoc.validationStatus || viewingDoc.validationStatus === 'Pending') && (
+                      <span className="status-pill status-pill-pending">
+                        <Clock size={14} />
+                        <span>Validation Pending</span>
+                      </span>
+                    )}
+
+                    {viewingDoc.validationScore != null && (
+                      <span className={`score-badge score-${viewingDoc.validationScore >= 80 ? 'high' : viewingDoc.validationScore >= 50 ? 'med' : 'low'}`} style={{ padding: '3px 10px', fontSize: '13px' }}>
+                        Score: {viewingDoc.validationScore} / 100
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="val-counts-group">
+                    <span className="badge-count badge-error">{viewingDoc.errorCount || 0} Errors</span>
+                    <span className="badge-count badge-warning">{viewingDoc.warningCount || 0} Warnings</span>
+                    <span className="badge-count badge-info">{viewingDoc.infoCount || 0} Info</span>
+                    {viewingDoc.validationTime != null && (
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>
+                        {viewingDoc.validationTime}s
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Score Calculation Breakdown (Issue 5) */}
+                {viewingDoc.validationScore != null && (
+                  <div className="score-explanation-box">
+                    <div className="score-explanation-header">Deterministic Score Calculation:</div>
+                    <div className="score-calc-grid">
+                      <div className="score-calc-item">
+                        <span className="calc-label">Base Score:</span>
+                        <span className="calc-value">100</span>
+                      </div>
+                      {viewingDoc.errorCount > 0 ? (
+                        <div className="score-calc-item calc-deduct-error">
+                          <span className="calc-label">Errors:</span>
+                          <span className="calc-value">{viewingDoc.errorCount} × 20 = -{viewingDoc.errorCount * 20}</span>
+                        </div>
+                      ) : (
+                        <div className="score-calc-item calc-clean">
+                          <span className="calc-label">Errors:</span>
+                          <span className="calc-value">0 (no deduction)</span>
+                        </div>
+                      )}
+                      {viewingDoc.warningCount > 0 ? (
+                        <div className="score-calc-item calc-deduct-warning">
+                          <span className="calc-label">Warnings:</span>
+                          <span className="calc-value">{viewingDoc.warningCount} × 5 = -{viewingDoc.warningCount * 5}</span>
+                        </div>
+                      ) : (
+                        <div className="score-calc-item calc-clean">
+                          <span className="calc-label">Warnings:</span>
+                          <span className="calc-value">0 (no deduction)</span>
+                        </div>
+                      )}
+                      <div className="score-calc-item calc-final">
+                        <span className="calc-label">Final Score:</span>
+                        <span className="calc-value">{viewingDoc.validationScore} / 100</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Multi-line Structured Validation Summary (Issue 3) */}
+                <div className="val-summary-text" style={{ whiteSpace: 'pre-line', marginTop: '10px' }}>
+                  {viewingDoc.validationSummary || 'Validation has not been executed on this document yet.'}
+                </div>
+              </div>
+
+              {/* 5. Validation Messages (Issues 1, 4, 8, 9) */}
+              <div className="modal-section-title" style={{ marginTop: '16px' }}>
+                <AlertCircle size={16} />
+                <span>5. Validation Messages & Discrepancies</span>
+              </div>
+              {(() => {
+                const rawMsgs = viewingDoc.validationMessages || viewingDoc.messages || [];
+                const seenKeys = new Set();
+                const validationMsgs = rawMsgs.filter((msg) => {
+                  const rule = msg.rule || msg.ruleId || 'VAL000';
+                  const key = `${rule}-${msg.field}-${msg.message}`;
+                  if (seenKeys.has(key)) return false;
+                  seenKeys.add(key);
+                  return true;
+                });
+
+                if (validationMsgs.length === 0) {
+                  return (
+                    <div style={{ padding: '12px', color: '#059669', fontSize: '13px', backgroundColor: '#ecfdf5', borderRadius: '6px', marginTop: '6px' }}>
+                      No validation discrepancies or rule violations found. Document record is completely clean.
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="table-responsive" style={{ marginTop: '6px', maxHeight: '240px', overflowY: 'auto' }}>
+                    <table className="validation-messages-table">
+                      <thead>
+                        <tr>
+                          <th style={{ width: '90px' }}>Rule</th>
+                          <th style={{ width: '95px' }}>Severity</th>
+                          <th style={{ width: '140px' }}>Field</th>
+                          <th>Message</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {validationMsgs.map((msg, idx) => (
+                          <tr key={idx}>
+                            <td>
+                              <span className="rule-chip">{msg.rule || msg.ruleId || 'RULE'}</span>
+                            </td>
+                            <td>
+                              <span className={`severity-badge severity-${(msg.severity || 'info').toLowerCase()}`}>
+                                {msg.severity}
+                              </span>
+                            </td>
+                            <td style={{ fontWeight: 600, color: '#334155' }}>
+                              {msg.field || '-'}
+                            </td>
+                            <td style={{ fontSize: '12px', color: '#475569' }}>
+                              {msg.message}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              })()}
+
+              {/* 6. Extracted Text Preview */}
+              <div className="modal-section-title" style={{ marginTop: '16px' }}>
+                <FileText size={16} />
+                <span>6. Raw Extracted Text Preview</span>
+              </div>
+              <div className="preview-section" style={{ marginTop: '6px' }}>
                 <div className="preview-header">
                   <label>First 500 characters of extracted text</label>
                   <span className="char-count">
@@ -604,6 +851,16 @@ export default function DocumentsPage() {
             </div>
 
             <div className="modal-footer">
+              <button
+                className="btn-revalidate-action"
+                onClick={() => handleRevalidate(viewingDoc.documentId)}
+                disabled={validatingDocId === viewingDoc.documentId}
+                style={{ marginRight: 'auto' }}
+                title="Re-run validation engine"
+              >
+                <RotateCcw size={14} className={validatingDocId === viewingDoc.documentId ? 'animate-spin' : ''} />
+                <span>Re-Validate</span>
+              </button>
               <button className="btn-modal-close" onClick={() => setViewingDoc(null)}>
                 Close
               </button>

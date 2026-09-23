@@ -1,0 +1,38 @@
+{
+  "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+  "validationStatus": "Error",
+  "validationScore": 80,
+  "validationSummary": "Validation flagged 1 error(s) and 0 warning(s) across 1 rule(s) (Score: 80/100).",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Production value missing."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001"
+  ],
+  "errorCount": 1,
+  "warningCount": 0,
+  "infoCount": 0,
+  "validationTime": 0.0002,
+  "validatedAt": "2026-09-22T15:05:51.099189+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-22T15:05:51.099189+00:00",
+      "score": 80,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 0
+    },
+    {
+      "validatedAt": "2026-09-22T15:05:40.442152+00:00",
+      "score": 80,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 0
+    }
+  ]
+}

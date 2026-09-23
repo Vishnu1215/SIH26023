@@ -5,7 +5,9 @@ export default function StatCard({ title, value, subtitle, icon: Icon, badge, co
     blue: { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe' },
     emerald: { bg: '#ecfdf5', text: '#047857', border: '#a7f3d0' },
     amber: { bg: '#fffbeb', text: '#b45309', border: '#fde68a' },
-    purple: { bg: '#faf5ff', text: '#6b21a8', border: '#e9d5ff' }
+    purple: { bg: '#faf5ff', text: '#6b21a8', border: '#e9d5ff' },
+    rose: { bg: '#fef2f2', text: '#b91c1c', border: '#fecaca' },
+    indigo: { bg: '#eef2ff', text: '#4338ca', border: '#c7d2fe' }
   }[color] || { bg: '#eff6ff', text: '#1d4ed8', border: '#bfdbfe' };
 
   return (
