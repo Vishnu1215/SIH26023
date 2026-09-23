@@ -203,3 +203,21 @@ export const loadSamples = (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Retrieve aggregated executive dashboard analytics (Phase 7).
+ * Reads the single source of truth from AI Service analytics engine.
+ * GET /api/dashboard/analytics
+ */
+export const getDashboardAnalytics = async (req, res, next) => {
+  try {
+    const { fetchDashboardAnalytics } = await import('../services/documentProcessing.service.js');
+    const analytics = await fetchDashboardAnalytics();
+    return res.status(200).json({
+      success: true,
+      analytics
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -27,9 +27,23 @@
   "errorCount": 0,
   "warningCount": 1,
   "infoCount": 0,
-  "validationTime": 0.0109,
-  "validatedAt": "2026-09-22T15:46:21.579218+00:00",
+  "validationTime": 0.0065,
+  "validatedAt": "2026-09-23T09:32:53.040513+00:00",
   "validationHistory": [
+    {
+      "validatedAt": "2026-09-23T09:32:53.040513+00:00",
+      "score": 95,
+      "status": "Warning",
+      "errorCount": 0,
+      "warningCount": 1
+    },
+    {
+      "validatedAt": "2026-09-23T09:17:59.899567+00:00",
+      "score": 95,
+      "status": "Warning",
+      "errorCount": 0,
+      "warningCount": 1
+    },
     {
       "validatedAt": "2026-09-22T15:46:21.579218+00:00",
       "score": 95,

@@ -98,9 +98,23 @@
   "errorCount": 3,
   "warningCount": 3,
   "infoCount": 0,
-  "validationTime": 0.0335,
-  "validatedAt": "2026-09-22T15:46:21.438422+00:00",
+  "validationTime": 0.0068,
+  "validatedAt": "2026-09-23T09:32:52.955452+00:00",
   "validationHistory": [
+    {
+      "validatedAt": "2026-09-23T09:32:52.955452+00:00",
+      "score": 25,
+      "status": "Error",
+      "errorCount": 3,
+      "warningCount": 3
+    },
+    {
+      "validatedAt": "2026-09-23T09:17:59.755215+00:00",
+      "score": 25,
+      "status": "Error",
+      "errorCount": 3,
+      "warningCount": 3
+    },
     {
       "validatedAt": "2026-09-22T15:46:21.438422+00:00",
       "score": 25,

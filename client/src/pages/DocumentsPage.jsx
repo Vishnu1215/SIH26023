@@ -18,7 +18,13 @@ import {
   Eye,
   Tag,
   Hash,
-  RotateCcw
+  RotateCcw,
+  TrendingUp,
+  Sliders,
+  Building2,
+  MapPin,
+  Award,
+  BarChart3
 } from 'lucide-react';
 import {
   uploadDocumentFile,
@@ -26,6 +32,13 @@ import {
   loadSampleDataset,
   validateDocument
 } from '../services/document.service.js';
+import {
+  formatNumber,
+  formatProduction,
+  formatPercent,
+  formatTime,
+  formatCount
+} from '../utils/formatters.js';
 
 const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'docx', 'xlsx', 'csv'];
 const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
@@ -42,6 +55,7 @@ export default function DocumentsPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [viewingDoc, setViewingDoc] = useState(null);
+  const [modalTab, setModalTab] = useState('overview'); // 'overview' | 'analytics' (Phase 7)
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingSamples, setIsLoadingSamples] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -543,7 +557,10 @@ export default function DocumentsPage() {
                           </button>
                           <button
                             className="btn-view-action"
-                            onClick={() => setViewingDoc(doc)}
+                            onClick={() => {
+                              setModalTab('overview');
+                              setViewingDoc(doc);
+                            }}
                             title="View complete document details and validation report"
                           >
                             <Eye size={13} />
@@ -574,21 +591,43 @@ export default function DocumentsPage() {
               </button>
             </div>
 
+            {/* Phase 7: Document Modal Navigation Tabs */}
+            <div className="modal-tabs-header">
+              <button
+                type="button"
+                className={`modal-tab-nav-btn ${modalTab === 'overview' ? 'active' : ''}`}
+                onClick={() => setModalTab('overview')}
+              >
+                <FileText size={14} />
+                <span>Document Overview</span>
+              </button>
+              <button
+                type="button"
+                className={`modal-tab-nav-btn ${modalTab === 'analytics' ? 'active' : ''}`}
+                onClick={() => setModalTab('analytics')}
+              >
+                <BarChart3 size={14} />
+                <span>Document Analytics</span>
+              </button>
+            </div>
+
             <div className="modal-body">
-              {/* 1. Document Metadata */}
-              <div className="modal-section-title">
-                <FileText size={16} />
-                <span>1. Document Metadata</span>
-              </div>
-              <div className="modal-grid">
-                <div className="meta-item">
-                  <label>Document Name</label>
-                  <span title={viewingDoc.originalName}>{viewingDoc.originalName}</span>
-                </div>
-                <div className="meta-item">
-                  <label>Category</label>
-                  <span>{viewingDoc.category || 'Unknown'}</span>
-                </div>
+              {modalTab === 'overview' ? (
+                <>
+                  {/* 1. Document Metadata */}
+                  <div className="modal-section-title">
+                    <FileText size={16} />
+                    <span>1. Document Metadata</span>
+                  </div>
+                  <div className="modal-grid">
+                    <div className="meta-item">
+                      <label>Document Name</label>
+                      <span title={viewingDoc.originalName}>{viewingDoc.originalName}</span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Category</label>
+                      <span>{viewingDoc.category || 'Unknown'}</span>
+                    </div>
                 <div className="meta-item">
                   <label>Upload Time</label>
                   <span>{new Date(viewingDoc.uploadedAt).toLocaleString()}</span>
@@ -621,7 +660,7 @@ export default function DocumentsPage() {
                 </div>
                 <div className="meta-item">
                   <label>Processing Time</label>
-                  <span>{viewingDoc.processingTime != null ? `${viewingDoc.processingTime}s` : '-'}</span>
+                  <span>{viewingDoc.processingTime != null ? formatTime(viewingDoc.processingTime) : '-'}</span>
                 </div>
                 <div className="meta-item">
                   <label>OCR Engine</label>
@@ -718,7 +757,7 @@ export default function DocumentsPage() {
                     <span className="badge-count badge-info">{viewingDoc.infoCount || 0} Info</span>
                     {viewingDoc.validationTime != null && (
                       <span style={{ fontSize: '11px', color: '#64748b' }}>
-                        {viewingDoc.validationTime}s
+                        {formatTime(viewingDoc.validationTime)}
                       </span>
                     )}
                   </div>
@@ -848,6 +887,178 @@ export default function DocumentsPage() {
                       : 'No text extracted for this record.')}
                 </pre>
               </div>
+                </>
+              ) : (
+                <div className="modal-analytics-tab-content">
+                  {/* Module 1: Production Summary */}
+                  <div className="modal-section-title">
+                    <TrendingUp size={16} />
+                    <span>1. Production & Operational Summary</span>
+                  </div>
+                  <div className="modal-grid">
+                    <div className="meta-item">
+                      <label>Coal Production</label>
+                      <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                        {viewingDoc.structuredData?.coalProduction != null ? formatProduction(viewingDoc.structuredData.coalProduction) : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Target Production</label>
+                      <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                        {viewingDoc.structuredData?.targetProduction != null ? formatProduction(viewingDoc.structuredData.targetProduction) : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Target Achievement</label>
+                      <span style={{
+                        fontWeight: 700,
+                        color: viewingDoc.structuredData?.coalProduction != null && viewingDoc.structuredData?.targetProduction != null && viewingDoc.structuredData.targetProduction > 0
+                          ? (viewingDoc.structuredData.coalProduction / viewingDoc.structuredData.targetProduction >= 1 ? '#16a34a' : '#d97706')
+                          : '#64748b'
+                      }}>
+                        {viewingDoc.structuredData?.coalProduction != null && viewingDoc.structuredData?.targetProduction != null && viewingDoc.structuredData.targetProduction > 0
+                          ? formatPercent((viewingDoc.structuredData.coalProduction / viewingDoc.structuredData.targetProduction) * 100)
+                          : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Overburden Removal (OBR)</label>
+                      <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                        {viewingDoc.structuredData?.overburdenRemoval != null ? `${formatNumber(viewingDoc.structuredData.overburdenRemoval, 2)} M.Cu.M` : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Subsidiary</label>
+                      <span style={{ fontWeight: 600, color: '#0284c7' }}>
+                        {viewingDoc.structuredData?.subsidiary || 'N/A'}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Mine Name</label>
+                      <span>{viewingDoc.structuredData?.mineName || 'N/A'}</span>
+                    </div>
+                    <div className="meta-item">
+                      <label>State</label>
+                      <span>{viewingDoc.structuredData?.state || 'N/A'}</span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Financial Year / Month</label>
+                      <span>
+                        {viewingDoc.structuredData?.financialYear || 'N/A'}
+                        {viewingDoc.structuredData?.month ? ` (${viewingDoc.structuredData.month})` : ''}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Module 2: Validation Summary */}
+                  <div className="modal-section-title" style={{ marginTop: '16px' }}>
+                    <ShieldCheck size={16} />
+                    <span>2. Validation & Discrepancy Health</span>
+                  </div>
+                  <div className="modal-grid">
+                    <div className="meta-item">
+                      <label>Validation Status</label>
+                      <span>
+                        <span className={`status-pill status-pill-${(viewingDoc.validationStatus || 'pending').toLowerCase()}`}>
+                          {viewingDoc.validationStatus || 'Pending'}
+                        </span>
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Quality Score</label>
+                      <span style={{
+                        fontWeight: 700,
+                        color: (viewingDoc.validationScore || 0) >= 80 ? '#16a34a' : (viewingDoc.validationScore || 0) >= 50 ? '#d97706' : '#dc2626'
+                      }}>
+                        {viewingDoc.validationScore != null ? `${viewingDoc.validationScore} / 100` : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Errors Detected</label>
+                      <span style={{ fontWeight: 700, color: viewingDoc.errorCount > 0 ? '#dc2626' : '#16a34a' }}>
+                        {viewingDoc.errorCount || 0}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Warnings Detected</label>
+                      <span style={{ fontWeight: 700, color: viewingDoc.warningCount > 0 ? '#d97706' : '#16a34a' }}>
+                        {viewingDoc.warningCount || 0}
+                      </span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Validation Latency</label>
+                      <span>{viewingDoc.validationTime != null ? formatTime(viewingDoc.validationTime) : 'N/A'}</span>
+                    </div>
+                    <div className="meta-item">
+                      <label>Validation Rules Engine</label>
+                      <span>10 Rules Active</span>
+                    </div>
+                  </div>
+
+                  {/* Module 3: Data Quality & Completeness */}
+                  <div className="modal-section-title" style={{ marginTop: '16px' }}>
+                    <Award size={16} />
+                    <span>3. Data Quality & Metadata Completeness</span>
+                  </div>
+                  {(() => {
+                    const stdFields = [
+                      'subsidiary',
+                      'mineName',
+                      'state',
+                      'financialYear',
+                      'month',
+                      'coalProduction',
+                      'targetProduction',
+                      'overburdenRemoval',
+                      'productivity'
+                    ];
+                    const struct = viewingDoc.structuredData || {};
+                    const populated = stdFields.filter(f => struct[f] !== null && struct[f] !== undefined && struct[f] !== '');
+                    const missing = stdFields.filter(f => struct[f] === null || struct[f] === undefined || struct[f] === '');
+                    const completenessPct = Math.round((populated.length / stdFields.length) * 100);
+
+                    return (
+                      <div>
+                        <div className="modal-grid">
+                          <div className="meta-item">
+                            <label>Field Completeness</label>
+                            <span style={{ fontWeight: 600, color: completenessPct >= 70 ? '#16a34a' : '#d97706' }}>
+                              {completenessPct}% ({populated.length}/{stdFields.length} fields)
+                            </span>
+                          </div>
+                          <div className="meta-item">
+                            <label>OCR Confidence</label>
+                            <span>{viewingDoc.confidence != null ? `${viewingDoc.confidence}%` : 'Digital PDF'}</span>
+                          </div>
+                          <div className="meta-item">
+                            <label>Raw Extracted Length</label>
+                            <span>{formatCount((viewingDoc.textPreview || viewingDoc.extractedText || '').length)} chars</span>
+                          </div>
+                          <div className="meta-item">
+                            <label>Integrity Fingerprint</label>
+                            <span className="hash-code" style={{ fontSize: '11px' }} title={viewingDoc.fileHash || 'N/A'}>
+                              {viewingDoc.fileHash ? `${viewingDoc.fileHash.slice(0, 16)}...` : 'N/A'}
+                            </span>
+                          </div>
+                        </div>
+
+                        {missing.length > 0 && (
+                          <div style={{ marginTop: '12px', padding: '10px 14px', backgroundColor: '#fffbeb', borderRadius: '6px', border: '1px solid #fef3c7' }}>
+                            <span style={{ fontSize: '12px', fontWeight: 600, color: '#92400e' }}>Missing Extracted Fields: </span>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
+                              {missing.map((f) => (
+                                <span key={f} className="badge-count badge-warning" style={{ fontSize: '11px', textTransform: 'capitalize' }}>
+                                  {f}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
 
             <div className="modal-footer">

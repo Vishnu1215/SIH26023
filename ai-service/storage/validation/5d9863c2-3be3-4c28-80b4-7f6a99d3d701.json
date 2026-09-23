@@ -1,9 +1,16 @@
 {
-  "documentId": "doc-low-1",
+  "documentId": "5d9863c2-3be3-4c28-80b4-7f6a99d3d701",
   "validationStatus": "Error",
-  "validationScore": 60,
-  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 60/100)\n\nPrimary Issue:\nMandatory field 'coalProduction' is missing.\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Specific Report Type missing or unspecified.\n• Low information document (only 2 structured fields detected).",
+  "validationScore": 40,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 40/100)\n\nPrimary Issue:\nMandatory field 'financialYear' is missing.\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Specific Report Type missing or unspecified.\n• Low information document (only 0 structured fields detected).",
   "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Mandatory field 'financialYear' is missing."
+    },
     {
       "ruleId": "VAL001",
       "rule": "VAL001",
@@ -37,13 +44,20 @@
       "rule": "VAL010",
       "field": "structuredRichness",
       "severity": "Warning",
-      "message": "Low information document (only 2 structured fields detected)."
+      "message": "Low information document (only 0 structured fields detected)."
     }
   ],
   "messages": [
     {
       "ruleId": "VAL001",
       "rule": "VAL001",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Mandatory field 'financialYear' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
       "field": "coalProduction",
       "severity": "Error",
       "message": "Mandatory field 'coalProduction' is missing."
@@ -74,38 +88,24 @@
       "rule": "VAL010",
       "field": "structuredRichness",
       "severity": "Warning",
-      "message": "Low information document (only 2 structured fields detected)."
+      "message": "Low information document (only 0 structured fields detected)."
     }
   ],
   "rulesTriggered": [
     "VAL001",
     "VAL010"
   ],
-  "errorCount": 1,
+  "errorCount": 2,
   "warningCount": 4,
   "infoCount": 0,
-  "validationTime": 0.0062,
-  "validatedAt": "2026-09-23T09:32:53.088605+00:00",
+  "validationTime": 0.0118,
+  "validatedAt": "2026-09-23T08:33:51.689637+00:00",
   "validationHistory": [
     {
-      "validatedAt": "2026-09-23T09:32:53.088605+00:00",
-      "score": 60,
+      "validatedAt": "2026-09-23T08:33:51.689637+00:00",
+      "score": 40,
       "status": "Error",
-      "errorCount": 1,
-      "warningCount": 4
-    },
-    {
-      "validatedAt": "2026-09-23T09:17:59.922531+00:00",
-      "score": 60,
-      "status": "Error",
-      "errorCount": 1,
-      "warningCount": 4
-    },
-    {
-      "validatedAt": "2026-09-22T15:46:21.630735+00:00",
-      "score": 60,
-      "status": "Error",
-      "errorCount": 1,
+      "errorCount": 2,
       "warningCount": 4
     }
   ]

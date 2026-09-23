@@ -30,6 +30,10 @@ class Settings:
         "LOGS_STORAGE_DIR",
         os.path.join(BASE_DIR, "storage", "logs")
     )
+    ANALYTICS_STORAGE_DIR: str = os.getenv(
+        "ANALYTICS_STORAGE_DIR",
+        os.path.join(BASE_DIR, "storage", "analytics")
+    )
     OCR_LOG_FILE: str = os.getenv(
         "OCR_LOG_FILE",
         os.path.join(BASE_DIR, "logs", "ocr.log")
@@ -42,6 +46,7 @@ settings = Settings()
 os.makedirs(settings.TEXT_STORAGE_DIR, exist_ok=True)
 os.makedirs(settings.STRUCTURED_DATA_DIR, exist_ok=True)
 os.makedirs(settings.VALIDATION_STORAGE_DIR, exist_ok=True)
+os.makedirs(settings.ANALYTICS_STORAGE_DIR, exist_ok=True)
 os.makedirs(settings.LOGS_STORAGE_DIR, exist_ok=True)
 os.makedirs(os.path.dirname(settings.OCR_LOG_FILE), exist_ok=True)
 

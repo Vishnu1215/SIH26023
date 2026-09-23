@@ -23,7 +23,7 @@
       "rule": "VAL007",
       "field": "fileHash",
       "severity": "Error",
-      "message": "Duplicate document: file content matches existing document 'doc-orig' (SHA-256 hash)."
+      "message": "Duplicate file content detected (matches document 'doc-orig' with SHA-256 hash)."
     },
     {
       "ruleId": "VAL001",
@@ -74,7 +74,7 @@
       "rule": "VAL007",
       "field": "fileHash",
       "severity": "Error",
-      "message": "Duplicate document: file content matches existing document 'doc-orig' (SHA-256 hash)."
+      "message": "Duplicate file content detected (matches document 'doc-orig' with SHA-256 hash)."
     },
     {
       "ruleId": "VAL001",
@@ -113,9 +113,23 @@
   "errorCount": 3,
   "warningCount": 4,
   "infoCount": 0,
-  "validationTime": 0.0128,
-  "validatedAt": "2026-09-22T15:46:21.593702+00:00",
+  "validationTime": 0.0222,
+  "validatedAt": "2026-09-23T09:32:53.064056+00:00",
   "validationHistory": [
+    {
+      "validatedAt": "2026-09-23T09:32:53.064056+00:00",
+      "score": 20,
+      "status": "Error",
+      "errorCount": 3,
+      "warningCount": 4
+    },
+    {
+      "validatedAt": "2026-09-23T09:17:59.906409+00:00",
+      "score": 20,
+      "status": "Error",
+      "errorCount": 3,
+      "warningCount": 4
+    },
     {
       "validatedAt": "2026-09-22T15:46:21.593702+00:00",
       "score": 20,

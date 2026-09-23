@@ -168,3 +168,36 @@ export async function validateDocument(documentId) {
   }
 }
 
+/**
+ * Retrieve aggregated executive dashboard analytics (Phase 7).
+ * Reads the single source of truth computed by the analytics engine.
+ * @returns {Promise<Object>} Dashboard analytics data
+ */
+export async function fetchDashboardAnalytics() {
+  const headers = {};
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/dashboard/analytics`, {
+      method: 'GET',
+      headers
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || `Failed to fetch analytics (HTTP ${response.status})`);
+    }
+
+    return data.analytics;
+  } catch (error) {
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Server unavailable. Unable to connect to backend.');
+    }
+    throw error;
+  }
+}
+
+

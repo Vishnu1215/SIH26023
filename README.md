@@ -778,6 +778,71 @@ admin123
 
 ---
 
+## Phase 7: Analytics Engine & Executive Dashboard Insights
+
+The deterministic Analytics Engine aggregates all normalized mining records and validation outputs into a centralized, persistent dashboard single source of truth (`ai-service/storage/analytics/dashboard.json`).
+
+### Key Analytical Modules
+
+1. **Production Analytics**: Total Coal Production (MT), Target Production (MT), Achieved Production (MT), Average Production, Highest/Lowest Production, and Production Achievement Percentage `(Total Achieved / Total Target) * 100`.
+2. **Subsidiary Analytics & Leaderboard**: Comprehensive aggregation across all coal subsidiaries (SECL, MCL, NCL, CCL, ECL, BCCL, WCL, CMPDI, SCCL) with document count, production, targets, and achievement percentage. Deterministically ranked by `Production (desc)` -> `Documents (desc)` -> `Alphabetical`.
+3. **Geographical / State Analytics**: State-wise mining breakdown (Jharkhand, Odisha, Chhattisgarh, Madhya Pradesh, West Bengal, Maharashtra, Telangana) with active document counts, total production, and state rankings.
+4. **Financial Year Trends**: Chronologically sorted multi-year production comparison (e.g., `2021-22`, `2022-23`, `2023-24`), target fulfillment rates, and validation quality trends.
+5. **Validation Engine Health**: Live accuracy metrics, valid/warning/error distributions, and average discrepancy score tracking.
+6. **Document Pipeline Analytics**: Aggregations across uploaded documents, processing stages, average OCR latency, and average validation duration.
+7. **Top Performers Rankings**: Instant leaderboards for Top 5 Mines and Top 5 Subsidiaries.
+8. **Data Quality & Integrity**: High / Medium / Low quality distribution, field completeness tracking, duplicate counts, and low-confidence OCR detection.
+
+### Architecture: Single Source of Truth
+
+```
+structured_data/*.json
+validation/*.json
+        │
+        ▼
+analytics_engine.py ──► storage/analytics/dashboard.json (Single Source of Truth)
+        │                                  │
+        ▼                                  ▼
+POST /analytics/recompute           GET /analytics/dashboard
+(Auto-triggered on upload)          (Read directly by Express API & React Dashboard)
+```
+
+### Executive Visualizations & Presentation (Phase 7 Refinement)
+
+The dashboard provides deterministic executive visualizations and layout refinements:
+- **3-Row KPI Architecture**:
+  - *Row 1: Pipeline & Quality Overview* (Processed, Clean Records, Quality Score, Accuracy %)
+  - *Row 2: Ingestion & Verification Progress* (Total Ingested, Extracted, Errors, Warnings)
+  - *Row 3: Mining Output & Operational Coverage* (Total Output, Target Achievement, Subsidiaries, States)
+- **Production Equation Box**: Explicit visual representation `Achieved / Target = Achievement %` with high-contrast progress tracking.
+- **Deterministic Inline SVG Visualizations** (pure React, zero external heavy chart libraries):
+  - *Production Trend by FY* (Chronologically sorted start-year bar chart)
+  - *Validation Health Status Donut* (Valid / Warning / Error proportional arcs with legend)
+  - *Subsidiary Output Distribution* (Horizontal comparative bars)
+  - *Geographical State Coverage* (Horizontal output bars with 'Not Available' fallback)
+- **Synchronized Scoping**: Active in-memory document set scoped to eliminate orphaned historical test artifacts.
+- **Consistent Number Formatting**: Indian numbering system (`142,787.01 MT`, `93.7%`, `0.36 s`, `1,245`).
+
+---
+
+# Verification & Testing
+
+### Running Phase 7 Analytics Tests
+
+```bash
+# Test deterministic refinement suite (scoping, FY sort, state normalization, accuracy)
+python scratch/test_phase7_refinements.py
+
+# Test Phase 5 & Phase 6 regression suites
+python scratch/test_phase5.py
+python scratch/test_phase6_refinements.py
+
+# Test React client production build
+cd client && npm run build
+```
+
+---
+
 # Current Limitations
 
 The following features are intentionally **not implemented** yet (scheduled for future phases):
@@ -804,10 +869,11 @@ The following features are intentionally **not implemented** yet (scheduled for 
 | Phase 4 – OCR & Document Text Extraction Pipeline | ✅ |
 | Phase 5 – Structured Information Extraction & Normalization | ✅ |
 | Phase 6 – Validation Engine & Discrepancy Detection | ✅ |
-| Phase 7 – Report Generation | ⏳ |
-| Phase 8 – Topic Modeling | ⏳ |
-| Phase 9 – Hybrid Q&A (SQL + RAG) | ⏳ |
-| Phase 10 – AI Recommendations | ⏳ |
+| Phase 7 – Analytics Engine & Executive Dashboard Insights | ✅ |
+| Phase 8 – Report Generation | ⏳ |
+| Phase 9 – Topic Modeling | ⏳ |
+| Phase 10 – Hybrid Q&A (SQL + RAG) | ⏳ |
+| Phase 11 – AI Recommendations | ⏳ |
 
 
 ---

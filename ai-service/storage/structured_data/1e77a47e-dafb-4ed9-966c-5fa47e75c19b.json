@@ -1,0 +1,22 @@
+{
+  "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+  "reportTitle": "Chap3Annualreport2026En",
+  "reportType": "Annual Report",
+  "financialYear": "2025-26",
+  "reportDate": null,
+  "issuingOrganization": "CMPDIL",
+  "subsidiary": "CIL",
+  "mineName": "Gevra",
+  "mineType": "Opencast",
+  "region": "Like Coalfield",
+  "district": "Korba",
+  "state": "Chhattisgarh",
+  "coalProduction": 3.1,
+  "overburdenRemoval": null,
+  "targetProduction": null,
+  "achievedProduction": null,
+  "percentageAchievement": null,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 12,
+  "extractedAt": "2026-09-23T08:27:38.822729+00:00"
+}

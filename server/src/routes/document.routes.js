@@ -5,12 +5,16 @@ import {
   processDocument,
   extractDocumentStructured,
   validateDocumentAction,
-  loadSamples
+  loadSamples,
+  getDashboardAnalytics
 } from '../controllers/document.controller.js';
 import { handleUpload } from '../middleware/upload.middleware.js';
 import express, { Router } from "express";
 
 const router = Router();
+
+// GET /api/documents/analytics - Retrieve executive dashboard analytics
+router.get('/analytics', getDashboardAnalytics);
 
 // POST /api/documents/upload - Upload single document
 router.post('/upload', handleUpload, uploadDocument);

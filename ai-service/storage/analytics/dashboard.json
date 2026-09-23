@@ -1,0 +1,197 @@
+{
+  "status": "success",
+  "analyticsVersion": 1,
+  "generatedAt": "2026-09-23T09:43:26.633064+00:00",
+  "lastRefresh": "2026-09-23T09:43:26.633064+00:00",
+  "generationTime": 0.0154,
+  "documentsProcessed": 1,
+  "totalDocuments": 1,
+  "documents": {
+    "documentsUploaded": 1,
+    "totalDocuments": 1,
+    "documentsProcessed": 1,
+    "totalProcessed": 1,
+    "documentsFailed": 0,
+    "totalFailed": 0,
+    "ocrComplete": 1,
+    "structuredRecords": 1,
+    "structuredRecordsExtracted": 1,
+    "validatedDocuments": 1,
+    "pendingDocuments": 0,
+    "duplicateDocuments": 0,
+    "statesCovered": 0,
+    "byCategory": {
+      "Unknown": 1
+    },
+    "categories": {
+      "Unknown": 1
+    },
+    "byFileType": {
+      "pdf": 1
+    },
+    "fileTypes": {
+      "pdf": 1
+    },
+    "averageOcrTime": 0.48,
+    "averageValidationTime": 0.0083,
+    "averageExtractionTime": 0.05
+  },
+  "production": {
+    "totalCoalProduction": 0,
+    "totalTargetProduction": 0,
+    "totalAchievedProduction": 0,
+    "targetVariance": 0,
+    "remainingTarget": 0.0,
+    "bestPerformingRecord": null,
+    "lowestPerformingRecord": null,
+    "averageProduction": 0.0,
+    "highestProduction": 0.0,
+    "lowestProduction": 0.0,
+    "productionAchievement": 0.0,
+    "productionAchievementPct": 0.0,
+    "productionAchievementPercentage": 0.0,
+    "productionCount": 0,
+    "productionUnit": "MT",
+    "productionTrend": [
+      {
+        "financialYear": "2025–26",
+        "production": 0.0,
+        "documents": 1
+      }
+    ]
+  },
+  "validation": {
+    "totalValidated": 1,
+    "validatedDocuments": 1,
+    "validDocuments": 0,
+    "warningDocuments": 1,
+    "errorDocuments": 0,
+    "averageValidationScore": 90.0,
+    "overallQualityRating": "Excellent",
+    "qualityRating": "Excellent",
+    "manualReviewRequired": 0,
+    "highestScore": 90,
+    "lowestScore": 90,
+    "totalErrors": 0,
+    "totalWarnings": 2,
+    "validationAccuracy": 0.0,
+    "validationAccuracyPercentage": 0.0,
+    "validationAccuracyPct": 0.0
+  },
+  "quality": {
+    "missingFieldsPercentage": 62.5,
+    "fieldCompletenessPercentage": 37.5,
+    "averageFieldCompleteness": 37.5,
+    "averageStructuredFields": 6.0,
+    "totalStandardFields": 16,
+    "missingMandatoryFields": 2,
+    "duplicateDocuments": 0,
+    "duplicateRecords": 0,
+    "unknownUnits": 0,
+    "lowOcrConfidence": 0,
+    "lowOcrConfidenceCount": 0,
+    "documentsRequiringReview": 0,
+    "manualReviewRequired": 0,
+    "failedValidationPercentage": 0.0,
+    "ocrConfidenceDistribution": {
+      "lowConfidence": 0,
+      "moderateConfidence": 0,
+      "highConfidence": 0,
+      "digitalLayer": 0
+    }
+  },
+  "subsidiaries": [
+    {
+      "subsidiary": "SCCL",
+      "documents": 1,
+      "production": 0.0,
+      "averageProduction": 0.0,
+      "unit": "MT",
+      "rank": 1,
+      "contributionPct": 0.0
+    }
+  ],
+  "states": [
+    {
+      "state": "Not Available",
+      "documents": 1,
+      "production": 0.0,
+      "averageProduction": 0.0,
+      "unit": "MT",
+      "rank": 1,
+      "contributionPct": 0.0
+    }
+  ],
+  "financialYears": [
+    {
+      "financialYear": "2025–26",
+      "documents": 1,
+      "production": 0.0,
+      "targetProduction": 0,
+      "averageAchievement": 0.0,
+      "achievementPercentage": 0.0,
+      "averageValidationScore": 90.0,
+      "qualityRating": "Excellent",
+      "averageQuality": "Excellent",
+      "unit": "MT",
+      "rank": 1
+    }
+  ],
+  "rankings": {
+    "topMines": [],
+    "topSubsidiaries": [
+      {
+        "subsidiary": "SCCL",
+        "documents": 1,
+        "production": 0.0,
+        "averageProduction": 0.0,
+        "unit": "MT",
+        "rank": 1,
+        "contributionPct": 0.0
+      }
+    ],
+    "topStates": [],
+    "topReports": []
+  },
+  "charts": {
+    "productionTrend": [
+      {
+        "financialYear": "2025–26",
+        "production": 0.0,
+        "documents": 1
+      }
+    ],
+    "subsidiaryDistribution": [
+      {
+        "name": "SCCL",
+        "production": 0.0,
+        "documents": 1,
+        "contributionPct": 0.0
+      }
+    ],
+    "stateDistribution": [],
+    "validationScoreDistribution": [
+      {
+        "category": "Valid",
+        "count": 0,
+        "color": "#16a34a"
+      },
+      {
+        "category": "Warning",
+        "count": 1,
+        "color": "#d97706"
+      },
+      {
+        "category": "Error",
+        "count": 0,
+        "color": "#dc2626"
+      }
+    ],
+    "documentTypeDistribution": [
+      {
+        "type": "PDF",
+        "count": 1
+      }
+    ]
+  }
+}
