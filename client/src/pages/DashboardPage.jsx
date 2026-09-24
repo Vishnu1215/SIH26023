@@ -25,7 +25,8 @@ import {
   FileCheck2,
   ArrowUpRight,
   ArrowDownRight,
-  UploadCloud
+  UploadCloud,
+  Bot
 } from 'lucide-react';
 import StatCard from '../components/common/StatCard.jsx';
 import { fetchDashboardAnalytics } from '../services/document.service.js';
@@ -836,20 +837,20 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Phase 10: Natural Language Quick Query Widget */}
+      {/* Phase 11: Ask Coal Intelligence Widget */}
       <section className="dashboard-section" style={{ marginTop: '28px', marginBottom: '24px' }}>
         <div className="section-header">
           <div className="section-title-box">
-            <HelpCircle size={18} className="text-amber-600" />
+            <Bot size={20} className="text-blue-600" />
             <div>
-              <h3 className="section-title">Natural Language Quick Query &amp; Decision Support</h3>
+              <h3 className="section-title">Ask Coal Intelligence</h3>
               <p className="section-subtitle">
-                Phase 10 deterministic natural language inquiry over verified metadata and single sources of truth.
+                Phase 11 Hybrid AI Question Answering with verified citations, evidence-backed reasoning, and single source of truth analytics.
               </p>
             </div>
           </div>
-          <Link to="/query" style={{ fontSize: '12px', fontWeight: 700, color: '#1e3a8a', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}>
-            <span>Open Decision Support</span>
+          <Link to="/qa" style={{ fontSize: '12px', fontWeight: 700, color: '#1e3a8a', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}>
+            <span>Open Conversational Q&amp;A</span>
             <ArrowUpRight size={14} />
           </Link>
         </div>
@@ -857,19 +858,19 @@ export default function DashboardPage() {
         <div className="card" style={{ padding: '1.25rem', background: '#f8fafc', border: '1px solid #e2e8f0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Quick Preset Queries:
+              Recommended Inquiries:
             </span>
             {[
-              { label: 'Production Leader', q: 'Which subsidiary has the highest production?' },
-              { label: 'Validation Failures', q: 'Which documents failed validation?' },
-              { label: 'SECL Reports', q: 'Show production reports for SECL' },
-              { label: 'Mines in Chhattisgarh', q: 'List mines in Chhattisgarh' },
-              { label: 'FY 2024-25 Reports', q: 'Which documents belong to FY 2024-25?' },
-              { label: 'Mine Safety Inquiries', q: 'Show reports related to mine safety' }
+              { label: 'Production Leader', q: 'Which subsidiary produced the highest coal?' },
+              { label: 'Validation Compliance', q: 'Which documents failed validation or need review?' },
+              { label: 'National Production', q: 'What is the total coal production across all reporting entities?' },
+              { label: 'Data Quality Rating', q: 'What is the overall data quality score?' },
+              { label: 'SECL Production', q: 'What is the total coal production of SECL?' },
+              { label: 'Mines in Chhattisgarh', q: 'Which mines and collieries are located in Chhattisgarh?' }
             ].map((btn, idx) => (
               <Link
                 key={idx}
-                to={`/query?q=${encodeURIComponent(btn.q)}`}
+                to={`/qa?q=${encodeURIComponent(btn.q)}`}
                 style={{
                   padding: '0.4rem 0.75rem',
                   fontSize: '0.8rem',
@@ -895,14 +896,14 @@ export default function DashboardPage() {
             onSubmit={(e) => {
               e.preventDefault();
               const q = e.target.elements.dashQuery.value.trim();
-              if (q) window.location.href = `/query?q=${encodeURIComponent(q)}`;
+              if (q) window.location.href = `/qa?q=${encodeURIComponent(q)}`;
             }}
             style={{ display: 'flex', gap: '0.5rem' }}
           >
             <input
               type="text"
               name="dashQuery"
-              placeholder="Type any inquiry... e.g. 'Show documents with production greater than 100 MT'"
+              placeholder="Ask anything... e.g. 'Which subsidiary produced the highest coal?' or 'Compare target vs actual production'"
               style={{
                 flex: 1,
                 padding: '0.65rem 1rem',
@@ -917,8 +918,8 @@ export default function DashboardPage() {
               className="btn-primary"
               style={{ padding: '0.65rem 1.25rem', fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}
             >
-              <Sparkles size={15} />
-              Query Platform
+              <Bot size={16} />
+              Ask Coal Intelligence
             </button>
           </form>
         </div>

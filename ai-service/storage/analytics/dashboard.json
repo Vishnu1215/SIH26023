@@ -1,84 +1,118 @@
 {
   "status": "success",
   "analyticsVersion": 1,
-  "generatedAt": "2026-09-24T14:05:21.435578+00:00",
-  "lastRefresh": "2026-09-24T14:05:21.435578+00:00",
-  "generationTime": 0.0307,
-  "documentsProcessed": 0,
-  "totalDocuments": 0,
+  "generatedAt": "2026-09-24T15:21:39.091650+00:00",
+  "lastRefresh": "2026-09-24T15:21:39.091650+00:00",
+  "generationTime": 0.0626,
+  "documentsProcessed": 13,
+  "totalDocuments": 13,
   "documents": {
-    "documentsUploaded": 0,
-    "totalDocuments": 0,
-    "documentsProcessed": 0,
-    "totalProcessed": 0,
+    "documentsUploaded": 13,
+    "totalDocuments": 13,
+    "documentsProcessed": 13,
+    "totalProcessed": 13,
     "documentsFailed": 0,
     "totalFailed": 0,
     "ocrComplete": 0,
-    "structuredRecords": 0,
-    "structuredRecordsExtracted": 0,
-    "validatedDocuments": 0,
+    "structuredRecords": 13,
+    "structuredRecordsExtracted": 13,
+    "validatedDocuments": 9,
     "pendingDocuments": 0,
     "duplicateDocuments": 0,
-    "statesCovered": 0,
-    "byCategory": {},
-    "categories": {},
-    "byFileType": {},
-    "fileTypes": {},
+    "statesCovered": 3,
+    "byCategory": {
+      "Unknown": 13
+    },
+    "categories": {
+      "Unknown": 13
+    },
+    "byFileType": {
+      "other": 13
+    },
+    "fileTypes": {
+      "other": 13
+    },
     "averageOcrTime": 0.0,
-    "averageValidationTime": 0.0,
+    "averageValidationTime": 0.0211,
     "averageExtractionTime": 0.05
   },
   "production": {
-    "totalCoalProduction": 0,
-    "totalTargetProduction": 0,
-    "totalAchievedProduction": 0,
-    "targetVariance": 0,
-    "remainingTarget": 0.0,
-    "bestPerformingRecord": null,
-    "lowestPerformingRecord": null,
-    "averageProduction": 0.0,
-    "highestProduction": 0.0,
-    "lowestProduction": 0.0,
-    "productionAchievement": 0.0,
-    "productionAchievementPct": 0.0,
-    "productionAchievementPercentage": 0.0,
-    "productionCount": 0,
+    "totalCoalProduction": 142788.22,
+    "totalTargetProduction": 154304.79,
+    "totalAchievedProduction": 142727.67,
+    "targetVariance": -11577.12,
+    "remainingTarget": 11577.12,
+    "bestPerformingRecord": {
+      "name": "Jharia Open Cast",
+      "mineName": "Jharia Open Cast",
+      "subsidiary": "BCCL",
+      "production": 142500.0
+    },
+    "lowestPerformingRecord": {
+      "name": "Gevra",
+      "mineName": "Gevra",
+      "subsidiary": "CIL",
+      "production": 1.21
+    },
+    "averageProduction": 20398.32,
+    "highestProduction": 142500.0,
+    "lowestProduction": 1.21,
+    "productionAchievement": 92.5,
+    "productionAchievementPct": 92.5,
+    "productionAchievementPercentage": 92.5,
+    "productionCount": 7,
     "productionUnit": "MT",
-    "productionTrend": []
+    "productionTrend": [
+      {
+        "financialYear": "2014–15",
+        "production": 57.45,
+        "documents": 1
+      },
+      {
+        "financialYear": "2023–24",
+        "production": 142685.5,
+        "documents": 2
+      },
+      {
+        "financialYear": "2025–26",
+        "production": 3.1,
+        "documents": 7
+      }
+    ]
   },
   "validation": {
-    "totalValidated": 0,
-    "validatedDocuments": 0,
-    "validDocuments": 0,
-    "warningDocuments": 0,
-    "errorDocuments": 0,
-    "averageValidationScore": 0.0,
-    "overallQualityRating": "Poor",
-    "qualityRating": "Poor",
-    "manualReviewRequired": 0,
-    "highestScore": 0,
-    "lowestScore": 0,
-    "totalErrors": 0,
-    "totalWarnings": 0,
-    "validationAccuracy": 0.0,
-    "validationAccuracyPercentage": 0.0,
-    "validationAccuracyPct": 0.0
+    "totalValidated": 9,
+    "validatedDocuments": 9,
+    "validDocuments": 1,
+    "warningDocuments": 4,
+    "errorDocuments": 4,
+    "averageValidationScore": 84.4,
+    "overallQualityRating": "Good",
+    "qualityRating": "Good",
+    "manualReviewRequired": 4,
+    "highestScore": 100,
+    "lowestScore": 70,
+    "totalErrors": 4,
+    "totalWarnings": 12,
+    "validationAccuracy": 11.1,
+    "validationAccuracyPercentage": 11.1,
+    "validationAccuracyPct": 11.1
   },
   "quality": {
-    "missingFieldsPercentage": 0.0,
-    "fieldCompletenessPercentage": 100.0,
-    "averageFieldCompleteness": 100.0,
-    "averageStructuredFields": 0.0,
+    "missingFieldsPercentage": 39.9,
+    "fieldCompletenessPercentage": 60.1,
+    "averageFieldCompleteness": 60.1,
+    "averageStructuredFields": 9.6,
     "totalStandardFields": 16,
-    "missingMandatoryFields": 0,
+    "missingMandatoryFields": 15,
     "duplicateDocuments": 0,
     "duplicateRecords": 0,
     "unknownUnits": 0,
     "lowOcrConfidence": 0,
     "lowOcrConfidenceCount": 0,
-    "documentsRequiringReview": 0,
-    "manualReviewRequired": 0,
-    "failedValidationPercentage": 0.0,
+    "documentsRequiringReview": 4,
+    "manualReviewRequired": 4,
+    "failedValidationPercentage": 44.4,
     "ocrConfidenceDistribution": {
       "lowConfidence": 0,
       "moderateConfidence": 0,
@@ -86,36 +120,416 @@
       "digitalLayer": 0
     }
   },
-  "subsidiaries": [],
-  "states": [],
-  "financialYears": [],
+  "subsidiaries": [
+    {
+      "subsidiary": "BCCL",
+      "documents": 1,
+      "production": 142500.0,
+      "averageProduction": 142500.0,
+      "unit": "MT",
+      "rank": 1,
+      "contributionPct": 99.8
+    },
+    {
+      "subsidiary": "SECL",
+      "documents": 1,
+      "production": 185.5,
+      "averageProduction": 185.5,
+      "unit": "MT",
+      "rank": 2,
+      "contributionPct": 0.1
+    },
+    {
+      "subsidiary": "Other / Unassigned",
+      "documents": 1,
+      "production": 57.45,
+      "averageProduction": 57.45,
+      "unit": "MT",
+      "rank": 3,
+      "contributionPct": 0.0
+    },
+    {
+      "subsidiary": "WCL",
+      "documents": 1,
+      "production": 39.75,
+      "averageProduction": 39.75,
+      "unit": "MT",
+      "rank": 4,
+      "contributionPct": 0.0
+    },
+    {
+      "subsidiary": "CIL",
+      "documents": 4,
+      "production": 5.52,
+      "averageProduction": 1.38,
+      "unit": "MT",
+      "rank": 5,
+      "contributionPct": 0.0
+    },
+    {
+      "subsidiary": "SCCL",
+      "documents": 5,
+      "production": 0.0,
+      "averageProduction": 0.0,
+      "unit": "MT",
+      "rank": 6,
+      "contributionPct": 0.0
+    }
+  ],
+  "states": [
+    {
+      "state": "Jharkhand",
+      "documents": 1,
+      "production": 142500.0,
+      "averageProduction": 142500.0,
+      "unit": "MT",
+      "rank": 1,
+      "contributionPct": 99.8
+    },
+    {
+      "state": "Chhattisgarh",
+      "documents": 5,
+      "production": 191.02,
+      "averageProduction": 38.2,
+      "unit": "MT",
+      "rank": 2,
+      "contributionPct": 0.1
+    },
+    {
+      "state": "Maharashtra",
+      "documents": 1,
+      "production": 39.75,
+      "averageProduction": 39.75,
+      "unit": "MT",
+      "rank": 3,
+      "contributionPct": 0.0
+    },
+    {
+      "state": "Not Available",
+      "documents": 6,
+      "production": 57.45,
+      "averageProduction": 9.58,
+      "unit": "MT",
+      "rank": 4,
+      "contributionPct": 0.0
+    }
+  ],
+  "financialYears": [
+    {
+      "financialYear": "2014–15",
+      "documents": 1,
+      "production": 57.45,
+      "targetProduction": 0,
+      "averageAchievement": 0.0,
+      "achievementPercentage": 0.0,
+      "averageValidationScore": 0.0,
+      "qualityRating": "Poor",
+      "averageQuality": "Poor",
+      "unit": "MT",
+      "rank": 1
+    },
+    {
+      "financialYear": "2023–24",
+      "documents": 2,
+      "production": 142685.5,
+      "targetProduction": 150190.0,
+      "averageAchievement": 95.0,
+      "achievementPercentage": 95.0,
+      "averageValidationScore": 0.0,
+      "qualityRating": "Poor",
+      "averageQuality": "Poor",
+      "unit": "MT",
+      "rank": 2
+    },
+    {
+      "financialYear": "2025–26",
+      "documents": 7,
+      "production": 3.1,
+      "targetProduction": 0,
+      "averageAchievement": 0.0,
+      "achievementPercentage": 0.0,
+      "averageValidationScore": 87.1,
+      "qualityRating": "Good",
+      "averageQuality": "Good",
+      "unit": "MT",
+      "rank": 3
+    },
+    {
+      "financialYear": "Unknown FY",
+      "documents": 3,
+      "production": 42.17,
+      "targetProduction": 4114.79,
+      "averageAchievement": 1.0,
+      "achievementPercentage": 1.0,
+      "averageValidationScore": 75.0,
+      "qualityRating": "Average",
+      "averageQuality": "Average",
+      "unit": "MT",
+      "rank": 4
+    }
+  ],
   "rankings": {
-    "topMines": [],
-    "topSubsidiaries": [],
-    "topStates": [],
-    "topReports": []
+    "topMines": [
+      {
+        "mine": "Jharia Open Cast",
+        "mineName": "Jharia Open Cast",
+        "subsidiary": "BCCL",
+        "state": "Jharkhand",
+        "production": 142500.0,
+        "documents": 1,
+        "rank": 1
+      },
+      {
+        "mine": "Gevra",
+        "mineName": "Gevra",
+        "subsidiary": "CIL",
+        "state": "Chhattisgarh",
+        "production": 5.52,
+        "documents": 3,
+        "rank": 2
+      },
+      {
+        "mine": "Kusmunda",
+        "mineName": "Kusmunda",
+        "subsidiary": "CIL",
+        "state": "Chhattisgarh",
+        "production": 0.0,
+        "documents": 1,
+        "rank": 3
+      }
+    ],
+    "topSubsidiaries": [
+      {
+        "subsidiary": "BCCL",
+        "documents": 1,
+        "production": 142500.0,
+        "averageProduction": 142500.0,
+        "unit": "MT",
+        "rank": 1,
+        "contributionPct": 99.8
+      },
+      {
+        "subsidiary": "SECL",
+        "documents": 1,
+        "production": 185.5,
+        "averageProduction": 185.5,
+        "unit": "MT",
+        "rank": 2,
+        "contributionPct": 0.1
+      },
+      {
+        "subsidiary": "Other / Unassigned",
+        "documents": 1,
+        "production": 57.45,
+        "averageProduction": 57.45,
+        "unit": "MT",
+        "rank": 3,
+        "contributionPct": 0.0
+      },
+      {
+        "subsidiary": "WCL",
+        "documents": 1,
+        "production": 39.75,
+        "averageProduction": 39.75,
+        "unit": "MT",
+        "rank": 4,
+        "contributionPct": 0.0
+      },
+      {
+        "subsidiary": "CIL",
+        "documents": 4,
+        "production": 5.52,
+        "averageProduction": 1.38,
+        "unit": "MT",
+        "rank": 5,
+        "contributionPct": 0.0
+      }
+    ],
+    "topStates": [
+      {
+        "state": "Jharkhand",
+        "documents": 1,
+        "production": 142500.0,
+        "averageProduction": 142500.0,
+        "unit": "MT",
+        "rank": 1,
+        "contributionPct": 99.8
+      },
+      {
+        "state": "Chhattisgarh",
+        "documents": 5,
+        "production": 191.02,
+        "averageProduction": 38.2,
+        "unit": "MT",
+        "rank": 2,
+        "contributionPct": 0.1
+      },
+      {
+        "state": "Maharashtra",
+        "documents": 1,
+        "production": 39.75,
+        "averageProduction": 39.75,
+        "unit": "MT",
+        "rank": 3,
+        "contributionPct": 0.0
+      }
+    ],
+    "topReports": [
+      {
+        "documentId": "test-phase5-doc-001",
+        "reportTitle": "Annual Bccl Production Report 2023 24",
+        "subsidiary": "BCCL",
+        "mineName": "Jharia Open Cast",
+        "state": "Jharkhand",
+        "financialYear": "2023-24",
+        "production": 142500.0,
+        "unit": "MT",
+        "rank": 1
+      },
+      {
+        "documentId": "test-fastapi-extract-001",
+        "reportTitle": "Secl Annual Report",
+        "subsidiary": "SECL",
+        "mineName": "-",
+        "state": "Chhattisgarh",
+        "financialYear": "2023-24",
+        "production": 185.5,
+        "unit": "MT",
+        "rank": 2
+      },
+      {
+        "documentId": "test-csv-doc",
+        "reportTitle": "Annual Coal Production",
+        "subsidiary": "Not Available",
+        "mineName": "-",
+        "state": "Not Available",
+        "financialYear": "2014-15",
+        "production": 57.45,
+        "unit": "MT",
+        "rank": 3
+      },
+      {
+        "documentId": "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "reportTitle": "174",
+        "subsidiary": "WCL",
+        "mineName": "-",
+        "state": "Maharashtra",
+        "financialYear": "-",
+        "production": 39.75,
+        "unit": "MT",
+        "rank": 4
+      },
+      {
+        "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "reportTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "mineName": "Gevra",
+        "state": "Chhattisgarh",
+        "financialYear": "2025-26",
+        "production": 3.1,
+        "unit": "MT",
+        "rank": 5
+      }
+    ]
   },
   "charts": {
-    "productionTrend": [],
-    "subsidiaryDistribution": [],
-    "stateDistribution": [],
+    "productionTrend": [
+      {
+        "financialYear": "2014–15",
+        "production": 57.45,
+        "documents": 1
+      },
+      {
+        "financialYear": "2023–24",
+        "production": 142685.5,
+        "documents": 2
+      },
+      {
+        "financialYear": "2025–26",
+        "production": 3.1,
+        "documents": 7
+      }
+    ],
+    "subsidiaryDistribution": [
+      {
+        "name": "BCCL",
+        "production": 142500.0,
+        "documents": 1,
+        "contributionPct": 99.8
+      },
+      {
+        "name": "SECL",
+        "production": 185.5,
+        "documents": 1,
+        "contributionPct": 0.1
+      },
+      {
+        "name": "Other / Unassigned",
+        "production": 57.45,
+        "documents": 1,
+        "contributionPct": 0.0
+      },
+      {
+        "name": "WCL",
+        "production": 39.75,
+        "documents": 1,
+        "contributionPct": 0.0
+      },
+      {
+        "name": "CIL",
+        "production": 5.52,
+        "documents": 4,
+        "contributionPct": 0.0
+      },
+      {
+        "name": "SCCL",
+        "production": 0.0,
+        "documents": 5,
+        "contributionPct": 0.0
+      }
+    ],
+    "stateDistribution": [
+      {
+        "name": "Jharkhand",
+        "production": 142500.0,
+        "documents": 1,
+        "contributionPct": 99.8
+      },
+      {
+        "name": "Chhattisgarh",
+        "production": 191.02,
+        "documents": 5,
+        "contributionPct": 0.1
+      },
+      {
+        "name": "Maharashtra",
+        "production": 39.75,
+        "documents": 1,
+        "contributionPct": 0.0
+      }
+    ],
     "validationScoreDistribution": [
       {
         "category": "Valid",
-        "count": 0,
+        "count": 1,
         "color": "#16a34a"
       },
       {
         "category": "Warning",
-        "count": 0,
+        "count": 4,
         "color": "#d97706"
       },
       {
         "category": "Error",
-        "count": 0,
+        "count": 4,
         "color": "#dc2626"
       }
     ],
-    "documentTypeDistribution": []
+    "documentTypeDistribution": [
+      {
+        "type": "OTHER",
+        "count": 13
+      }
+    ]
   }
 }

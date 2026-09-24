@@ -6,6 +6,7 @@ import {
   ClipboardList,
   Sparkles,
   MessageSquareQuote,
+  Bot,
   Lightbulb,
   Settings,
   Flame
@@ -37,6 +38,11 @@ const NAV_ITEMS = [
     path: ROUTES.QUERY,
     label: 'Natural Language Query',
     icon: MessageSquareQuote
+  },
+  {
+    path: ROUTES.QA,
+    label: 'Hybrid AI Q&A',
+    icon: Bot
   },
   {
     path: ROUTES.RECOMMENDATIONS,

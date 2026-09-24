@@ -25,7 +25,9 @@ import {
   MapPin,
   Award,
   BarChart3,
-  Sparkles
+  Sparkles,
+  Bot,
+  ExternalLink
 } from 'lucide-react';
 import {
   uploadDocumentFile,
@@ -35,6 +37,7 @@ import {
 } from '../services/document.service.js';
 import { getDocumentIntelligence } from '../services/intelligence.service.js';
 import { executeNaturalLanguageQuery } from '../services/query.service.js';
+import { askQAQuery } from '../services/qa.service.js';
 import {
   formatNumber,
   formatProduction,
@@ -93,16 +96,17 @@ export default function DocumentsPage() {
       else if (type === 'topics') queryStr = 'What topics are detected in this document?';
       else if (type === 'related') queryStr = 'What documents are related to this document?';
 
-      const res = await executeNaturalLanguageQuery({
-        query: queryStr,
-        documentId: viewingDoc.documentId
+      const res = await askQAQuery({
+        question: queryStr,
+        documentId: viewingDoc.documentId,
+        useLLM: false
       });
       setDocQueryAnswer(res);
     } catch (e) {
       setDocQueryAnswer({
         answer: 'Failed to process inquiry for this document.',
-        reason: e.message,
-        source: 'document_intelligence'
+        reasoning: e.message,
+        queryType: 'Document Question'
       });
     } finally {
       setDocQueryLoading(false);
@@ -1417,10 +1421,10 @@ export default function DocumentsPage() {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
                           <CheckCircle2 size={16} color="#16a34a" />
-                          <span>Verified Response</span>
+                          <span>{Math.round((docQueryAnswer.confidence || 0.98) * 100)}% Verified Response</span>
                         </div>
                         <span style={{ fontSize: '0.72rem', padding: '0.15rem 0.45rem', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: '4px', fontWeight: 600 }}>
-                          {docQueryAnswer.source || 'storage/document_intelligence'}
+                          {docQueryAnswer.queryType || 'Document Question'}
                         </span>
                       </div>
 
@@ -1428,12 +1432,31 @@ export default function DocumentsPage() {
                         {docQueryAnswer.answer}
                       </div>
 
-                      {docQueryAnswer.reason && (
-                        <div style={{ fontSize: '0.8rem', color: '#475569', background: '#ffffff', padding: '0.5rem 0.75rem', borderRadius: '6px', borderLeft: '3px solid #3b82f6' }}>
+                      {(docQueryAnswer.reasoning || docQueryAnswer.reason) && (
+                        <div style={{ fontSize: '0.8rem', color: '#475569', background: '#ffffff', padding: '0.5rem 0.75rem', borderRadius: '6px', borderLeft: '3px solid #3b82f6', marginBottom: '0.75rem' }}>
                           <strong>Basis: </strong>
-                          {docQueryAnswer.reason}
+                          {docQueryAnswer.reasoning || docQueryAnswer.reason}
                         </div>
                       )}
+
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '0.4rem' }}>
+                        <Link
+                          to={`/qa?q=${encodeURIComponent(docQueryAnswer.question || '')}&documentId=${viewingDoc.documentId}`}
+                          style={{
+                            fontSize: '0.78rem',
+                            fontWeight: 700,
+                            color: '#1e3a8a',
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                          }}
+                        >
+                          <Bot size={14} />
+                          <span>Open in Coal Intelligence Q&amp;A</span>
+                          <ExternalLink size={12} />
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </div>

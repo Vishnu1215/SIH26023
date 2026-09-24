@@ -1,26 +1,16 @@
 [
   {
-    "id": "qh-249a855a",
-    "query": "Show annual reports",
-    "timestamp": "2026-09-24T14:05:04.236161+00:00",
-    "intent": "report_lookup",
-    "totalResults": 10,
-    "filters": {
-      "category": "Annual Report"
-    }
-  },
-  {
-    "id": "qh-c3e819c6",
+    "id": "qh-9ca6a094",
     "query": "Which subsidiary has the highest production?",
-    "timestamp": "2026-09-24T13:53:42.340905+00:00",
+    "timestamp": "2026-09-24T14:38:44.563184+00:00",
     "intent": "analytics_lookup",
-    "totalResults": 5,
+    "totalResults": 1,
     "filters": {}
   },
   {
-    "id": "qh-572dc996",
+    "id": "qh-1f2271df",
     "query": "Show production reports for SECL",
-    "timestamp": "2026-09-24T13:53:42.319717+00:00",
+    "timestamp": "2026-09-24T14:38:44.545172+00:00",
     "intent": "report_lookup",
     "totalResults": 1,
     "filters": {
@@ -29,11 +19,11 @@
     }
   },
   {
-    "id": "qh-8a5a4d3c",
+    "id": "qh-2abdd74e",
     "query": "Which subsidiary has the highest production?",
-    "timestamp": "2026-09-24T13:53:42.289808+00:00",
+    "timestamp": "2026-09-24T14:38:44.516311+00:00",
     "intent": "analytics_lookup",
-    "totalResults": 5,
+    "totalResults": 1,
     "filters": {}
   }
 ]
