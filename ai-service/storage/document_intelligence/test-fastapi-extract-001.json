@@ -1,0 +1,119 @@
+{
+  "documentId": "test-fastapi-extract-001",
+  "reportTitle": "Secl Annual Report",
+  "processedAt": "2026-09-23T10:30:21.886202+00:00",
+  "processingTimeMs": 4.0,
+  "classification": {
+    "documentCategory": "Annual Report",
+    "classificationConfidence": 67,
+    "classificationReason": "Title/filename contains 'annual report'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "SECL",
+    "Chhattisgarh",
+    "Korba",
+    "2023-24",
+    "Coal Production",
+    "Annual",
+    "None"
+  ],
+  "entities": {
+    "organizations": [
+      "SECL"
+    ],
+    "subsidiaries": [
+      "SECL"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [
+      "Korba"
+    ],
+    "mines": [],
+    "measurements": [
+      "185.5 MT"
+    ],
+    "financialYears": [
+      "2023-24"
+    ],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Annual Report document records statutory operations for SECL during Financial Year 2023-24. Operational data pertains to in Korba district, Chhattisgarh. Key physical metrics record total coal production of 185.50 MT, target production of 190.00 MT, achievement rate of 97.6%. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "test-phase5-doc-001",
+        "documentTitle": "Annual Bccl Production Report 2023 24",
+        "subsidiary": "BCCL",
+        "financialYear": "2023-24",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2023-24)"
+        ]
+      },
+      {
+        "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "documentTitle": "Chap2Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "documentTitle": "Cmpdi Annual Report 2025 26",
+        "subsidiary": "CIL",
+        "financialYear": "N/A",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      }
+    ],
+    "totalRelated": 4
+  },
+  "structuredData": {
+    "documentId": "test-fastapi-extract-001",
+    "reportTitle": "Secl Annual Report",
+    "reportType": "General Mining Document",
+    "financialYear": "2023-24",
+    "reportDate": null,
+    "issuingOrganization": "SECL",
+    "subsidiary": "SECL",
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": "Korba",
+    "state": "Chhattisgarh",
+    "coalProduction": 185.5,
+    "overburdenRemoval": null,
+    "targetProduction": 190,
+    "achievedProduction": null,
+    "percentageAchievement": 97.63,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 11,
+    "extractedAt": "2026-09-23T09:32:40.126941+00:00"
+  },
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

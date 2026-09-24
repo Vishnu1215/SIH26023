@@ -1,0 +1,123 @@
+{
+  "documentId": "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+  "reportTitle": "Cmpdi Annual Report 2025 26",
+  "processedAt": "2026-09-23T10:30:21.817205+00:00",
+  "processingTimeMs": 2.8,
+  "classification": {
+    "documentCategory": "Annual Report",
+    "classificationConfidence": 87,
+    "classificationReason": "Title/filename contains 'annual report'; Structured metadata explicitly declared 'Annual Report'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    },
+    {
+      "topic": "Overburden",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "CIL",
+    "Gevra",
+    "Chhattisgarh",
+    "Korba",
+    "Coal Production",
+    "Opencast",
+    "Cmpdi",
+    "Annual"
+  ],
+  "entities": {
+    "organizations": [
+      "CIL",
+      "CMPDI",
+      "CMPDIL"
+    ],
+    "subsidiaries": [
+      "CIL",
+      "CMPDI",
+      "CMPDIL"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [
+      "Korba"
+    ],
+    "mines": [
+      "Gevra"
+    ],
+    "measurements": [
+      "1.21 T"
+    ],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": [
+      "Opencast"
+    ]
+  },
+  "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) for standard operational monitoring. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 1.21 T, target production of 2,025.00 T, achievement rate of 0.1%, overburden removal of 1.20 CuM. Primary analytical subject matter centers on Coal Production, Overburden.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 70,
+        "sharedAttributes": [
+          "Mine (Gevra)",
+          "Subsidiary (CIL)",
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "documentTitle": "Chap2Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 40,
+        "sharedAttributes": [
+          "Subsidiary (CIL)",
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "test-fastapi-extract-001",
+        "documentTitle": "Secl Annual Report",
+        "subsidiary": "SECL",
+        "financialYear": "2023-24",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      }
+    ],
+    "totalRelated": 3
+  },
+  "structuredData": {
+    "documentId": "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+    "reportTitle": "Cmpdi Annual Report 2025 26",
+    "reportType": "Annual Report",
+    "financialYear": null,
+    "reportDate": null,
+    "issuingOrganization": "CMPDIL",
+    "subsidiary": "CIL",
+    "mineName": "Gevra",
+    "mineType": "Opencast",
+    "region": "Jharia Coalfield",
+    "district": "Korba",
+    "state": "Chhattisgarh",
+    "coalProduction": 1.21,
+    "overburdenRemoval": 1.2,
+    "targetProduction": 2025,
+    "achievedProduction": 1.21,
+    "percentageAchievement": 0.06,
+    "productionUnit": "T",
+    "extractedFieldsCount": 15,
+    "extractedAt": "2026-09-22T14:33:06.048540+00:00"
+  },
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

@@ -1,0 +1,610 @@
+{
+  "lastIndexedAt": "2026-09-23T10:39:58.376427+00:00",
+  "totalDocuments": 11,
+  "documents": {
+    "1e77a47e-dafb-4ed9-966c-5fa47e75c19b": {
+      "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+      "reportTitle": "Chap3Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "CIL",
+      "mineName": "Gevra",
+      "state": "Chhattisgarh",
+      "district": "Korba",
+      "financialYear": "2025-26",
+      "coalProduction": 3.1,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 3.10 MT. Data integrity audit classifies this record as Valid (Score: 100/100) with zero discrepancies flagged. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "Gevra",
+        "CIL",
+        "Chhattisgarh",
+        "Korba",
+        "2025-26",
+        "Coal Production",
+        "Opencast",
+        "Chap3Annualreport2026En"
+      ],
+      "relatedCount": 5
+    },
+    "217ec505-e2a7-4f93-9f3b-a8463b214770": {
+      "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+      "reportTitle": "Chap2Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "CIL",
+      "mineName": "Kusmunda",
+      "state": "Chhattisgarh",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 80,
+      "validationStatus": "Error",
+      "summary": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data integrity audit classifies this record as Error (Score: 80/100) with 1 statutory error(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "CIL",
+        "Kusmunda",
+        "Chhattisgarh",
+        "2025-26",
+        "Opencast",
+        "Chap2Annualreport2026En"
+      ],
+      "relatedCount": 5
+    },
+    "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf": {
+      "documentId": "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 90,
+      "validationStatus": "Warning",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 5
+    },
+    "5062a163-a8eb-47d4-8033-ea835014a7ca": {
+      "documentId": "5062a163-a8eb-47d4-8033-ea835014a7ca",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 90,
+      "validationStatus": "Warning",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 5
+    },
+    "52ef573e-f21e-479a-b92b-f90a1d9107c9": {
+      "documentId": "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+      "reportTitle": "174",
+      "documentCategory": "Production Report",
+      "classificationConfidence": 62,
+      "subsidiary": "WCL",
+      "mineName": "N/A",
+      "state": "Maharashtra",
+      "district": "Chandrapur",
+      "financialYear": "N/A",
+      "coalProduction": 39.75,
+      "productionUnit": "MT",
+      "validationScore": 70,
+      "validationStatus": "Error",
+      "summary": "This Production Report document records statutory operations for SCCL (WCL) for standard operational monitoring. Operational data pertains to in Chandrapur district, Maharashtra. Key physical metrics record total coal production of 39.75 MT, target production of 64.79 MT, achievement rate of 58.4%, overburden removal of 4.00 CuM. Data integrity audit classifies this record as Error (Score: 70/100) with 1 statutory error(s), 2 warning(s). Primary analytical subject matter centers on Coal Production, Overburden.",
+      "topTopics": [
+        "Coal Production",
+        "Overburden"
+      ],
+      "keywords": [
+        "WCL",
+        "Maharashtra",
+        "Chandrapur",
+        "Coal Production",
+        "Opencast",
+        "None"
+      ],
+      "relatedCount": 0
+    },
+    "83d8a268-00c4-4873-a692-a35d4aa4bf6f": {
+      "documentId": "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 90,
+      "validationStatus": "Warning",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 5
+    },
+    "c5de86f6-0da2-4194-a63f-02a8c7d2462a": {
+      "documentId": "c5de86f6-0da2-4194-a63f-02a8c7d2462a",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 70,
+      "validationStatus": "Error",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Error (Score: 70/100) with 1 statutory error(s), 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 5
+    },
+    "f2d385b0-0466-4d9d-b5bf-e35affda7d38": {
+      "documentId": "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+      "reportTitle": "Cmpdi Annual Report 2025 26",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "CIL",
+      "mineName": "Gevra",
+      "state": "Chhattisgarh",
+      "district": "Korba",
+      "financialYear": "N/A",
+      "coalProduction": 1.21,
+      "productionUnit": "T",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) for standard operational monitoring. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 1.21 T, target production of 2,025.00 T, achievement rate of 0.1%, overburden removal of 1.20 CuM. Primary analytical subject matter centers on Coal Production, Overburden.",
+      "topTopics": [
+        "Coal Production",
+        "Overburden"
+      ],
+      "keywords": [
+        "CIL",
+        "Gevra",
+        "Chhattisgarh",
+        "Korba",
+        "Coal Production",
+        "Opencast",
+        "Cmpdi",
+        "Annual"
+      ],
+      "relatedCount": 3
+    },
+    "test-csv-doc": {
+      "documentId": "test-csv-doc",
+      "reportTitle": "Annual Coal Production",
+      "documentCategory": "Production Report",
+      "classificationConfidence": 92,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2014-15",
+      "coalProduction": 57.45,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Production Report document records statutory operations for Coal India Limited during Financial Year 2014-15. Key physical metrics record total coal production of 57.45 MT. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "2014-15",
+        "Coal Production",
+        "None",
+        "Annual",
+        "Coal",
+        "Production"
+      ],
+      "relatedCount": 0
+    },
+    "test-fastapi-extract-001": {
+      "documentId": "test-fastapi-extract-001",
+      "reportTitle": "Secl Annual Report",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 67,
+      "subsidiary": "SECL",
+      "mineName": "N/A",
+      "state": "Chhattisgarh",
+      "district": "Korba",
+      "financialYear": "2023-24",
+      "coalProduction": 185.5,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Annual Report document records statutory operations for SECL during Financial Year 2023-24. Operational data pertains to in Korba district, Chhattisgarh. Key physical metrics record total coal production of 185.50 MT, target production of 190.00 MT, achievement rate of 97.6%. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SECL",
+        "Chhattisgarh",
+        "Korba",
+        "2023-24",
+        "Coal Production",
+        "Annual",
+        "None"
+      ],
+      "relatedCount": 4
+    },
+    "test-phase5-doc-001": {
+      "documentId": "test-phase5-doc-001",
+      "reportTitle": "Annual Bccl Production Report 2023 24",
+      "documentCategory": "Production Report",
+      "classificationConfidence": 77,
+      "subsidiary": "BCCL",
+      "mineName": "Jharia Open Cast",
+      "state": "Jharkhand",
+      "district": "Dhanbad",
+      "financialYear": "2023-24",
+      "coalProduction": 142500,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Production Report document records statutory operations for BCCL during Financial Year 2023-24. Operational data pertains to Jharia Open Cast Mine (Opencast), in Dhanbad district, Jharkhand. Key physical metrics record total coal production of 142,500.00 MT, target production of 150,000.00 MT, achievement rate of 95.0%, overburden removal of 320,000.00 CuM. Primary analytical subject matter centers on Coal Production, Overburden.",
+      "topTopics": [
+        "Coal Production",
+        "Overburden"
+      ],
+      "keywords": [
+        "BCCL",
+        "Jharia Open Cast",
+        "Jharkhand",
+        "Dhanbad",
+        "2023-24",
+        "Coal Production",
+        "Opencast",
+        "Annual"
+      ],
+      "relatedCount": 1
+    }
+  },
+  "indices": {
+    "by_keyword": {
+      "gevra": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "cil": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "chhattisgarh": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-fastapi-extract-001"
+      ],
+      "korba": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-fastapi-extract-001"
+      ],
+      "2025-26": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
+      ],
+      "coal production": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-csv-doc",
+        "test-fastapi-extract-001",
+        "test-phase5-doc-001"
+      ],
+      "opencast": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-phase5-doc-001"
+      ],
+      "chap3annualreport2026en": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b"
+      ],
+      "mine": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b"
+      ],
+      "annual": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-csv-doc",
+        "test-fastapi-extract-001",
+        "test-phase5-doc-001"
+      ],
+      "coal": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "test-csv-doc"
+      ],
+      "production": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "test-csv-doc",
+        "test-phase5-doc-001"
+      ],
+      "kusmunda": [
+        "217ec505-e2a7-4f93-9f3b-a8463b214770"
+      ],
+      "chap2annualreport2026en": [
+        "217ec505-e2a7-4f93-9f3b-a8463b214770"
+      ],
+      "sccl": [
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
+      ],
+      "chap5annualreport2026en": [
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
+      ],
+      "none": [
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a",
+        "test-csv-doc",
+        "test-fastapi-extract-001"
+      ],
+      "wcl": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9"
+      ],
+      "maharashtra": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9"
+      ],
+      "chandrapur": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9"
+      ],
+      "cmpdi": [
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "2014-15": [
+        "test-csv-doc"
+      ],
+      "secl": [
+        "test-fastapi-extract-001"
+      ],
+      "2023-24": [
+        "test-fastapi-extract-001",
+        "test-phase5-doc-001"
+      ],
+      "bccl": [
+        "test-phase5-doc-001"
+      ],
+      "jharia open cast": [
+        "test-phase5-doc-001"
+      ],
+      "jharkhand": [
+        "test-phase5-doc-001"
+      ],
+      "dhanbad": [
+        "test-phase5-doc-001"
+      ],
+      "jharia": [
+        "test-phase5-doc-001"
+      ],
+      "open": [
+        "test-phase5-doc-001"
+      ],
+      "cast": [
+        "test-phase5-doc-001"
+      ]
+    },
+    "by_topic": {
+      "coal production": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-csv-doc",
+        "test-fastapi-extract-001",
+        "test-phase5-doc-001"
+      ],
+      "overburden": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-phase5-doc-001"
+      ]
+    },
+    "by_subsidiary": {
+      "cil": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "sccl": [
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
+      ],
+      "wcl": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9"
+      ],
+      "secl": [
+        "test-fastapi-extract-001"
+      ],
+      "bccl": [
+        "test-phase5-doc-001"
+      ]
+    },
+    "by_mine": {
+      "gevra": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "kusmunda": [
+        "217ec505-e2a7-4f93-9f3b-a8463b214770"
+      ],
+      "jharia open cast": [
+        "test-phase5-doc-001"
+      ]
+    },
+    "by_state": {
+      "chhattisgarh": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-fastapi-extract-001"
+      ],
+      "maharashtra": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9"
+      ],
+      "jharkhand": [
+        "test-phase5-doc-001"
+      ]
+    },
+    "by_fy": {
+      "2025-26": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
+      ],
+      "2014-15": [
+        "test-csv-doc"
+      ],
+      "2023-24": [
+        "test-fastapi-extract-001",
+        "test-phase5-doc-001"
+      ]
+    },
+    "by_category": {
+      "annual report": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "test-fastapi-extract-001"
+      ],
+      "production report": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "test-csv-doc",
+        "test-phase5-doc-001"
+      ]
+    },
+    "by_entity": {
+      "cil": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "cmpdil": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "gevra": [
+        "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "sccl": [
+        "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
+      ],
+      "kusmunda": [
+        "217ec505-e2a7-4f93-9f3b-a8463b214770"
+      ],
+      "ministry of coal": [
+        "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
+      ],
+      "wcl": [
+        "52ef573e-f21e-479a-b92b-f90a1d9107c9"
+      ],
+      "cmpdi": [
+        "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
+      ],
+      "coal india": [
+        "test-csv-doc"
+      ],
+      "coal india limited": [
+        "test-csv-doc"
+      ],
+      "secl": [
+        "test-fastapi-extract-001"
+      ],
+      "bccl": [
+        "test-phase5-doc-001"
+      ],
+      "jharia open cast": [
+        "test-phase5-doc-001"
+      ]
+    }
+  }
+}

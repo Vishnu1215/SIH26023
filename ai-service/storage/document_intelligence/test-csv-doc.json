@@ -1,0 +1,72 @@
+{
+  "documentId": "test-csv-doc",
+  "reportTitle": "Annual Coal Production",
+  "processedAt": "2026-09-23T10:30:21.870638+00:00",
+  "processingTimeMs": 4.34,
+  "classification": {
+    "documentCategory": "Production Report",
+    "classificationConfidence": 92,
+    "classificationReason": "Title/filename contains 'production'; Title/filename contains 'coal production'; Extracted quantitative production fields (Coal/Target/OBR)"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "2014-15",
+    "Coal Production",
+    "None",
+    "Annual",
+    "Coal",
+    "Production"
+  ],
+  "entities": {
+    "organizations": [
+      "Coal India",
+      "Coal India Limited"
+    ],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [
+      "57.45 MT"
+    ],
+    "financialYears": [
+      "2014-15"
+    ],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Production Report document records statutory operations for Coal India Limited during Financial Year 2014-15. Key physical metrics record total coal production of 57.45 MT. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {
+    "documentId": "test-csv-doc",
+    "reportTitle": "Annual Coal Production",
+    "reportType": "General Mining Document",
+    "financialYear": "2014-15",
+    "reportDate": null,
+    "issuingOrganization": "Coal India Limited",
+    "subsidiary": null,
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": null,
+    "coalProduction": 57.45,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 6,
+    "extractedAt": "2026-09-23T09:32:38.225645+00:00"
+  },
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

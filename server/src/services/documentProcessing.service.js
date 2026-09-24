@@ -138,6 +138,14 @@ export const processDocumentExtraction = async (document) => {
       }, { timeout: 10000 })
         .catch((e) => console.warn('[DocumentProcessing] Analytics recompute background trigger:', e.message));
 
+      // Phase 9: Trigger Document Intelligence & Search Indexing
+      axios.post(`${config.aiServiceUrl}/intelligence/process`, {
+        documentId: document.documentId,
+        filename: document.originalName,
+        extractedText: response.data.extractedText || ''
+      }, { timeout: 15000 })
+        .catch((e) => console.warn('[DocumentProcessing] Intelligence processing background trigger:', e.message));
+
       console.log(
         `[DocumentProcessing] Success for ${document.originalName} via ${response.data.loaderUsed} in ${response.data.processingTime}s (Structured Data: ${structuredDataAvailable ? 'Extracted & Normalized' : 'None'})`
       );
@@ -291,6 +299,13 @@ export const processDocumentValidation = async (documentId) => {
         documents: documentModel.getAllDocuments()
       }, { timeout: 10000 })
         .catch((e) => console.warn('[DocumentProcessing] Analytics recompute background trigger:', e.message));
+
+      // Phase 9: Trigger Document Intelligence update
+      axios.post(`${config.aiServiceUrl}/intelligence/process`, {
+        documentId: document.documentId,
+        filename: document.originalName
+      }, { timeout: 15000 })
+        .catch((e) => console.warn('[DocumentProcessing] Intelligence update background trigger:', e.message));
 
       return updated;
     }

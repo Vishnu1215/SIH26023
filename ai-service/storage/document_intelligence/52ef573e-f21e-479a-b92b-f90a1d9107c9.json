@@ -1,0 +1,83 @@
+{
+  "documentId": "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+  "reportTitle": "174",
+  "processedAt": "2026-09-23T10:30:21.634541+00:00",
+  "processingTimeMs": 5.21,
+  "classification": {
+    "documentCategory": "Production Report",
+    "classificationConfidence": 62,
+    "classificationReason": "Extracted quantitative production fields (Coal/Target/OBR)"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    },
+    {
+      "topic": "Overburden",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "WCL",
+    "Maharashtra",
+    "Chandrapur",
+    "Coal Production",
+    "Opencast",
+    "None"
+  ],
+  "entities": {
+    "organizations": [
+      "SCCL",
+      "WCL"
+    ],
+    "subsidiaries": [
+      "SCCL",
+      "WCL"
+    ],
+    "states": [
+      "Maharashtra"
+    ],
+    "districts": [
+      "Chandrapur"
+    ],
+    "mines": [],
+    "measurements": [
+      "39.75 MT"
+    ],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": [
+      "Opencast"
+    ]
+  },
+  "summary": "This Production Report document records statutory operations for SCCL (WCL) for standard operational monitoring. Operational data pertains to in Chandrapur district, Maharashtra. Key physical metrics record total coal production of 39.75 MT, target production of 64.79 MT, achievement rate of 58.4%, overburden removal of 4.00 CuM. Data integrity audit classifies this record as Error (Score: 70/100) with 1 statutory error(s), 2 warning(s). Primary analytical subject matter centers on Coal Production, Overburden.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {
+    "documentId": "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+    "reportTitle": "174",
+    "reportType": "Ministry Report",
+    "financialYear": null,
+    "reportDate": null,
+    "issuingOrganization": "SCCL",
+    "subsidiary": "WCL",
+    "mineName": null,
+    "mineType": "Opencast",
+    "region": null,
+    "district": "Chandrapur",
+    "state": "Maharashtra",
+    "coalProduction": 39.75,
+    "overburdenRemoval": 4,
+    "targetProduction": 64.79,
+    "achievedProduction": 39.75,
+    "percentageAchievement": 58.4,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 13,
+    "extractedAt": "2026-09-23T08:36:10.510638+00:00"
+  },
+  "validationScore": 70,
+  "validationStatus": "Error"
+}

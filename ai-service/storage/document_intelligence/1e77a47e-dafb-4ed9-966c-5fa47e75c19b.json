@@ -1,0 +1,144 @@
+{
+  "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+  "reportTitle": "Chap3Annualreport2026En",
+  "processedAt": "2026-09-23T10:39:58.373699+00:00",
+  "processingTimeMs": 11.1,
+  "classification": {
+    "documentCategory": "Annual Report",
+    "classificationConfidence": 87,
+    "classificationReason": "Title/filename contains 'annual report'; Structured metadata explicitly declared 'Annual Report'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "Gevra",
+    "CIL",
+    "Chhattisgarh",
+    "Korba",
+    "2025-26",
+    "Coal Production",
+    "Opencast",
+    "Chap3Annualreport2026En",
+    "mine",
+    "annual",
+    "coal",
+    "production"
+  ],
+  "entities": {
+    "organizations": [
+      "CIL",
+      "CMPDIL"
+    ],
+    "subsidiaries": [
+      "CIL",
+      "CMPDIL"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [
+      "Korba"
+    ],
+    "mines": [
+      "Gevra"
+    ],
+    "measurements": [
+      "3.1 MT"
+    ],
+    "financialYears": [
+      "2025-26"
+    ],
+    "dates": [],
+    "mineTypes": [
+      "Opencast"
+    ]
+  },
+  "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 3.10 MT. Data integrity audit classifies this record as Valid (Score: 100/100) with zero discrepancies flagged. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
+        "documentTitle": "Cmpdi Annual Report 2025 26",
+        "subsidiary": "CIL",
+        "financialYear": "N/A",
+        "similarityScore": 70,
+        "sharedAttributes": [
+          "Mine (Gevra)",
+          "Subsidiary (CIL)",
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "documentTitle": "Chap2Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 60,
+        "sharedAttributes": [
+          "Subsidiary (CIL)",
+          "FY (2025-26)",
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      },
+      {
+        "documentId": "5062a163-a8eb-47d4-8033-ea835014a7ca",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      },
+      {
+        "documentId": "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      }
+    ],
+    "totalRelated": 5
+  },
+  "structuredData": {
+    "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+    "reportTitle": "Chap3Annualreport2026En",
+    "reportType": "Annual Report",
+    "financialYear": "2025-26",
+    "reportDate": null,
+    "issuingOrganization": "CMPDIL",
+    "subsidiary": "CIL",
+    "mineName": "Gevra",
+    "mineType": "Opencast",
+    "region": "Like Coalfield",
+    "district": "Korba",
+    "state": "Chhattisgarh",
+    "coalProduction": 3.1,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 12,
+    "extractedAt": "2026-09-23T08:27:38.822729+00:00"
+  },
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

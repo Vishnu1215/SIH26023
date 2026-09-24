@@ -4,6 +4,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import DocumentsPage from './pages/DocumentsPage.jsx';
 import ReportsPage from './pages/ReportsPage.jsx';
+import TopicsSearchPage from './pages/TopicsSearchPage.jsx';
 import PlaceholderModulePage from './pages/PlaceholderModulePage.jsx';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
@@ -28,16 +29,8 @@ export default function App() {
           <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
           <Route path={ROUTES.DOCUMENTS} element={<DocumentsPage />} />
           <Route path={ROUTES.REPORTS} element={<ReportsPage />} />
-          <Route
-            path={ROUTES.TOPICS}
-            element={
-              <PlaceholderModulePage
-                title="Topic Modeling & Word Clouds"
-                moduleNumber="Module 2"
-                description="BERTopic extraction with TF-IDF fallback, domain mining terminology, and Devanagari stopword lists."
-              />
-            }
-          />
+          <Route path={ROUTES.TOPICS} element={<TopicsSearchPage />} />
+          <Route path={ROUTES.SEARCH} element={<TopicsSearchPage />} />
           <Route
             path={ROUTES.QA}
             element={

@@ -1,0 +1,102 @@
+{
+  "documentId": "test-phase5-doc-001",
+  "reportTitle": "Annual Bccl Production Report 2023 24",
+  "processedAt": "2026-09-23T10:30:21.920897+00:00",
+  "processingTimeMs": 2.97,
+  "classification": {
+    "documentCategory": "Production Report",
+    "classificationConfidence": 77,
+    "classificationReason": "Title/filename contains 'production'; Extracted quantitative production fields (Coal/Target/OBR)"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    },
+    {
+      "topic": "Overburden",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "BCCL",
+    "Jharia Open Cast",
+    "Jharkhand",
+    "Dhanbad",
+    "2023-24",
+    "Coal Production",
+    "Opencast",
+    "Annual",
+    "Production",
+    "Jharia",
+    "Open",
+    "Cast"
+  ],
+  "entities": {
+    "organizations": [
+      "BCCL"
+    ],
+    "subsidiaries": [
+      "BCCL"
+    ],
+    "states": [
+      "Jharkhand"
+    ],
+    "districts": [
+      "Dhanbad"
+    ],
+    "mines": [
+      "Jharia Open Cast"
+    ],
+    "measurements": [
+      "142500 MT"
+    ],
+    "financialYears": [
+      "2023-24"
+    ],
+    "dates": [],
+    "mineTypes": [
+      "Opencast"
+    ]
+  },
+  "summary": "This Production Report document records statutory operations for BCCL during Financial Year 2023-24. Operational data pertains to Jharia Open Cast Mine (Opencast), in Dhanbad district, Jharkhand. Key physical metrics record total coal production of 142,500.00 MT, target production of 150,000.00 MT, achievement rate of 95.0%, overburden removal of 320,000.00 CuM. Primary analytical subject matter centers on Coal Production, Overburden.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "test-fastapi-extract-001",
+        "documentTitle": "Secl Annual Report",
+        "subsidiary": "SECL",
+        "financialYear": "2023-24",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2023-24)"
+        ]
+      }
+    ],
+    "totalRelated": 1
+  },
+  "structuredData": {
+    "documentId": "test-phase5-doc-001",
+    "reportTitle": "Annual Bccl Production Report 2023 24",
+    "reportType": "Ministry Report",
+    "financialYear": "2023-24",
+    "reportDate": "2024-04-15",
+    "issuingOrganization": "BCCL",
+    "subsidiary": "BCCL",
+    "mineName": "Jharia Open Cast",
+    "mineType": "Opencast",
+    "region": null,
+    "district": "Dhanbad",
+    "state": "Jharkhand",
+    "coalProduction": 142500,
+    "overburdenRemoval": 320000,
+    "targetProduction": 150000,
+    "achievedProduction": 142500,
+    "percentageAchievement": 95.0,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 16,
+    "extractedAt": "2026-09-23T09:32:38.210112+00:00"
+  },
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

@@ -7,6 +7,7 @@ from app.api.extract import router as extract_router
 from app.api.validate import router as validate_router
 from app.api.analytics import router as analytics_router
 from app.api.reports import router as reports_router
+from app.api.intelligence import router as intelligence_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -30,6 +31,7 @@ app.include_router(extract_router)
 app.include_router(validate_router)
 app.include_router(analytics_router)
 app.include_router(reports_router)
+app.include_router(intelligence_router)
 
 
 

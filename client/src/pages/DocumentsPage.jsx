@@ -24,7 +24,8 @@ import {
   Building2,
   MapPin,
   Award,
-  BarChart3
+  BarChart3,
+  Sparkles
 } from 'lucide-react';
 import {
   uploadDocumentFile,
@@ -32,6 +33,7 @@ import {
   loadSampleDataset,
   validateDocument
 } from '../services/document.service.js';
+import { getDocumentIntelligence } from '../services/intelligence.service.js';
 import {
   formatNumber,
   formatProduction,
@@ -55,13 +57,26 @@ export default function DocumentsPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [viewingDoc, setViewingDoc] = useState(null);
-  const [modalTab, setModalTab] = useState('overview'); // 'overview' | 'analytics' (Phase 7)
+  const [modalTab, setModalTab] = useState('overview'); // 'overview' | 'analytics' | 'intelligence'
+  const [docIntelligence, setDocIntelligence] = useState(null);
+  const [isLoadingIntel, setIsLoadingIntel] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingSamples, setIsLoadingSamples] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [validatingDocId, setValidatingDocId] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
+
+  // Fetch intelligence on modal open or tab switch
+  useEffect(() => {
+    if (viewingDoc && modalTab === 'intelligence') {
+      setIsLoadingIntel(true);
+      getDocumentIntelligence(viewingDoc.documentId)
+        .then((data) => setDocIntelligence(data))
+        .catch((err) => console.warn('Could not load doc intelligence:', err.message))
+        .finally(() => setIsLoadingIntel(false));
+    }
+  }, [viewingDoc, modalTab]);
 
 
   const fileInputRef = useRef(null);
@@ -609,6 +624,14 @@ export default function DocumentsPage() {
                 <BarChart3 size={14} />
                 <span>Document Analytics</span>
               </button>
+              <button
+                type="button"
+                className={`modal-tab-nav-btn ${modalTab === 'intelligence' ? 'active' : ''}`}
+                onClick={() => setModalTab('intelligence')}
+              >
+                <Sparkles size={14} />
+                <span>Document Intelligence</span>
+              </button>
             </div>
 
             <div className="modal-body">
@@ -888,7 +911,7 @@ export default function DocumentsPage() {
                 </pre>
               </div>
                 </>
-              ) : (
+              ) : modalTab === 'analytics' ? (
                 <div className="modal-analytics-tab-content">
                   {/* Module 1: Production Summary */}
                   <div className="modal-section-title">
@@ -1057,6 +1080,176 @@ export default function DocumentsPage() {
                       </div>
                     );
                   })()}
+                </div>
+              ) : (
+                /* Phase 9: Document Intelligence Tab Content */
+                <div className="intelligence-tab-container">
+                  {isLoadingIntel ? (
+                    <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>
+                      <RefreshCw size={24} className="animate-spin" style={{ margin: '0 auto 12px' }} />
+                      <p style={{ fontSize: '14px', fontWeight: 600 }}>Extracting Document Intelligence &amp; Topics...</p>
+                    </div>
+                  ) : !docIntelligence ? (
+                    <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>
+                      <p style={{ fontSize: '14px' }}>No intelligence metadata available for this record yet.</p>
+                    </div>
+                  ) : (
+                    <>
+                      {/* 1. Classification & Confidence */}
+                      <div className="intel-card intel-card-classification">
+                        <div className="intel-card-header">
+                          <span className="intel-badge intel-badge-category">
+                            {docIntelligence.classification?.documentCategory || 'Unknown'}
+                          </span>
+                          <span className="intel-badge intel-badge-confidence">
+                            {docIntelligence.classification?.classificationConfidence || 0}% Confidence
+                          </span>
+                        </div>
+                        <div className="intel-reason-text">
+                          <strong>Classification Basis: </strong>
+                          {docIntelligence.classification?.classificationReason || 'Pattern match'}
+                        </div>
+                      </div>
+
+                      {/* 2. Executive Factual Summary */}
+                      <div className="intel-card">
+                        <div className="modal-section-title" style={{ marginTop: 0 }}>
+                          <FileText size={16} />
+                          <span>Deterministic Executive Summary</span>
+                        </div>
+                        <p className="intel-summary-p">
+                          {docIntelligence.summary}
+                        </p>
+                      </div>
+
+                      {/* 3. Mining Topics & Ontology Weights */}
+                      <div className="intel-card">
+                        <div className="modal-section-title" style={{ marginTop: 0 }}>
+                          <Sparkles size={16} />
+                          <span>Extracted Topics &amp; Normalized Weights</span>
+                        </div>
+                        <div className="intel-topics-grid">
+                          {docIntelligence.topics?.map((t) => (
+                            <div key={t.topic} className="intel-topic-item">
+                              <div className="intel-topic-label">
+                                <span>{t.topic}</span>
+                                <span className="intel-topic-pct">{Math.round((t.weight || 0) * 100)}%</span>
+                              </div>
+                              <div className="intel-topic-bar-bg">
+                                <div
+                                  className="intel-topic-bar-fill"
+                                  style={{ width: `${Math.round((t.weight || 0) * 100)}%` }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* 4. Domain Keywords */}
+                      <div className="intel-card">
+                        <div className="modal-section-title" style={{ marginTop: 0 }}>
+                          <Tag size={16} />
+                          <span>Frequency-Ranked Keywords</span>
+                        </div>
+                        <div className="intel-keywords-cloud">
+                          {docIntelligence.keywords?.map((kw) => (
+                            <span key={kw} className="intel-keyword-chip">
+                              {kw}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* 5. Named Entities */}
+                      <div className="intel-card">
+                        <div className="modal-section-title" style={{ marginTop: 0 }}>
+                          <Building2 size={16} />
+                          <span>Deterministic Named Entities</span>
+                        </div>
+                        <div className="intel-entities-grid">
+                          {docIntelligence.entities?.organizations?.length > 0 && (
+                            <div className="intel-entity-col">
+                              <span className="intel-entity-group-title">Organizations &amp; Subsidiaries</span>
+                              <div className="intel-entity-pills">
+                                {docIntelligence.entities.organizations.map((org) => (
+                                  <span key={org} className="intel-entity-pill pill-org">{org}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {(docIntelligence.entities?.states?.length > 0 || docIntelligence.entities?.districts?.length > 0) && (
+                            <div className="intel-entity-col">
+                              <span className="intel-entity-group-title">Geographical Locations</span>
+                              <div className="intel-entity-pills">
+                                {docIntelligence.entities.states?.map((st) => (
+                                  <span key={st} className="intel-entity-pill pill-loc">{st}</span>
+                                ))}
+                                {docIntelligence.entities.districts?.map((dst) => (
+                                  <span key={dst} className="intel-entity-pill pill-loc">{dst}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {docIntelligence.entities?.mines?.length > 0 && (
+                            <div className="intel-entity-col">
+                              <span className="intel-entity-group-title">Collieries &amp; Mines</span>
+                              <div className="intel-entity-pills">
+                                {docIntelligence.entities.mines.map((m) => (
+                                  <span key={m} className="intel-entity-pill pill-mine">{m}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {docIntelligence.entities?.measurements?.length > 0 && (
+                            <div className="intel-entity-col">
+                              <span className="intel-entity-group-title">Physical Metrics &amp; Units</span>
+                              <div className="intel-entity-pills">
+                                {docIntelligence.entities.measurements.map((meas) => (
+                                  <span key={meas} className="intel-entity-pill pill-meas">{meas}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* 6. Related Documents */}
+                      <div className="intel-card">
+                        <div className="modal-section-title" style={{ marginTop: 0 }}>
+                          <Layers size={16} />
+                          <span>Related Documents Graph ({docIntelligence.relationships?.relatedDocuments?.length || 0})</span>
+                        </div>
+                        {docIntelligence.relationships?.relatedDocuments?.length === 0 ? (
+                          <p style={{ fontSize: '13px', color: '#64748b', margin: 0 }}>No cross-document relationships detected with active records.</p>
+                        ) : (
+                          <div className="intel-related-list">
+                            {docIntelligence.relationships?.relatedDocuments?.map((rel) => (
+                              <div key={rel.documentId} className="intel-related-item">
+                                <div className="intel-related-info">
+                                  <div className="intel-related-title">{rel.documentTitle}</div>
+                                  <div className="intel-related-meta">
+                                    <span>{rel.subsidiary}</span> &bull; <span>FY: {rel.financialYear}</span>
+                                    <div className="intel-shared-chips">
+                                      {rel.sharedAttributes?.map((attr) => (
+                                        <span key={attr} className="intel-shared-chip">{attr}</span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                                <span className="intel-similarity-badge">
+                                  {rel.similarityScore}% Match
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
             </div>
