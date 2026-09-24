@@ -1,6 +1,6 @@
 {
   "status": "success",
-  "lastUpdated": "2026-09-24T15:32:09.702931+00:00",
+  "lastUpdated": "2026-09-24T16:06:26.915568+00:00",
   "summary": {
     "overallRisk": 41.9,
     "riskLevel": "Medium",
@@ -59,7 +59,7 @@
       "recommendedAction": "1. Review non-compliant records in the Validation Inspector. 2. Verify colliery tonnage numbers and target arithmetic. 3. Re-validate documents after correcting optical or structural extraction flaws.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+      "generatedAt": "2026-09-24T16:06:26.915253+00:00"
     },
     {
       "id": "REC-QUAL-002",
@@ -85,7 +85,7 @@
         "Chap5Annualreport2026En"
       ],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+      "generatedAt": "2026-09-24T16:06:26.915253+00:00"
     },
     {
       "id": "REC-OPS-003",
@@ -106,7 +106,7 @@
       "affectedSubsidiaries": [
         "BCCL"
       ],
-      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+      "generatedAt": "2026-09-24T16:06:26.915253+00:00"
     },
     {
       "id": "REC-OBR-004",
@@ -124,7 +124,7 @@
       "recommendedAction": "1. Verify whether colliery returns include Form-A OBR tables. 2. Ensure stripping ratio calculations are extracted and validated.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+      "generatedAt": "2026-09-24T16:06:26.915253+00:00"
     }
   ],
   "alerts": [
@@ -135,7 +135,7 @@
       "severity": "Orange",
       "source": "storage/analytics/dashboard.json (production)",
       "recommendation": "Accelerate overburden removal and optimize rake availability to meet quarterly dispatch targets.",
-      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "timestamp": "2026-09-24T16:06:26.915198+00:00",
       "affectedEntities": [
         "CIL Subsidiaries"
       ]
@@ -147,7 +147,7 @@
       "severity": "Orange",
       "source": "storage/structured_data/",
       "recommendation": "Re-extract or manually assign the statutory financial year tag to ensure accurate chronological rollups.",
-      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "timestamp": "2026-09-24T16:06:26.915198+00:00",
       "affectedEntities": [
         "174",
         "Cmpdi Annual Report 2025 26",
@@ -161,7 +161,7 @@
       "severity": "Yellow",
       "source": "storage/structured_data/",
       "recommendation": "Update colliery gazetteer mappings so mine names automatically resolve to their host states.",
-      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "timestamp": "2026-09-24T16:06:26.915198+00:00",
       "affectedEntities": [
         "Chap5Annualreport2026En",
         "Chap5Annualreport2026En",
@@ -177,7 +177,7 @@
       "severity": "Yellow",
       "source": "storage/analytics/dashboard.json (rankings)",
       "recommendation": "Verify whether monthly returns from other CIL subsidiaries (MCL, NCL, CCL, WCL, ECL) are awaiting ingestion.",
-      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "timestamp": "2026-09-24T16:06:26.915198+00:00",
       "affectedEntities": [
         "BCCL"
       ]

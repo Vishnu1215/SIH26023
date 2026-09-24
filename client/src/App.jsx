@@ -8,7 +8,7 @@ import TopicsSearchPage from './pages/TopicsSearchPage.jsx';
 import QueryPage from './pages/QueryPage.jsx';
 import QAPage from './pages/QAPage.jsx';
 import RecommendationsPage from './pages/RecommendationsPage.jsx';
-import PlaceholderModulePage from './pages/PlaceholderModulePage.jsx';
+import SystemAuditPage from './pages/SystemAuditPage.jsx';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import { ROUTES } from './constants/routes.js';
@@ -37,16 +37,7 @@ export default function App() {
           <Route path={ROUTES.QUERY} element={<QueryPage />} />
           <Route path={ROUTES.QA} element={<QAPage />} />
           <Route path={ROUTES.RECOMMENDATIONS} element={<RecommendationsPage />} />
-          <Route
-            path={ROUTES.SETTINGS}
-            element={
-              <PlaceholderModulePage
-                title="System Configuration & Audit"
-                moduleNumber="Administration"
-                description="Role-Based Access Control, subsidiary scoping, audit log traces, and model profile fallbacks."
-              />
-            }
-          />
+          <Route path={ROUTES.SETTINGS} element={<SystemAuditPage />} />
         </Route>
 
         {/* Root and Fallback Redirection */}
