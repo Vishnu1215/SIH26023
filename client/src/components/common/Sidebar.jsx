@@ -34,8 +34,8 @@ const NAV_ITEMS = [
     icon: Sparkles
   },
   {
-    path: ROUTES.QA,
-    label: 'Hybrid Q&A (SQL+RAG)',
+    path: ROUTES.QUERY,
+    label: 'Natural Language Query',
     icon: MessageSquareQuote
   },
   {

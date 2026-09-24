@@ -1,6 +1,6 @@
 {
-  "lastIndexedAt": "2026-09-23T10:39:58.376427+00:00",
-  "totalDocuments": 11,
+  "lastIndexedAt": "2026-09-24T13:54:06.086546+00:00",
+  "totalDocuments": 13,
   "documents": {
     "1e77a47e-dafb-4ed9-966c-5fa47e75c19b": {
       "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
@@ -62,6 +62,32 @@
     },
     "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf": {
       "documentId": "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 90,
+      "validationStatus": "Warning",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 5
+    },
+    "49919212-2166-476c-94e4-a21d1090f886": {
+      "documentId": "49919212-2166-476c-94e4-a21d1090f886",
       "reportTitle": "Chap5Annualreport2026En",
       "documentCategory": "Annual Report",
       "classificationConfidence": 87,
@@ -193,6 +219,37 @@
       ],
       "relatedCount": 5
     },
+    "e9a34ce5-22e9-4624-a4ed-fc022f60c64f": {
+      "documentId": "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
+      "reportTitle": "Cmpdi Annual Report 2025 26",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "CIL",
+      "mineName": "Gevra",
+      "state": "Chhattisgarh",
+      "district": "Korba",
+      "financialYear": "N/A",
+      "coalProduction": 1.21,
+      "productionUnit": "T",
+      "validationScore": 80,
+      "validationStatus": "Error",
+      "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) for standard operational monitoring. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 1.21 T, target production of 2,025.00 T, achievement rate of 0.1%, overburden removal of 1.20 CuM. Data integrity audit classifies this record as Error (Score: 80/100) with 1 statutory error(s). Primary analytical subject matter centers on Coal Production, Overburden.",
+      "topTopics": [
+        "Coal Production",
+        "Overburden"
+      ],
+      "keywords": [
+        "CIL",
+        "Gevra",
+        "Chhattisgarh",
+        "Korba",
+        "Coal Production",
+        "Opencast",
+        "Cmpdi",
+        "Annual"
+      ],
+      "relatedCount": 4
+    },
     "f2d385b0-0466-4d9d-b5bf-e35affda7d38": {
       "documentId": "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
       "reportTitle": "Cmpdi Annual Report 2025 26",
@@ -317,21 +374,25 @@
     "by_keyword": {
       "gevra": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "cil": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "chhattisgarh": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-fastapi-extract-001"
       ],
       "korba": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-fastapi-extract-001"
       ],
@@ -339,6 +400,7 @@
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
@@ -346,6 +408,7 @@
       "coal production": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-csv-doc",
         "test-fastapi-extract-001",
@@ -355,6 +418,7 @@
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
         "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-phase5-doc-001"
       ],
@@ -366,6 +430,7 @@
       ],
       "annual": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-csv-doc",
         "test-fastapi-extract-001",
@@ -388,18 +453,21 @@
       ],
       "sccl": [
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
       ],
       "chap5annualreport2026en": [
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
       ],
       "none": [
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "52ef573e-f21e-479a-b92b-f90a1d9107c9",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
@@ -417,6 +485,7 @@
         "52ef573e-f21e-479a-b92b-f90a1d9107c9"
       ],
       "cmpdi": [
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "2014-15": [
@@ -456,10 +525,12 @@
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "52ef573e-f21e-479a-b92b-f90a1d9107c9",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-csv-doc",
         "test-fastapi-extract-001",
@@ -467,6 +538,7 @@
       ],
       "overburden": [
         "52ef573e-f21e-479a-b92b-f90a1d9107c9",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-phase5-doc-001"
       ]
@@ -475,10 +547,12 @@
       "cil": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "sccl": [
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
@@ -496,6 +570,7 @@
     "by_mine": {
       "gevra": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "kusmunda": [
@@ -509,6 +584,7 @@
       "chhattisgarh": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-fastapi-extract-001"
       ],
@@ -524,6 +600,7 @@
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
@@ -541,9 +618,11 @@
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38",
         "test-fastapi-extract-001"
       ],
@@ -557,19 +636,23 @@
       "cil": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "cmpdil": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "gevra": [
         "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "sccl": [
         "217ec505-e2a7-4f93-9f3b-a8463b214770",
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "52ef573e-f21e-479a-b92b-f90a1d9107c9",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
@@ -580,6 +663,7 @@
       ],
       "ministry of coal": [
         "30910a6f-7ac5-45ed-9cc3-6ad40bb8bfbf",
+        "49919212-2166-476c-94e4-a21d1090f886",
         "5062a163-a8eb-47d4-8033-ea835014a7ca",
         "83d8a268-00c4-4873-a692-a35d4aa4bf6f",
         "c5de86f6-0da2-4194-a63f-02a8c7d2462a"
@@ -588,6 +672,7 @@
         "52ef573e-f21e-479a-b92b-f90a1d9107c9"
       ],
       "cmpdi": [
+        "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
         "f2d385b0-0466-4d9d-b5bf-e35affda7d38"
       ],
       "coal india": [

@@ -34,6 +34,7 @@ import {
   validateDocument
 } from '../services/document.service.js';
 import { getDocumentIntelligence } from '../services/intelligence.service.js';
+import { executeNaturalLanguageQuery } from '../services/query.service.js';
 import {
   formatNumber,
   formatProduction,
@@ -57,9 +58,12 @@ export default function DocumentsPage() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [documents, setDocuments] = useState([]);
   const [viewingDoc, setViewingDoc] = useState(null);
-  const [modalTab, setModalTab] = useState('overview'); // 'overview' | 'analytics' | 'intelligence'
+  const [modalTab, setModalTab] = useState('overview'); // 'overview' | 'analytics' | 'intelligence' | 'ask'
   const [docIntelligence, setDocIntelligence] = useState(null);
   const [isLoadingIntel, setIsLoadingIntel] = useState(false);
+  const [docQueryAnswer, setDocQueryAnswer] = useState(null);
+  const [docQueryLoading, setDocQueryLoading] = useState(false);
+  const [docCustomQuery, setDocCustomQuery] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [isLoadingSamples, setIsLoadingSamples] = useState(false);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -69,7 +73,7 @@ export default function DocumentsPage() {
 
   // Fetch intelligence on modal open or tab switch
   useEffect(() => {
-    if (viewingDoc && modalTab === 'intelligence') {
+    if (viewingDoc && (modalTab === 'intelligence' || modalTab === 'ask')) {
       setIsLoadingIntel(true);
       getDocumentIntelligence(viewingDoc.documentId)
         .then((data) => setDocIntelligence(data))
@@ -77,6 +81,33 @@ export default function DocumentsPage() {
         .finally(() => setIsLoadingIntel(false));
     }
   }, [viewingDoc, modalTab]);
+
+  const handleAskDoc = async (type, customText = '') => {
+    if (!viewingDoc) return;
+    setDocQueryLoading(true);
+    try {
+      let queryStr = customText;
+      if (type === 'validation') queryStr = 'What is the validation score for this document?';
+      else if (type === 'summary') queryStr = 'Show executive summary of this document';
+      else if (type === 'entities') queryStr = 'What entities, organizations and mines are in this document?';
+      else if (type === 'topics') queryStr = 'What topics are detected in this document?';
+      else if (type === 'related') queryStr = 'What documents are related to this document?';
+
+      const res = await executeNaturalLanguageQuery({
+        query: queryStr,
+        documentId: viewingDoc.documentId
+      });
+      setDocQueryAnswer(res);
+    } catch (e) {
+      setDocQueryAnswer({
+        answer: 'Failed to process inquiry for this document.',
+        reason: e.message,
+        source: 'document_intelligence'
+      });
+    } finally {
+      setDocQueryLoading(false);
+    }
+  };
 
 
   const fileInputRef = useRef(null);
@@ -632,6 +663,14 @@ export default function DocumentsPage() {
                 <Sparkles size={14} />
                 <span>Document Intelligence</span>
               </button>
+              <button
+                type="button"
+                className={`modal-tab-nav-btn ${modalTab === 'ask' ? 'active' : ''}`}
+                onClick={() => setModalTab('ask')}
+              >
+                <HelpCircle size={14} />
+                <span>Ask about Document</span>
+              </button>
             </div>
 
             <div className="modal-body">
@@ -1081,7 +1120,7 @@ export default function DocumentsPage() {
                     );
                   })()}
                 </div>
-              ) : (
+              ) : modalTab === 'intelligence' ? (
                 /* Phase 9: Document Intelligence Tab Content */
                 <div className="intelligence-tab-container">
                   {isLoadingIntel ? (
@@ -1249,6 +1288,153 @@ export default function DocumentsPage() {
                         )}
                       </div>
                     </>
+                  )}
+                </div>
+              ) : (
+                /* Phase 10: Ask about Document Tab Content */
+                <div className="doc-ask-tab-container" style={{ padding: '0.5rem 0' }}>
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>
+                      Deterministic Document Q&amp;A
+                    </div>
+                    <p style={{ fontSize: '0.82rem', color: '#64748b', margin: 0 }}>
+                      Ask questions about this specific document. Answers are derived strictly from verified metadata, validation audit rules, and domain ontologies.
+                    </p>
+                  </div>
+
+                  {/* Preset Question Buttons */}
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <div style={{ fontSize: '0.78rem', fontWeight: 600, color: '#475569', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+                      Recommended Inquiries:
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                      <button
+                        type="button"
+                        className="btn-subtle"
+                        onClick={() => handleAskDoc('validation')}
+                        disabled={docQueryLoading}
+                        style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px' }}
+                      >
+                        <ShieldCheck size={14} color="#16a34a" />
+                        <span>Validation Status &amp; Score</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-subtle"
+                        onClick={() => handleAskDoc('summary')}
+                        disabled={docQueryLoading}
+                        style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px' }}
+                      >
+                        <FileText size={14} color="#0284c7" />
+                        <span>Executive Summary</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-subtle"
+                        onClick={() => handleAskDoc('entities')}
+                        disabled={docQueryLoading}
+                        style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px' }}
+                      >
+                        <Building2 size={14} color="#9333ea" />
+                        <span>Entities, Mines &amp; Locations</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-subtle"
+                        onClick={() => handleAskDoc('topics')}
+                        disabled={docQueryLoading}
+                        style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px' }}
+                      >
+                        <Sparkles size={14} color="#f97316" />
+                        <span>Detected Mining Topics</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="btn-subtle"
+                        onClick={() => handleAskDoc('related')}
+                        disabled={docQueryLoading}
+                        style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '20px' }}
+                      >
+                        <Layers size={14} color="#2563eb" />
+                        <span>Related Documents</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Custom Question Input Form */}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (docCustomQuery.trim()) {
+                        handleAskDoc('custom', docCustomQuery.trim());
+                      }
+                    }}
+                    style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}
+                  >
+                    <input
+                      type="text"
+                      placeholder="Ask anything about this document... e.g. 'What is the validation score?'"
+                      value={docCustomQuery}
+                      onChange={(e) => setDocCustomQuery(e.target.value)}
+                      style={{
+                        flex: 1,
+                        padding: '0.6rem 0.85rem',
+                        fontSize: '0.85rem',
+                        borderRadius: '6px',
+                        border: '1px solid #cbd5e1',
+                        outline: 'none'
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={docQueryLoading || !docCustomQuery.trim()}
+                      style={{ padding: '0.6rem 1rem', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
+                    >
+                      {docQueryLoading ? 'Querying...' : 'Ask'}
+                    </button>
+                  </form>
+
+                  {/* Loading State */}
+                  {docQueryLoading && (
+                    <div style={{ padding: '1.5rem', textAlign: 'center', color: '#64748b' }}>
+                      <RefreshCw size={20} className="animate-spin" style={{ margin: '0 auto 8px' }} />
+                      <p style={{ fontSize: '0.85rem' }}>Extracting verified answer from metadata...</p>
+                    </div>
+                  )}
+
+                  {/* Answer Card */}
+                  {docQueryAnswer && !docQueryLoading && (
+                    <div
+                      style={{
+                        padding: '1.1rem',
+                        background: '#f8fafc',
+                        border: '1.5px solid #cbd5e1',
+                        borderRadius: '8px',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.65rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', fontWeight: 700, color: '#166534', textTransform: 'uppercase' }}>
+                          <CheckCircle2 size={16} color="#16a34a" />
+                          <span>Verified Response</span>
+                        </div>
+                        <span style={{ fontSize: '0.72rem', padding: '0.15rem 0.45rem', background: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', borderRadius: '4px', fontWeight: 600 }}>
+                          {docQueryAnswer.source || 'storage/document_intelligence'}
+                        </span>
+                      </div>
+
+                      <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', lineHeight: 1.4, marginBottom: '0.65rem' }}>
+                        {docQueryAnswer.answer}
+                      </div>
+
+                      {docQueryAnswer.reason && (
+                        <div style={{ fontSize: '0.8rem', color: '#475569', background: '#ffffff', padding: '0.5rem 0.75rem', borderRadius: '6px', borderLeft: '3px solid #3b82f6' }}>
+                          <strong>Basis: </strong>
+                          {docQueryAnswer.reason}
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

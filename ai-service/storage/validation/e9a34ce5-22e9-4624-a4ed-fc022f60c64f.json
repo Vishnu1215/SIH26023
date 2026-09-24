@@ -1,0 +1,48 @@
+{
+  "documentId": "e9a34ce5-22e9-4624-a4ed-fc022f60c64f",
+  "validationStatus": "Error",
+  "validationScore": 80,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 80/100)\n\nPrimary Issue:\nMandatory field 'financialYear' is missing.",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Mandatory field 'financialYear' is missing."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "financialYear",
+      "severity": "Error",
+      "message": "Mandatory field 'financialYear' is missing."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001"
+  ],
+  "errorCount": 1,
+  "warningCount": 0,
+  "infoCount": 0,
+  "validationTime": 0.0821,
+  "validatedAt": "2026-09-24T08:23:43.514045+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-24T08:23:43.514045+00:00",
+      "score": 80,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 0
+    },
+    {
+      "validatedAt": "2026-09-24T08:21:30.213669+00:00",
+      "score": 80,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 0
+    }
+  ]
+}

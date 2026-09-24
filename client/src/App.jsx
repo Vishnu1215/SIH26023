@@ -5,6 +5,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import DocumentsPage from './pages/DocumentsPage.jsx';
 import ReportsPage from './pages/ReportsPage.jsx';
 import TopicsSearchPage from './pages/TopicsSearchPage.jsx';
+import QueryPage from './pages/QueryPage.jsx';
 import PlaceholderModulePage from './pages/PlaceholderModulePage.jsx';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
@@ -31,16 +32,8 @@ export default function App() {
           <Route path={ROUTES.REPORTS} element={<ReportsPage />} />
           <Route path={ROUTES.TOPICS} element={<TopicsSearchPage />} />
           <Route path={ROUTES.SEARCH} element={<TopicsSearchPage />} />
-          <Route
-            path={ROUTES.QA}
-            element={
-              <PlaceholderModulePage
-                title="Hybrid Query & Response System"
-                moduleNumber="Module 3"
-                description="Text-to-SQL for accurate numeric aggregates and RAG for narrative context with figure-level citations."
-              />
-            }
-          />
+          <Route path={ROUTES.QUERY} element={<QueryPage />} />
+          <Route path={ROUTES.QA} element={<QueryPage />} />
           <Route
             path={ROUTES.RECOMMENDATIONS}
             element={

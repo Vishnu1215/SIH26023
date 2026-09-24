@@ -1,5 +1,23 @@
 [
   {
+    "reportId": "fae29e38-8b76-409f-afcd-c3cb8d172086",
+    "reportName": "National Coal Production & Subsidiary Performance Report",
+    "reportType": "production",
+    "format": "pdf",
+    "fileName": "fae29e38-8b76-409f-afcd-c3cb8d172086_production_20260924_075210.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\fae29e38-8b76-409f-afcd-c3cb8d172086_production_20260924_075210.pdf",
+    "fileSize": 3432,
+    "fileSizeFormatted": "3.4 KB",
+    "createdAt": "2026-09-24T07:52:10.233846+00:00",
+    "generatedBy": "Executive User",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 12,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  },
+  {
     "reportId": "16937669-fa9a-442f-8ead-f1bf213e0987",
     "reportName": "Executive Mining & Analytics Report",
     "reportType": "executive",

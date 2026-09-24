@@ -40,15 +40,15 @@ const TOPICS = [
   'All',
   'Coal Production',
   'Mine Safety',
-  'Environmental Clearance',
-  'Coal Dispatch',
+  'Environment',
+  'Dispatch',
   'Coal Quality',
-  'Overburden Removal',
+  'Overburden',
   'CSR',
   'Mine Expansion',
   'Financial Performance',
   'Land Acquisition',
-  'Geological Exploration',
+  'Exploration',
   'Infrastructure'
 ];
 

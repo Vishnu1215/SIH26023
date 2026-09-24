@@ -6,6 +6,7 @@ export const ROUTES = {
   REPORTS: '/reports',
   TOPICS: '/topics',
   SEARCH: '/search',
+  QUERY: '/query',
   QA: '/qa',
   RECOMMENDATIONS: '/recommendations',
   SETTINGS: '/settings'

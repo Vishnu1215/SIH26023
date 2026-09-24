@@ -1,0 +1,55 @@
+{
+  "documentId": "49919212-2166-476c-94e4-a21d1090f886",
+  "validationStatus": "Warning",
+  "validationScore": 90,
+  "validationSummary": "Validation completed with warnings.\n\nStatus: Warning (Score: 90/100)\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001"
+  ],
+  "errorCount": 0,
+  "warningCount": 2,
+  "infoCount": 0,
+  "validationTime": 0.0236,
+  "validatedAt": "2026-09-24T07:49:39.062495+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-24T07:49:39.062495+00:00",
+      "score": 90,
+      "status": "Warning",
+      "errorCount": 0,
+      "warningCount": 2
+    }
+  ]
+}
