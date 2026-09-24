@@ -1,0 +1,50 @@
+[
+  {
+    "timestamp": "2026-09-24T15:32:09.702931+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-24T15:32:09.694391+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-24T15:32:09.581860+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-24T15:31:43.145120+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-24T15:31:43.077998+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-24T15:28:13.646014+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  }
+]

@@ -1,0 +1,339 @@
+{
+  "status": "success",
+  "lastUpdated": "2026-09-24T15:32:09.702931+00:00",
+  "summary": {
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "totalRecommendations": 4,
+    "highPriorityRecommendations": 2,
+    "totalAlerts": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  "risk": {
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "riskBreakdown": {
+      "productionRisk": 45.0,
+      "validationRisk": 62.2,
+      "qualityRisk": 15.0,
+      "completenessRisk": 65.4,
+      "processingRisk": 0.0
+    },
+    "riskFactors": [
+      {
+        "factor": "Subsidiary Output Concentration",
+        "impact": "Medium",
+        "score": 45.0,
+        "description": "BCCL accounts for 99.8% of total reported coal output, indicating high operational concentration."
+      },
+      {
+        "factor": "Statutory Validation Discrepancies",
+        "impact": "High",
+        "score": 62.2,
+        "description": "0 document(s) flagged with validation rule issues; overall validation accuracy is 11.1%."
+      },
+      {
+        "factor": "Statutory Field Omissions",
+        "impact": "Medium",
+        "score": 65.4,
+        "description": "Multiple reporting records lack complete Financial Year, Colliery Name, or State attributes."
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "id": "REC-VAL-001",
+      "title": "Enforce Document Validation Before Statutory Report Compilation",
+      "description": "Overall statutory validation accuracy is 11.1%, with 0 document(s) violating DGMS/CMPDI statutory rules (VR-001..VR-010).",
+      "category": "Validation",
+      "priority": "Critical",
+      "severity": "Critical",
+      "confidence": 0.99,
+      "reason": "Statutory validation accuracy of 11.1% is below the 85% compliance threshold.",
+      "supportingMetrics": {
+        "validationAccuracy": 11.1,
+        "invalidDocumentsCount": 0,
+        "validDocumentsCount": 1
+      },
+      "recommendedAction": "1. Review non-compliant records in the Validation Inspector. 2. Verify colliery tonnage numbers and target arithmetic. 3. Re-validate documents after correcting optical or structural extraction flaws.",
+      "affectedDocuments": [],
+      "affectedSubsidiaries": [],
+      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+    },
+    {
+      "id": "REC-QUAL-002",
+      "title": "Review Extraction Rules for Missing Statutory Metadata Fields",
+      "description": "Field completeness score is 61.5%. 5 document(s) lack required Financial Year, State, or Colliery tags.",
+      "category": "Data Quality",
+      "priority": "High",
+      "severity": "High",
+      "confidence": 0.96,
+      "reason": "Field completeness of 61.5% falls below the 85% data governance standard.",
+      "supportingMetrics": {
+        "completenessPercentage": 61.5,
+        "missingFinancialYearCount": 3,
+        "missingStateCount": 6,
+        "missingMineCount": 8
+      },
+      "recommendedAction": "1. Update domain regular expressions in entity_extractor.py to capture varied date & state header layouts. 2. Expand coal colliery gazetteer mappings for regional mine names. 3. Re-run structured extraction.",
+      "affectedDocuments": [
+        "174",
+        "Cmpdi Annual Report 2025 26",
+        "Cmpdi Annual Report 2025 26",
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En"
+      ],
+      "affectedSubsidiaries": [],
+      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+    },
+    {
+      "id": "REC-OPS-003",
+      "title": "Diversify Reporting Intake to Mitigate Dependency on BCCL",
+      "description": "BCCL contributes 99.8% of all reported coal production in the repository. Several major coalfields (MCL, NCL, CCL) are underrepresented.",
+      "category": "Operational",
+      "priority": "Medium",
+      "severity": "Medium",
+      "confidence": 0.94,
+      "reason": "Output concentration of 99.8% in a single subsidiary represents potential data skew.",
+      "supportingMetrics": {
+        "dominantSubsidiary": "BCCL",
+        "dominantSharePct": 99.8,
+        "reportingSubsidiariesCount": 6
+      },
+      "recommendedAction": "1. Ingest pending monthly production statements from eastern and central subsidiaries (MCL, CCL, WCL, ECL). 2. Verify that network folder watchers are polling subsidiary network drives.",
+      "affectedDocuments": [],
+      "affectedSubsidiaries": [
+        "BCCL"
+      ],
+      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+    },
+    {
+      "id": "REC-OBR-004",
+      "title": "Audit Overburden Removal Reporting in Open Cast Mining Returns",
+      "description": "Substantial coal production is recorded without corresponding Overburden Removal (OBR) metrics, risking non-compliance with DGMS mine safety guidelines.",
+      "category": "Compliance",
+      "priority": "Medium",
+      "severity": "Medium",
+      "confidence": 0.91,
+      "reason": "Zero reported overburden removal volume alongside active open-cast extraction.",
+      "supportingMetrics": {
+        "totalCoalProduction": 142788.22,
+        "overburdenRemoval": 0
+      },
+      "recommendedAction": "1. Verify whether colliery returns include Form-A OBR tables. 2. Ensure stripping ratio calculations are extracted and validated.",
+      "affectedDocuments": [],
+      "affectedSubsidiaries": [],
+      "generatedAt": "2026-09-24T15:32:09.702534+00:00"
+    }
+  ],
+  "alerts": [
+    {
+      "id": "ALT-PROD-001",
+      "title": "Coal Production Trailing Target",
+      "description": "Overall production stands at 92.5% of targeted quota. Production is lagging statutory target by 11,516.6 MT.",
+      "severity": "Orange",
+      "source": "storage/analytics/dashboard.json (production)",
+      "recommendation": "Accelerate overburden removal and optimize rake availability to meet quarterly dispatch targets.",
+      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "affectedEntities": [
+        "CIL Subsidiaries"
+      ]
+    },
+    {
+      "id": "ALT-META-002",
+      "title": "Missing Financial Year in 3 Document(s)",
+      "description": "3 records do not contain a recognized financial year string, preventing accurate fiscal year consolidation.",
+      "severity": "Orange",
+      "source": "storage/structured_data/",
+      "recommendation": "Re-extract or manually assign the statutory financial year tag to ensure accurate chronological rollups.",
+      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "affectedEntities": [
+        "174",
+        "Cmpdi Annual Report 2025 26",
+        "Cmpdi Annual Report 2025 26"
+      ]
+    },
+    {
+      "id": "ALT-META-003",
+      "title": "Missing State / Jurisdiction in 6 Record(s)",
+      "description": "6 files lack explicit state attribution, affecting state-level royalty and production breakdowns.",
+      "severity": "Yellow",
+      "source": "storage/structured_data/",
+      "recommendation": "Update colliery gazetteer mappings so mine names automatically resolve to their host states.",
+      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "affectedEntities": [
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En"
+      ]
+    },
+    {
+      "id": "ALT-CONC-004",
+      "title": "High Output Concentration in BCCL",
+      "description": "BCCL accounts for 99.8% of national reported coal output. Other active subsidiaries show minimal or missing returns in current database.",
+      "severity": "Yellow",
+      "source": "storage/analytics/dashboard.json (rankings)",
+      "recommendation": "Verify whether monthly returns from other CIL subsidiaries (MCL, NCL, CCL, WCL, ECL) are awaiting ingestion.",
+      "timestamp": "2026-09-24T15:32:09.702498+00:00",
+      "affectedEntities": [
+        "BCCL"
+      ]
+    }
+  ],
+  "insights": [
+    {
+      "id": "INS-001",
+      "title": "National Target Achievement",
+      "statement": "National coal production reached 142,788.22 MT, achieving 92.5% of the cumulative target (154,304.79 MT).",
+      "category": "Production",
+      "impact": "Positive",
+      "icon": "Target",
+      "metric": "92.5% Target Met",
+      "source": "storage/analytics/dashboard.json"
+    },
+    {
+      "id": "INS-002",
+      "title": "Production Leader",
+      "statement": "BCCL is the top producing subsidiary, yielding 142,500.00 MT (99.8% of national reported output).",
+      "category": "Subsidiaries",
+      "impact": "Highlight",
+      "icon": "Award",
+      "metric": "BCCL (99.8%)",
+      "source": "storage/analytics/dashboard.json (rankings)"
+    },
+    {
+      "id": "INS-003",
+      "title": "Statutory Validation Compliance",
+      "statement": "Statutory validation accuracy across files is 11.1%, with 1 certified valid returns and 0 flagged for review.",
+      "category": "Validation",
+      "impact": "Warning",
+      "icon": "ShieldCheck",
+      "metric": "11.1% Accuracy",
+      "source": "storage/validation/"
+    },
+    {
+      "id": "INS-004",
+      "title": "Data Quality Rating",
+      "statement": "Platform repository carries an overall data quality score of 0/100 with an executive rating of 'Good'.",
+      "category": "Data Quality",
+      "impact": "Attention",
+      "icon": "Gauge",
+      "metric": "0/100 (Good)",
+      "source": "storage/analytics/dashboard.json (quality)"
+    },
+    {
+      "id": "INS-005",
+      "title": "Geographical Concentration",
+      "statement": "Jharkhand accounts for the primary share of mining operations with 1 reporting document(s) and 142,500.00 MT produced.",
+      "category": "Geography",
+      "impact": "Informational",
+      "icon": "MapPin",
+      "metric": "Jharkhand (1 Docs)",
+      "source": "storage/analytics/dashboard.json (states)"
+    },
+    {
+      "id": "INS-006",
+      "title": "Document Distribution",
+      "statement": "'Unknown' documents constitute the majority of processed records (13 files, 100.0% of total).",
+      "category": "Operations",
+      "impact": "Informational",
+      "icon": "FileText",
+      "metric": "Unknown (100%)",
+      "source": "storage/search_index.json"
+    },
+    {
+      "id": "INS-007",
+      "title": "Subsidiary Representation",
+      "statement": "6 Coal India subsidiary entities are currently reporting verified performance returns into the centralized registry.",
+      "category": "Subsidiaries",
+      "impact": "Highlight",
+      "icon": "Building2",
+      "metric": "6 Subsidiaries Reporting",
+      "source": "storage/analytics/dashboard.json"
+    },
+    {
+      "id": "INS-009",
+      "title": "Published Statutory Reports",
+      "statement": "24 certified statutory reports (Executive, Production, and Geological) are compiled and ready for distribution in PDF/XLSX formats.",
+      "category": "Reporting",
+      "impact": "Positive",
+      "icon": "ClipboardList",
+      "metric": "24 Reports Available",
+      "source": "storage/reports/report-history.json"
+    },
+    {
+      "id": "INS-010",
+      "title": "Zero Ingestion Failures",
+      "statement": "100% of uploaded geological returns and coal reports processed successfully through OCR and domain parsing without fatal parsing errors.",
+      "category": "System Health",
+      "impact": "Positive",
+      "icon": "CheckCircle2",
+      "metric": "100% Pipeline Reliability",
+      "source": "storage/analytics/dashboard.json"
+    }
+  ],
+  "trends": {
+    "productionTrend": {
+      "trend": "Increasing",
+      "percentageChange": 1260.3,
+      "reason": "Coal output expanded by +1260.3% from 2025–26 to Unknown FY.",
+      "supportingMetrics": {
+        "latestProduction": 42.17,
+        "historicalPeriods": 4,
+        "achievementPct": 92.5
+      }
+    },
+    "validationTrend": {
+      "trend": "Declining",
+      "currentAccuracy": 11.1,
+      "reason": "Validation accuracy stands at 11.1%, impacted by 0 non-compliant document returns.",
+      "supportingMetrics": {
+        "validDocuments": 1,
+        "invalidDocuments": 0,
+        "accuracy": 11.1
+      }
+    },
+    "documentIngestionTrend": {
+      "trend": "Increasing",
+      "totalDocuments": 13,
+      "reason": "Active ingestion repository contains 13 verified files, reflecting comprehensive data intake.",
+      "supportingMetrics": {
+        "indexedCount": 13,
+        "categoriesCovered": 1
+      }
+    },
+    "reportGenerationTrend": {
+      "trend": "Increasing",
+      "totalReports": 24,
+      "reason": "24 statutory reports generated and published for executive decision makers.",
+      "supportingMetrics": {
+        "generatedReports": 24
+      }
+    },
+    "historicalSeries": [
+      {
+        "period": "2014–15",
+        "production": 57.45,
+        "documents": 1
+      },
+      {
+        "period": "2023–24",
+        "production": 142685.5,
+        "documents": 2
+      },
+      {
+        "period": "2025–26",
+        "production": 3.1,
+        "documents": 7
+      },
+      {
+        "period": "Unknown FY",
+        "production": 42.17,
+        "documents": 3
+      }
+    ]
+  }
+}

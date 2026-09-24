@@ -146,6 +146,10 @@ export const processDocumentExtraction = async (document) => {
       }, { timeout: 15000 })
         .catch((e) => console.warn('[DocumentProcessing] Intelligence processing background trigger:', e.message));
 
+      // Phase 12: Trigger Recommendations Recompute
+      axios.post(`${config.aiServiceUrl}/recommendations/recompute`, {}, { timeout: 15000 })
+        .catch((e) => console.warn('[DocumentProcessing] Recommendations recompute background trigger:', e.message));
+
       console.log(
         `[DocumentProcessing] Success for ${document.originalName} via ${response.data.loaderUsed} in ${response.data.processingTime}s (Structured Data: ${structuredDataAvailable ? 'Extracted & Normalized' : 'None'})`
       );
@@ -306,6 +310,10 @@ export const processDocumentValidation = async (documentId) => {
         filename: document.originalName
       }, { timeout: 15000 })
         .catch((e) => console.warn('[DocumentProcessing] Intelligence update background trigger:', e.message));
+
+      // Phase 12: Trigger Recommendations Recompute
+      axios.post(`${config.aiServiceUrl}/recommendations/recompute`, {}, { timeout: 15000 })
+        .catch((e) => console.warn('[DocumentProcessing] Recommendations recompute background trigger:', e.message));
 
       return updated;
     }

@@ -7,6 +7,7 @@ import ReportsPage from './pages/ReportsPage.jsx';
 import TopicsSearchPage from './pages/TopicsSearchPage.jsx';
 import QueryPage from './pages/QueryPage.jsx';
 import QAPage from './pages/QAPage.jsx';
+import RecommendationsPage from './pages/RecommendationsPage.jsx';
 import PlaceholderModulePage from './pages/PlaceholderModulePage.jsx';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
@@ -35,16 +36,7 @@ export default function App() {
           <Route path={ROUTES.SEARCH} element={<TopicsSearchPage />} />
           <Route path={ROUTES.QUERY} element={<QueryPage />} />
           <Route path={ROUTES.QA} element={<QAPage />} />
-          <Route
-            path={ROUTES.RECOMMENDATIONS}
-            element={
-              <PlaceholderModulePage
-                title="AI Insights & Recommendations Engine"
-                moduleNumber="Module 4"
-                description="Proactive anomaly detection and evidence-backed advisory recommendations requiring reviewer approval."
-              />
-            }
-          />
+          <Route path={ROUTES.RECOMMENDATIONS} element={<RecommendationsPage />} />
           <Route
             path={ROUTES.SETTINGS}
             element={

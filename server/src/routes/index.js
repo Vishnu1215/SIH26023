@@ -7,6 +7,7 @@ import intelligenceRoutes from './intelligence.routes.js';
 import searchRoutes from './search.routes.js';
 import queryRoutes from './query.routes.js';
 import qaRoutes from './qa.routes.js';
+import recommendationRoutes from './recommendation.routes.js';
 import { getDashboardAnalytics } from '../controllers/document.controller.js';
 
 const apiRouter = Router();
@@ -19,6 +20,7 @@ apiRouter.use('/intelligence', intelligenceRoutes);
 apiRouter.use('/search', searchRoutes);
 apiRouter.use('/query', queryRoutes);
 apiRouter.use('/qa', qaRoutes);
+apiRouter.use('/recommendations', recommendationRoutes);
 apiRouter.get('/dashboard/analytics', getDashboardAnalytics);
 
 export default apiRouter;

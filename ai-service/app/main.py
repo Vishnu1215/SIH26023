@@ -10,6 +10,7 @@ from app.api.reports import router as reports_router
 from app.api.intelligence import router as intelligence_router
 from app.api.query import router as query_router
 from app.api.qa import router as qa_router
+from app.api.recommendations import router as recommendations_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -36,6 +37,7 @@ app.include_router(reports_router)
 app.include_router(intelligence_router)
 app.include_router(query_router)
 app.include_router(qa_router)
+app.include_router(recommendations_router)
 
 
 

@@ -1,7 +1,7 @@
 [
   {
-    "id": "0d824001-ebe3-494c-8f4c-f48ac5f465ba",
-    "timestamp": "2026-09-24T14:38:05.071073+00:00",
+    "id": "47963dfc-24bb-4b55-889b-c9ef1c549a16",
+    "timestamp": "2026-09-24T15:32:19.778577+00:00",
     "question": "Which subsidiary produced the highest coal?",
     "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
     "queryType": "Subsidiary Question",
@@ -64,13 +64,13 @@
         "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
       }
     ],
-    "responseTimeMs": 6.55,
+    "responseTimeMs": 2.82,
     "useLLM": false,
     "documentId": null
   },
   {
-    "id": "fb5f1947-a887-4af1-a8ea-93023a0aa7ac",
-    "timestamp": "2026-09-24T14:38:05.030514+00:00",
+    "id": "403eb629-98da-4dde-b576-31cbc995f4e7",
+    "timestamp": "2026-09-24T15:32:19.763971+00:00",
     "question": "Which subsidiary produced the highest coal?",
     "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
     "queryType": "Subsidiary Question",
@@ -133,13 +133,13 @@
         "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
       }
     ],
-    "responseTimeMs": 7.29,
+    "responseTimeMs": 4.61,
     "useLLM": false,
     "documentId": null
   },
   {
-    "id": "54b845e9-8b31-4d6f-9d93-fd8a9af47c05",
-    "timestamp": "2026-09-24T14:38:05.003994+00:00",
+    "id": "0f85caf8-3f35-41bc-be9b-29b092583957",
+    "timestamp": "2026-09-24T15:32:19.748234+00:00",
     "question": "Which subsidiary produced the highest coal?",
     "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
     "queryType": "Subsidiary Question",
@@ -202,13 +202,13 @@
         "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
       }
     ],
-    "responseTimeMs": 6.96,
+    "responseTimeMs": 4.04,
     "useLLM": false,
     "documentId": null
   },
   {
-    "id": "d9b7829e-a699-4120-9b50-0e40910974f1",
-    "timestamp": "2026-09-24T14:38:04.980046+00:00",
+    "id": "4afc64ff-1ba4-4917-a64d-a232550119f4",
+    "timestamp": "2026-09-24T15:32:19.733891+00:00",
     "question": "Which subsidiary produced the highest coal?",
     "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
     "queryType": "Subsidiary Question",
@@ -271,13 +271,13 @@
         "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
       }
     ],
-    "responseTimeMs": 6.1,
+    "responseTimeMs": 2.69,
     "useLLM": false,
     "documentId": null
   },
   {
-    "id": "a68238b9-3a4b-4632-8048-f4766739728b",
-    "timestamp": "2026-09-24T14:38:04.948065+00:00",
+    "id": "a4f1b881-2cdd-4104-af1b-031de4f103ac",
+    "timestamp": "2026-09-24T15:32:19.720411+00:00",
     "question": "Which subsidiary produced the highest coal?",
     "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
     "queryType": "Subsidiary Question",
@@ -340,13 +340,13 @@
         "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
       }
     ],
-    "responseTimeMs": 8.62,
+    "responseTimeMs": 6.73,
     "useLLM": false,
     "documentId": null
   },
   {
-    "id": "39b16e7b-a0c3-4d15-9052-8bd7831cbac9",
-    "timestamp": "2026-09-24T14:38:04.905852+00:00",
+    "id": "7ec4699d-a5da-48ad-ae5d-bb16d5cf863a",
+    "timestamp": "2026-09-24T15:32:19.689358+00:00",
     "question": "Which subsidiary produced the highest coal?",
     "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
     "queryType": "Subsidiary Question",
@@ -409,7 +409,7 @@
         "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
       }
     ],
-    "responseTimeMs": 7.07,
+    "responseTimeMs": 2.64,
     "useLLM": false,
     "documentId": null
   }
