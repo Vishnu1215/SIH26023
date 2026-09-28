@@ -1,5 +1,29 @@
 [
   {
+    "id": "qh-2bd984c1",
+    "query": "Which subsidiary produced highest coal?",
+    "timestamp": "2026-09-28T17:25:05.029217+00:00",
+    "intent": "analytics_lookup",
+    "totalResults": 1,
+    "filters": {}
+  },
+  {
+    "id": "qh-2b0a97a4",
+    "query": "Which subsidiary produced highest coal?",
+    "timestamp": "2026-09-28T17:24:52.207854+00:00",
+    "intent": "analytics_lookup",
+    "totalResults": 1,
+    "filters": {}
+  },
+  {
+    "id": "qh-fef32f6d",
+    "query": "Which subsidiary produced highest coal?",
+    "timestamp": "2026-09-28T14:25:06.332594+00:00",
+    "intent": "analytics_lookup",
+    "totalResults": 0,
+    "filters": {}
+  },
+  {
     "id": "qh-91ecfd08",
     "query": "Which subsidiary has the highest production?",
     "timestamp": "2026-09-24T16:06:26.941860+00:00",

@@ -45,6 +45,10 @@ import {
   formatTime,
   formatCount
 } from '../utils/formatters.js';
+import Button from '../components/common/Button.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
+import Toast from '../components/common/Toast.jsx';
 
 const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'docx', 'xlsx', 'csv'];
 const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
@@ -292,63 +296,44 @@ export default function DocumentsPage() {
       {/* Page Header */}
       <div className="page-header">
         <div>
-          <h2 className="page-title">Document Upload & Ingestion</h2>
+          <h2 className="page-title">Geological Archives & Ingestion — Statutory Coal Records</h2>
           <p className="page-subtitle">
-            Ingest geological survey reports, borehole logs, mine plans, and production figures
+            Ingest statutory geological survey reports, borehole logs, mine plans, and certified production records for deterministic OCR and analytical validation
           </p>
         </div>
 
         <div className="page-actions-group">
-          <button
-            onClick={handleLoadSampleDataset}
-            className="btn-sample-data"
-            title="Register representative sample files for SIH demonstration"
+          <Button
+            variant="secondary"
+            icon={Database}
+            loading={isLoadingSamples}
             disabled={isLoadingSamples || isUploading}
+            onClick={handleLoadSampleDataset}
+            title="Register representative sample files for SIH demonstration"
           >
-            {isLoadingSamples ? (
-              <>
-                <Loader2 size={15} className="animate-spin" />
-                <span>Loading Samples...</span>
-              </>
-            ) : (
-              <>
-                <Database size={15} />
-                <span>Load Sample Dataset</span>
-              </>
-            )}
-          </button>
+            {isLoadingSamples ? 'Loading Samples...' : 'Load Sample Dataset'}
+          </Button>
 
-          <button
-            onClick={loadDocuments}
-            className="btn-refresh"
-            title="Refresh document history"
+          <Button
+            variant="outline"
+            icon={RefreshCw}
+            loading={isLoadingHistory}
             disabled={isLoadingHistory}
+            onClick={loadDocuments}
+            title="Refresh document history"
           >
-            <RefreshCw size={15} className={isLoadingHistory ? 'animate-spin' : ''} />
-            <span>Refresh</span>
-          </button>
+            Refresh
+          </Button>
         </div>
       </div>
 
       {/* Floating Toast Notification */}
       {toast && (
-        <div className={`toast-notification toast-${toast.type}`}>
-          <div className="toast-content">
-            {toast.type === 'success' ? (
-              <CheckCircle2 size={20} className="toast-icon" />
-            ) : (
-              <AlertCircle size={20} className="toast-icon" />
-            )}
-            <span className="toast-message">{toast.message}</span>
-          </div>
-          <button
-            onClick={() => setToast(null)}
-            className="toast-close"
-            title="Dismiss notification"
-          >
-            <X size={16} />
-          </button>
-        </div>
+        <Toast
+          type={toast.type}
+          message={toast.message}
+          onClose={() => setToast(null)}
+        />
       )}
 
       {/* Drag-and-Drop Upload Section */}
@@ -401,42 +386,32 @@ export default function DocumentsPage() {
             </div>
 
             <div className="selected-file-actions">
-              <button
-                type="button"
-                className="btn-clear"
+              <Button
+                variant="ghost"
                 onClick={handleClearSelected}
                 disabled={isUploading}
               >
                 Clear
-              </button>
-              <button
-                type="button"
-                className="btn-sample-data"
+              </Button>
+              <Button
+                variant="secondary"
+                icon={Database}
                 onClick={handleLoadSampleDataset}
                 disabled={isLoadingSamples || isUploading}
+                loading={isLoadingSamples}
                 title="Register representative sample files for SIH demonstration"
               >
-                <Database size={15} />
-                <span>Load Sample Dataset</span>
-              </button>
-              <button
-                type="button"
-                className="btn-upload-primary"
+                Load Sample Dataset
+              </Button>
+              <Button
+                variant="primary"
+                icon={UploadCloud}
                 onClick={handleUploadSubmit}
                 disabled={isUploading}
+                loading={isUploading}
               >
-                {isUploading ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    <span>Uploading...</span>
-                  </>
-                ) : (
-                  <>
-                    <UploadCloud size={16} />
-                    <span>Upload</span>
-                  </>
-                )}
-              </button>
+                Upload & Process
+              </Button>
             </div>
           </div>
         )}
@@ -453,14 +428,18 @@ export default function DocumentsPage() {
           </div>
         </div>
 
-        {documents.length === 0 ? (
-          <div className="empty-history-state">
-            <HardDrive size={40} color="#94a3b8" />
-            <h4 className="empty-history-title">No documents uploaded yet.</h4>
-            <p className="empty-history-desc">
-              Upload a geological document above or click "Load Sample Dataset" to populate demo records.
-            </p>
+        {isLoadingHistory ? (
+          <div style={{ padding: '24px' }}>
+            <SkeletonLoader type="table-row" count={5} />
           </div>
+        ) : documents.length === 0 ? (
+          <EmptyState
+            icon={HardDrive}
+            title="No documents uploaded yet"
+            description="Upload a geological or coal document above or click 'Load Sample Dataset' to populate demo records."
+            actionLabel="Load Sample Dataset"
+            onAction={handleLoadSampleDataset}
+          />
         ) : (
           <div className="table-responsive">
             <table className="history-table">
@@ -531,26 +510,26 @@ export default function DocumentsPage() {
                       </td>
                       <td>
                         {doc.validationStatus === 'Valid' && (
-                          <span className="status-pill status-pill-valid" title={doc.validationSummary || 'Valid'}>
-                            <ShieldCheck size={13} />
-                            <span>Valid</span>
+                          <span className="badge badge-validated" title={doc.validationSummary || 'Valid'}>
+                            <ShieldCheck size={12} />
+                            <span>Validated</span>
                           </span>
                         )}
                         {doc.validationStatus === 'Warning' && (
-                          <span className="status-pill status-pill-warning" title={doc.validationSummary || 'Validation warning'}>
-                            <AlertTriangle size={13} />
+                          <span className="badge badge-warning" title={doc.validationSummary || 'Validation warning'}>
+                            <AlertTriangle size={12} />
                             <span>Warning</span>
                           </span>
                         )}
                         {doc.validationStatus === 'Error' && (
-                          <span className="status-pill status-pill-error" title={doc.validationSummary || 'Validation error'}>
-                            <ShieldAlert size={13} />
+                          <span className="badge badge-rejected" title={doc.validationSummary || 'Validation error'}>
+                            <ShieldAlert size={12} />
                             <span>Error</span>
                           </span>
                         )}
                         {(!doc.validationStatus || doc.validationStatus === 'Pending') && (
-                          <span className="status-pill status-pill-pending" title="Validation pending">
-                            <Clock size={13} />
+                          <span className="badge badge-pending" title="Validation pending">
+                            <Clock size={12} />
                             <span>Pending</span>
                           </span>
                         )}

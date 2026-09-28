@@ -18,6 +18,10 @@ import {
   X
 } from 'lucide-react';
 import { searchDocuments, reindexSearch } from '../services/intelligence.service.js';
+import Button from '../components/common/Button.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
+import Toast from '../components/common/Toast.jsx';
 
 const MINES = ['All', 'Gevra', 'Kusmunda', 'Dipka', 'Talcher', 'Jharia', 'Bokaro', 'Singrauli'];
 const SUBSIDIARIES = ['All', 'CIL', 'SECL', 'MCL', 'BCCL', 'CCL', 'WCL', 'NCL', 'ECL', 'SCCL', 'CMPDI'];
@@ -132,26 +136,27 @@ export default function TopicsSearchPage() {
           <div className="reports-meta-chip">
             <span className="reports-meta-dot"></span> Pure-JSON Inverted Index
           </div>
-          <button
-            className="reports-btn-refresh"
+          <Button
+            variant="outline"
+            size="sm"
+            icon={RotateCcw}
             onClick={handleReindex}
+            loading={isReindexing}
             disabled={isReindexing}
             title="Re-scan and rebuild search index"
           >
-            <RotateCcw size={14} className={isReindexing ? 'spin' : ''} />
-            <span>Re-Index Search</span>
-          </button>
+            Re-Index Search
+          </Button>
         </div>
       </div>
 
       {/* Notification Alert */}
       {notification && (
-        <div className={`reports-alert reports-alert-${notification.type}`}>
-          <span>{notification.message}</span>
-          <button className="reports-alert-close" onClick={() => setNotification(null)}>
-            <X size={16} />
-          </button>
-        </div>
+        <Toast
+          type={notification.type}
+          message={notification.message}
+          onClose={() => setNotification(null)}
+        />
       )}
 
       {/* Main Search Panel */}
@@ -171,9 +176,14 @@ export default function TopicsSearchPage() {
               <X size={16} />
             </button>
           )}
-          <button className="search-submit-btn" onClick={executeSearch} disabled={isSearching}>
-            {isSearching ? 'Searching...' : 'Search Index'}
-          </button>
+          <Button
+            variant="primary"
+            onClick={executeSearch}
+            loading={isSearching}
+            disabled={isSearching}
+          >
+            Search Index
+          </Button>
         </div>
 
         {/* Multi-Faceted Filters */}
@@ -232,9 +242,15 @@ export default function TopicsSearchPage() {
             </select>
           </div>
 
-          <button className="search-filter-reset" onClick={handleResetFilters} title="Reset all filters">
-            <RotateCcw size={13} /> Reset
-          </button>
+          <Button
+            variant="ghost"
+            size="sm"
+            icon={RotateCcw}
+            onClick={handleResetFilters}
+            title="Reset all filters"
+          >
+            Reset
+          </Button>
         </div>
       </div>
 
@@ -262,12 +278,18 @@ export default function TopicsSearchPage() {
           </div>
         </div>
 
-        {results.length === 0 ? (
-          <div className="reports-empty-state" style={{ background: '#fff', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
-            <Search size={44} color="#94a3b8" />
-            <h3>No Documents Match Query</h3>
-            <p>Try broadening your search term or resetting the multi-attribute filters above.</p>
+        {isSearching ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '16px' }}>
+            <SkeletonLoader type="card" count={3} />
           </div>
+        ) : results.length === 0 ? (
+          <EmptyState
+            icon={Search}
+            title="No Documents Match Query"
+            description="Try broadening your search term or resetting the multi-attribute filters above."
+            actionLabel="Reset Filters"
+            onAction={handleResetFilters}
+          />
         ) : (
           <div className="search-cards-grid">
             {results.map((doc) => (

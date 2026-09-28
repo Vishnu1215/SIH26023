@@ -39,6 +39,9 @@ import {
   getQAStatus
 } from '../services/qa.service.js';
 import { formatNumber, formatProduction } from '../utils/formatters.js';
+import Button from '../components/common/Button.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 
 export default function QAPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -194,64 +197,52 @@ export default function QAPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div
                 style={{
-                  width: '42px',
-                  height: '42px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%)',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '6px',
+                  background: 'var(--gov-navy-800)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#ffffff',
-                  boxShadow: '0 4px 10px rgba(30, 58, 138, 0.25)'
+                  boxShadow: 'var(--shadow-sm)'
                 }}
               >
-                <Bot size={24} />
+                <Bot size={22} />
               </div>
               <div>
-                <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  Coal Intelligence Q&amp;A
+                <h1 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--gov-navy-950)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  Decision Support Q&amp;A — Hybrid Intelligence Console
                   <span
                     style={{
                       fontSize: '0.72rem',
                       fontWeight: 700,
-                      background: '#ecfdf5',
-                      color: '#059669',
-                      border: '1px solid #a7f3d0',
+                      background: 'var(--status-verified-bg)',
+                      color: 'var(--status-verified-text)',
+                      border: '1px solid var(--status-verified-border)',
                       padding: '2px 8px',
-                      borderRadius: '12px'
+                      borderRadius: '4px'
                     }}
                   >
-                    Phase 11 Hybrid QA
+                    Phase 11 Sovereign QA
                   </span>
                 </h1>
-                <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '2px 0 0 0' }}>
-                  Statutory question answering grounded on Single Sources of Truth • Zero Hallucination
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>
+                  Statutory question answering grounded on Single Sources of Truth &bull; Air-Gapped &bull; Zero Hallucination
                 </p>
               </div>
             </div>
 
             {/* Controls: History Drawer Toggle & LLM Adapter Switch */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <button
-                type="button"
+              <Button
+                variant={historyOpen ? 'secondary' : 'outline'}
+                size="sm"
+                icon={History}
                 onClick={() => setHistoryOpen(!historyOpen)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  padding: '6px 12px',
-                  fontSize: '0.82rem',
-                  fontWeight: 600,
-                  background: historyOpen ? '#e2e8f0' : '#f8fafc',
-                  color: '#334155',
-                  border: '1px solid #cbd5e1',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}
               >
-                <History size={16} />
-                <span>History ({history.length})</span>
-              </button>
+                History ({history.length})
+              </Button>
 
               <label
                 style={{
@@ -259,11 +250,11 @@ export default function QAPage() {
                   alignItems: 'center',
                   gap: '8px',
                   padding: '6px 12px',
-                  background: '#f8fafc',
-                  border: '1px solid #e2e8f0',
+                  background: 'var(--bg-card-subtle)',
+                  border: '1px solid var(--border-default)',
                   borderRadius: '6px',
                   fontSize: '0.8rem',
-                  color: '#475569',
+                  color: 'var(--text-secondary)',
                   cursor: 'pointer'
                 }}
                 title="When disabled, uses 100% deterministic rule synthesis. When enabled, passes verified context to LLM adapter."
@@ -275,8 +266,8 @@ export default function QAPage() {
                   style={{ cursor: 'pointer' }}
                 />
                 <Cpu size={14} color="#0284c7" />
-                <span style={{ fontWeight: 600 }}>LLM Adapter</span>
-                <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>LLM Adapter</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
                   {useLLM ? 'Ready' : 'Deterministic'}
                 </span>
               </label>
@@ -285,10 +276,10 @@ export default function QAPage() {
 
           {/* Dynamic Suggested Question Chips */}
           {suggestions.length > 0 && (
-            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid #f1f5f9' }}>
+            <div style={{ marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--border-subtle)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                <Sparkles size={14} color="#f97316" />
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <Sparkles size={14} color="#ea580c" />
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   Recommended Inquiries:
                 </span>
               </div>
@@ -304,26 +295,18 @@ export default function QAPage() {
                       alignItems: 'center',
                       gap: '6px',
                       padding: '5px 12px',
-                      background: '#f8fafc',
-                      color: '#1e293b',
-                      border: '1px solid #cbd5e1',
+                      background: 'var(--bg-card-subtle)',
+                      color: 'var(--text-primary)',
+                      border: '1px solid var(--border-default)',
                       borderRadius: '20px',
                       fontSize: '0.78rem',
                       fontWeight: 600,
                       cursor: 'pointer',
                       transition: 'all 0.15s ease'
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#eff6ff';
-                      e.currentTarget.style.borderColor = '#93c5fd';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = '#f8fafc';
-                      e.currentTarget.style.borderColor = '#cbd5e1';
-                    }}
                   >
                     <span>{sugg.title}</span>
-                    <ArrowRight size={12} color="#64748b" />
+                    <ArrowRight size={12} color="var(--text-muted)" />
                   </button>
                 ))}
               </div>
@@ -340,7 +323,7 @@ export default function QAPage() {
             maxHeight: '680px',
             overflowY: 'auto',
             padding: '1.5rem',
-            background: '#fafbfc',
+            background: 'var(--bg-card-subtle)',
             display: 'flex',
             flexDirection: 'column',
             gap: '20px'
@@ -353,20 +336,20 @@ export default function QAPage() {
                   width: '64px',
                   height: '64px',
                   borderRadius: '16px',
-                  background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
+                  background: 'linear-gradient(135deg, rgba(2, 132, 199, 0.2) 0%, rgba(30, 58, 138, 0.3) 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 16px',
-                  color: '#1e3a8a'
+                  color: 'var(--sky-500)'
                 }}
               >
                 <Bot size={36} />
               </div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#1e293b', marginBottom: '8px' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '8px' }}>
                 How can Coal Intelligence assist you?
               </h3>
-              <p style={{ fontSize: '0.85rem', color: '#64748b', lineHeight: 1.5, marginBottom: '20px' }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5, marginBottom: '20px' }}>
                 Ask complex questions regarding coal production, statutory validation audits, subsidiary performance, mine registries, or generated reports.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -382,12 +365,12 @@ export default function QAPage() {
                     style={{
                       textAlign: 'left',
                       padding: '10px 14px',
-                      background: '#ffffff',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border-default)',
                       borderRadius: '8px',
                       fontSize: '0.82rem',
                       fontWeight: 600,
-                      color: '#1e3a8a',
+                      color: 'var(--text-primary)',
                       cursor: 'pointer',
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -395,7 +378,7 @@ export default function QAPage() {
                     }}
                   >
                     <span>{sample}</span>
-                    <ArrowRight size={14} color="#94a3b8" />
+                    <ArrowRight size={14} color="var(--text-muted)" />
                   </button>
                 ))}
               </div>
@@ -806,10 +789,11 @@ export default function QAPage() {
             display: 'flex',
             alignItems: 'center',
             gap: '10px',
-            background: '#ffffff'
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-default)'
           }}
         >
-          <Search size={18} color="#94a3b8" />
+          <Search size={18} color="var(--text-muted)" />
           <input
             type="text"
             placeholder="Ask anything... e.g. 'Which subsidiary produced the highest coal?' or 'Validation accuracy'"
@@ -821,24 +805,18 @@ export default function QAPage() {
               border: 'none',
               outline: 'none',
               fontSize: '0.92rem',
-              color: '#0f172a'
+              background: 'transparent',
+              color: 'var(--text-primary)'
             }}
           />
-          <button
-            type="submit"
-            className="btn-primary"
+          <Button
+            variant="primary"
+            icon={loading ? Loader2 : Send}
+            loading={loading}
             disabled={loading || !inputQuestion.trim()}
-            style={{
-              padding: '8px 18px',
-              fontSize: '0.88rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
           >
-            <span>Ask</span>
-            <Send size={15} />
-          </button>
+            Ask
+          </Button>
         </form>
       </div>
 
@@ -851,46 +829,40 @@ export default function QAPage() {
             flexShrink: 0,
             display: 'flex',
             flexDirection: 'column',
-            maxHeight: '820px'
+            maxHeight: '820px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-default)'
           }}
         >
           <div
             style={{
               padding: '1rem',
-              borderBottom: '1px solid #e2e8f0',
+              borderBottom: '1px solid var(--border-subtle)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.9rem' }}>
-              <History size={16} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+              <History size={16} color="var(--coal-orange)" />
               <span>Inquiry History</span>
             </div>
             {history.length > 0 && (
-              <button
-                type="button"
+              <Button
+                variant="ghost"
+                size="sm"
+                icon={Trash2}
                 onClick={handleClearHistory}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#ef4444',
-                  cursor: 'pointer',
-                  fontSize: '0.78rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
+                style={{ color: '#f87171' }}
               >
-                <Trash2 size={13} />
-                <span>Clear</span>
-              </button>
+                Clear
+              </Button>
             )}
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto', padding: '0.75rem' }}>
             {history.length === 0 ? (
-              <p style={{ fontSize: '0.82rem', color: '#94a3b8', textAlign: 'center', margin: '2rem 0' }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', textAlign: 'center', margin: '2rem 0' }}>
                 No past questions logged.
               </p>
             ) : (
@@ -903,17 +875,17 @@ export default function QAPage() {
                     style={{
                       textAlign: 'left',
                       padding: '8px 10px',
-                      background: '#f8fafc',
-                      border: '1px solid #e2e8f0',
+                      background: 'var(--bg-card-subtle)',
+                      border: '1px solid var(--border-default)',
                       borderRadius: '6px',
                       cursor: 'pointer',
                       fontSize: '0.78rem'
                     }}
                   >
-                    <div style={{ fontWeight: 600, color: '#1e293b', marginBottom: '2px', wordBreak: 'break-word' }}>
+                    <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '2px', wordBreak: 'break-word' }}>
                       {h.question}
                     </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: '0.7rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-muted)', fontSize: '0.7rem' }}>
                       <span>{h.queryType}</span>
                       <span>{new Date(h.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>

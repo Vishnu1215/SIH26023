@@ -58,7 +58,7 @@ export function ProductionTrendChart({ data = [], height = 220 }) {
                 width={barWidth}
                 height={barH}
                 rx="4"
-                fill="#0284c7"
+                fill="#0f2e5a"
                 className="chart-bar-rect"
               >
                 <title>{`${item.financialYear}: ${item.production?.toLocaleString()} MT (${item.documents || 0} docs)`}</title>
@@ -149,7 +149,7 @@ export function HorizontalBarChart({ data = [], unit = 'MT', maxItems = 6, heigh
                 className="h-bar-fill"
                 style={{
                   width: `${barWidthPct}%`,
-                  backgroundColor: idx === 0 ? '#0284c7' : idx === 1 ? '#0ea5e9' : '#38bdf8'
+                  backgroundColor: idx === 0 ? '#0f2e5a' : idx === 1 ? '#1e3a8a' : idx === 2 ? '#2563eb' : '#475569'
                 }}
               />
             </div>

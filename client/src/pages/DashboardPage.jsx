@@ -29,6 +29,9 @@ import {
   Bot
 } from 'lucide-react';
 import StatCard from '../components/common/StatCard.jsx';
+import Button from '../components/common/Button.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 import { fetchDashboardAnalytics } from '../services/document.service.js';
 import {
   formatNumber,
@@ -94,32 +97,33 @@ export default function DashboardPage() {
   };
 
   // Section 1: Executive Overview
+  // Section 1: Executive Overview
   const executiveOverviewStats = [
     {
-      title: 'Total Documents',
+      title: 'Total Ingested Documents',
       value: formatCount(totalDocsCount),
-      subtitle: 'Ingested mining & geological files',
+      subtitle: 'Official mining & geological records',
       icon: FileText,
-      color: 'blue'
+      color: 'navy'
     },
     {
-      title: 'Validated Documents',
+      title: 'Statutory Validated Docs',
       value: formatCount(val.validatedDocuments ?? val.totalValidated ?? 0),
-      subtitle: 'Evaluated against compliance rules',
+      subtitle: 'Evaluated against statutory rules',
       icon: ShieldCheck,
-      color: 'indigo'
+      color: 'navy'
     },
     {
-      title: 'Validation Accuracy',
+      title: 'Validation Accuracy Rate',
       value: formatPercent(val.validationAccuracy ?? 0),
-      subtitle: 'Clean records / validated docs',
+      subtitle: 'Rule conformance percentage',
       icon: Target,
       color: (val.validationAccuracy || 0) >= 80 ? 'emerald' : (val.validationAccuracy || 0) >= 50 ? 'amber' : 'rose'
     },
     {
-      title: 'Overall Data Quality Score',
+      title: 'Overall Data Quality Rating',
       value: `${val.averageValidationScore != null ? val.averageValidationScore : 0} / 100`,
-      subtitle: val.overallQualityRating ? `${val.overallQualityRating} System Rating` : 'Standard Compliance Score',
+      subtitle: val.overallQualityRating ? `${val.overallQualityRating} Compliance Score` : 'Standard Compliance Score',
       icon: Gauge,
       badge: val.overallQualityRating || null,
       color: (val.averageValidationScore || 0) >= 80 ? 'emerald' : (val.averageValidationScore || 0) >= 50 ? 'amber' : 'rose'
@@ -129,64 +133,64 @@ export default function DashboardPage() {
   // Section 2: Mining Operations
   const miningOperationsStats = [
     {
-      title: 'Total Coal Production',
+      title: 'Consolidated Coal Output',
       value: formatProduction(prod.totalCoalProduction),
-      subtitle: 'Consolidated achieved output',
+      subtitle: 'National verified extraction (MT)',
       icon: TrendingUp,
-      color: 'blue'
+      color: 'navy'
     },
     {
-      title: 'Target Production',
+      title: 'Statutory Target Production',
       value: formatProduction(prod.totalTargetProduction),
-      subtitle: 'Prescribed operational targets',
+      subtitle: 'Prescribed ministerial targets',
       icon: Target,
       color: 'slate'
     },
     {
-      title: 'Achievement %',
+      title: 'Target Achievement %',
       value: formatPercent(prod.productionAchievement ?? 0),
-      subtitle: 'Achieved vs target ratio',
+      subtitle: 'Actual vs statutory quota',
       icon: BarChart3,
-      color: (prod.productionAchievement || 0) >= 100 ? 'emerald' : (prod.productionAchievement || 0) >= 80 ? 'blue' : 'amber'
+      color: (prod.productionAchievement || 0) >= 100 ? 'emerald' : (prod.productionAchievement || 0) >= 80 ? 'navy' : 'amber'
     },
     {
-      title: 'Active Subsidiaries',
+      title: 'Reporting Subsidiaries',
       value: formatCount(subsidiaries.filter(s => s.subsidiary !== 'Other / Unassigned').length || subsidiaries.length),
-      subtitle: 'Reporting coal producing companies',
+      subtitle: 'Active coal producing enterprises',
       icon: Building2,
-      color: 'purple'
+      color: 'saffron'
     }
   ];
 
   // Section 3: Platform Health
   const platformHealthStats = [
     {
-      title: 'OCR Complete',
+      title: 'OCR Digital Ingestion',
       value: formatCount(docs.ocrComplete),
-      subtitle: 'Extracted digital layers',
+      subtitle: 'Extracted digitized documents',
       icon: CheckCircle2,
       color: 'emerald'
     },
     {
-      title: 'Average OCR Time',
+      title: 'Extraction Latency',
       value: formatTime(docs.averageOcrTime),
-      subtitle: 'Text extraction latency',
+      subtitle: 'Average digital processing SLA',
       icon: Clock,
-      color: 'blue'
+      color: 'navy'
     },
     {
-      title: 'Duplicate Documents',
+      title: 'Duplicate Documents Flagged',
       value: formatCount(quality.duplicateRecords ?? quality.duplicateDocuments ?? docs.duplicateDocuments ?? 0),
-      subtitle: 'SHA-256 duplicate alerts',
+      subtitle: 'SHA-256 duplicate records',
       icon: Copy,
       color: (quality.duplicateRecords || quality.duplicateDocuments) > 0 ? 'rose' : 'slate'
     },
     {
-      title: 'States Covered',
+      title: 'State Jurisdictions',
       value: formatCount(states.filter(s => s.state !== 'Not Available').length || docs.statesCovered || 0),
-      subtitle: 'Mining state jurisdictions',
+      subtitle: 'Mining states represented',
       icon: MapPin,
-      color: 'indigo'
+      color: 'navy'
     }
   ];
 
@@ -201,9 +205,16 @@ export default function DashboardPage() {
 
   if (isLoading && !analytics) {
     return (
-      <div className="analytics-loading-box">
-        <RotateCcw size={28} className="animate-spin text-blue-600" />
-        <span className="loading-label">Loading Executive Dashboard...</span>
+      <div className="dashboard-page" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div className="page-header executive-header-banner">
+          <div className="skeleton-line skeleton-title-sm" style={{ width: '260px', height: '28px' }} />
+          <div className="skeleton-line skeleton-title-sm" style={{ width: '180px', height: '36px' }} />
+        </div>
+        <SkeletonLoader type="kpi" count={4} />
+        <div className="card" style={{ height: '70px', padding: '16px' }}>
+          <div className="skeleton-line" style={{ width: '100%', height: '28px' }} />
+        </div>
+        <SkeletonLoader type="kpi" count={4} />
       </div>
     );
   }
@@ -213,11 +224,13 @@ export default function DashboardPage() {
       {/* ========================================================= */}
       {/* Executive Header Banner */}
       {/* ========================================================= */}
-      <div className="page-header executive-header-banner">
+      <div className="page-header executive-header-banner" style={{ borderBottom: '2px solid var(--gov-navy-800)', paddingBottom: '16px', marginBottom: '20px' }}>
         <div>
-          <h2 className="page-title">Executive Dashboard</h2>
-          <p className="page-subtitle">
-            Ministry of Coal | CMPDI Mining Analytics & Production Monitoring Platform
+          <h2 className="page-title" style={{ color: 'var(--gov-navy-950)', fontSize: '20px', fontWeight: 800 }}>
+            Ministry Command Centre — National Coal Monitoring
+          </h2>
+          <p className="page-subtitle" style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
+            Government of India &bull; Ministry of Coal &bull; Central Mine Planning & Design Institute Limited
           </p>
         </div>
 
@@ -243,15 +256,16 @@ export default function DashboardPage() {
             <span>v{analytics?.analyticsVersion || 1}.0 Deterministic</span>
           </div>
 
-          <button
-            className="btn-refresh-analytics"
+          <Button
+            variant="secondary"
+            size="sm"
+            icon={RotateCcw}
+            loading={isRefreshing}
             onClick={() => loadAnalytics(true)}
-            disabled={isRefreshing || isLoading}
             title="Synchronize and recompute all executive analytics"
           >
-            <RotateCcw size={14} className={isRefreshing ? 'animate-spin' : ''} />
-            <span>{isRefreshing ? 'Synchronizing...' : 'Refresh Analytics'}</span>
-          </button>
+            {isRefreshing ? 'Synchronizing...' : 'Refresh Analytics'}
+          </Button>
         </div>
       </div>
 
@@ -260,32 +274,53 @@ export default function DashboardPage() {
         <div className="analytics-error-banner">
           <AlertCircle size={18} />
           <span>{error}</span>
-          <button onClick={() => loadAnalytics(true)}>Retry</button>
+          <Button variant="outline" size="sm" onClick={() => loadAnalytics(true)}>
+            Retry
+          </Button>
         </div>
       )}
 
       {/* ========================================================= */}
-      {/* Empty State Banner (Requirement 10) */}
+      {/* Empty State Banner */}
       {/* ========================================================= */}
       {isDatasetEmpty && (
-        <div className="empty-dataset-banner">
-          <div className="empty-banner-icon">
-            <UploadCloud size={32} />
-          </div>
-          <div className="empty-banner-content">
-            <h4>No Mining Documents Uploaded Yet</h4>
-            <p>
-              The executive dashboard currently has no document records to evaluate.
-              Upload mining reports, annual production summaries, or load the official sample dataset to view real-time analytics.
-            </p>
-            <div className="empty-banner-actions">
-              <Link to="/documents" className="btn-primary-action">
-                Go to Document Ingestion
-              </Link>
-            </div>
-          </div>
-        </div>
+        <EmptyState
+          icon={UploadCloud}
+          title="No Mining Documents Ingested Yet"
+          description="The executive dashboard currently has no document records to evaluate. Ingest mining reports, production sheets, or load the official sample dataset to view real-time analytics."
+          actionText="Go to Document Ingestion"
+          actionIcon={UploadCloud}
+          onAction={() => window.location.href = '/documents'}
+          className="card mb-6"
+        />
       )}
+
+      {/* ========================================================= */}
+      {/* Secretary-Level Executive Briefing Panel */}
+      {/* ========================================================= */}
+      <div
+        className="card"
+        style={{
+          padding: '16px 20px',
+          marginBottom: '20px',
+          backgroundColor: '#ffffff',
+          border: '1px solid #d1dce5',
+          borderLeft: '4px solid var(--gov-navy-800)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', fontWeight: 800, color: 'var(--gov-navy-900)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            <ShieldCheck size={16} color="var(--tri-green)" />
+            <span>Secretary-Level Mining Briefing & Statutory Status</span>
+          </div>
+          <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f2e5a', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', padding: '2px 8px', borderRadius: '4px' }}>
+            Statutory Scope: National Tier-1
+          </span>
+        </div>
+        <p style={{ margin: 0, fontSize: '13px', color: '#1e293b', lineHeight: 1.5 }}>
+          National coal extraction monitoring is active across <strong>{subsidiaries.filter(s => s.subsidiary !== 'Other / Unassigned').length || subsidiaries.length} reporting subsidiaries</strong>. Total verified output stands at <strong>{formatProduction(prod.totalCoalProduction)} MT</strong> against prescribed statutory targets of <strong>{formatProduction(prod.totalTargetProduction)} MT</strong> ({formatPercent(prod.productionAchievement ?? 0)} quota fulfillment). Deterministic validation engine confirms a <strong>{formatPercent(val.validationAccuracy ?? 0)} compliance rating</strong> across <strong>{formatCount(val.validatedDocuments ?? val.totalValidated ?? 0)} audited document records</strong> with zero hallucination risk.
+        </p>
+      </div>
 
       {/* ========================================================= */}
       {/* 1. Executive KPI Reorganization (Requirement 1) */}

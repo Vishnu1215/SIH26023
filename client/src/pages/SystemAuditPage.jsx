@@ -39,6 +39,9 @@ import {
   triggerSystemRefresh
 } from '../services/admin.service.js';
 import { formatNumber, formatPercent } from '../utils/formatters.js';
+import Button from '../components/common/Button.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 
 export default function SystemAuditPage() {
   const [activeTab, setActiveTab] = useState('health'); // 'health' | 'statistics' | 'audit' | 'storage' | 'runtime' | 'configuration' | 'activity'
@@ -144,11 +147,17 @@ export default function SystemAuditPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-        <RefreshCw className="w-10 h-10 text-emerald-500 animate-spin" />
-        <p className="text-slate-400 font-medium tracking-wide">
-          Loading System Administration & Audit Dashboard...
-        </p>
+      <div className="space-y-6 pb-12" style={{ padding: '24px 0' }}>
+        <div className="card" style={{ padding: '24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <RefreshCw className="animate-spin" size={24} style={{ color: 'var(--coal-orange)' }} />
+          <div>
+            <h3 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--text-primary)' }}>Loading System Administration & Audit Dashboard...</h3>
+            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Synchronizing runtime metrics, storage allocations, and audit stream...</p>
+          </div>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+          <SkeletonLoader type="kpi" count={4} />
+        </div>
       </div>
     );
   }
@@ -160,35 +169,36 @@ export default function SystemAuditPage() {
   const overallStatus = healthData?.overallStatus || 'Healthy';
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 admin-dashboard">
       {/* Header Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-white tracking-tight">
-              System Administration, Audit & Monitoring
+            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+              System Administration, Audit Trail & Infrastructure Monitoring
             </h1>
-            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300">
               Phase 13 Active
             </span>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700">
-              <Lock className="w-3 h-3 text-emerald-400" /> Air-Gapped Compliant
+            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-300">
+              <Lock className="w-3 h-3 text-emerald-600" /> Air-Gapped Sovereign
             </span>
           </div>
-          <p className="text-sm text-slate-400 mt-1 max-w-3xl">
-            Unified government administration dashboard for Ministry of Coal and CMPDI officials. Monitor real-time system health, single-source storage allocations, processing statistics, SLAs, and immutable compliance audit logs.
+          <p className="text-sm text-slate-600 mt-1 max-w-3xl">
+            Unified government administration console for Ministry of Coal and CMPDI officials. Monitor real-time platform health, single-source storage allocations, processing statistics, SLAs, and immutable compliance audit logs.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <button
-            onClick={handleRefresh}
+          <Button
+            variant="outline"
+            icon={RefreshCw}
+            loading={refreshing}
             disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium text-sm border border-slate-700 transition shadow-sm disabled:opacity-50"
+            onClick={handleRefresh}
           >
-            <RefreshCw className={`w-4 h-4 text-emerald-400 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? 'Refreshing...' : 'System Refresh'}
-          </button>
+            System Refresh
+          </Button>
         </div>
       </div>
 

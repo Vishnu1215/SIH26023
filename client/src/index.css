@@ -1,17 +1,159 @@
+/* ==========================================================================
+   Government of India | Ministry of Coal | CMPDI Enterprise Reporting Platform
+   Design System Core Tokens & Sovereign National Identity
+   ========================================================================== */
+
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #1f2937;
-  background-color: #f9fafb;
+  /* Official Government Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans', Oxygen, Ubuntu, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+  /* Sovereign Government Surfaces */
+  --bg-app: #f4f6f9;               /* Official light grey executive canvas */
+  --bg-sidebar: #0b1d3a;           /* Deep institutional Navy sidebar */
+  --bg-sidebar-hover: #132a4f;     /* Navy hover state */
+  --bg-sidebar-active: #1a3865;    /* Navy active navigation item */
+  --bg-navbar: #ffffff;            /* Crisp official Government white masthead */
+  --bg-navbar-top: #08162b;        /* Top national tricolor anchor bar */
+  --bg-card: #ffffff;              /* Crisp white executive dashboard panel */
+  --bg-card-subtle: #f8fafc;       /* Off-white secondary surface */
+  --bg-card-raised: #ffffff;       /* Elevated official document card */
+  --bg-card-hover: #fcfdfe;        /* Subtle interactive card hover */
+  --bg-input: #ffffff;             /* Government form field */
+  --bg-input-focus: #ffffff;       /* Focus form field */
+
+  /* Government Navy & Deep Blue Hierarchy */
+  --gov-navy-950: #061124;
+  --gov-navy-900: #0b1d3a;
+  --gov-navy-800: #0f2e5a;
+  --gov-navy-700: #1b3d6d;
+  --gov-navy-600: #244b82;
+  --gov-blue-500: #1d4ed8;
+  --gov-blue-100: #e0e7ff;
+  --gov-blue-50:  #eff6ff;
+
+  /* Sovereign Tri-Color Micro-Accents */
+  --tri-saffron: #ea580c;          /* Deep India Saffron / Coal Orange */
+  --tri-saffron-subtle: #fff7ed;
+  --tri-saffron-border: #ffedd5;
+  --tri-white: #ffffff;
+  --tri-green: #15803d;            /* India Green / Compliance */
+  --tri-green-subtle: #f0fdf4;
+  --tri-green-border: #dcfce7;
+
+  /* Institutional Text Colors */
+  --text-primary: #0a192f;         /* Deep high-contrast navy-slate */
+  --text-secondary: #334155;       /* Slate body text */
+  --text-muted: #64748b;           /* Metadata and statutory labels */
+  --text-inverse: #ffffff;         /* Pure white on navy surfaces */
+  --text-navy: #0f2e5a;            /* Government Navy headings */
+
+  /* Official Borders & Grid Lines */
+  --border-default: #d1dce5;       /* Crisp official panel border */
+  --border-subtle: #e2e8f0;        /* Subtle divider */
+  --border-strong: #94a3b8;        /* Emphasis border */
+  --border-navy: #0f2e5a;          /* Official Navy accent border */
+
+  /* Formal Status Indicators */
+  --status-verified-bg: #ecfdf5;
+  --status-verified-border: #a7f3d0;
+  --status-verified-text: #065f46;
+
+  --status-validated-bg: #eff6ff;
+  --status-validated-border: #bfdbfe;
+  --status-validated-text: #1e40af;
+
+  --status-warning-bg: #fffbeb;
+  --status-warning-border: #fde68a;
+  --status-warning-text: #92400e;
+
+  --status-pending-bg: #f8fafc;
+  --status-pending-border: #e2e8f0;
+  --status-pending-text: #475569;
+
+  --status-completed-bg: #f0fdf4;
+  --status-completed-border: #bbf7d0;
+  --status-completed-text: #166534;
+
+  --status-rejected-bg: #fef2f2;
+  --status-rejected-border: #fecaca;
+  --status-rejected-text: #991b1b;
+
+  --status-review-bg: #fff7ed;
+  --status-review-border: #fed7aa;
+  --status-review-text: #9a3412;
+
+  /* Executive Minimalist Elevation & Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(11, 29, 58, 0.05);
+  --shadow-md: 0 1px 3px 0 rgba(11, 29, 58, 0.08), 0 1px 2px -1px rgba(11, 29, 58, 0.08);
+  --shadow-lg: 0 4px 6px -1px rgba(11, 29, 58, 0.08), 0 2px 4px -2px rgba(11, 29, 58, 0.05);
+  --shadow-panel: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  /* Precise Government Border Radii */
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+html {
+  font-size: 14px;
+  color-scheme: light;
+}
+
 body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
   min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Tabular Numerals for Official Mining Figures and Metrics */
+.tabular-nums,
+.stat-card-value,
+.reports-stat-value,
+.prod-kpi-value,
+.metric-value {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* Institutional Clean Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: var(--radius-xs);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Accessible High-Contrast Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--gov-navy-800);
+  outline-offset: 2px;
 }

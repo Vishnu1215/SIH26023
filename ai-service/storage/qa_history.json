@@ -1,5 +1,212 @@
 [
   {
+    "id": "8b95abd3-7402-477f-b421-99974ef3d73c",
+    "timestamp": "2026-09-28T17:25:05.038857+00:00",
+    "question": "Which subsidiary produced the highest coal?",
+    "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
+    "queryType": "Subsidiary Question",
+    "confidence": 0.98,
+    "evidenceCount": 2,
+    "evidence": [
+      {
+        "source": "storage/analytics/dashboard.json (rankings)",
+        "detail": "Production Leader: BCCL (142,500.00 MT)"
+      },
+      {
+        "source": "storage/analytics/dashboard.json (rankings)",
+        "detail": "SECL/BCCL Subsidiary Rank #1: 142,500.00 MT (99.8%)"
+      }
+    ],
+    "documentsUsed": [
+      {
+        "sourceDocument": "Executive Analytics Master Dashboard",
+        "documentId": "storage/analytics/dashboard.json",
+        "page": "Subsidiary Rankings",
+        "confidence": 0.99,
+        "supportingFields": {
+          "topSubsidiary": "BCCL",
+          "production": 142500.0,
+          "unit": "MT",
+          "contributionPct": 99.8,
+          "documentsCount": 1,
+          "rank": 1
+        },
+        "excerpt": "BCCL holds Rank #1 with 142,500.00 MT total production."
+      },
+      {
+        "sourceDocument": "Chap3Annualreport2026En",
+        "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "page": 1,
+        "confidence": 0.95,
+        "supportingFields": {
+          "subsidiary": "CIL",
+          "mineName": "Gevra",
+          "coalProduction": 3.1,
+          "validationScore": 100,
+          "financialYear": "2025-26",
+          "state": "Chhattisgarh"
+        },
+        "excerpt": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chha..."
+      },
+      {
+        "sourceDocument": "Chap2Annualreport2026En",
+        "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "page": 1,
+        "confidence": 0.95,
+        "supportingFields": {
+          "subsidiary": "CIL",
+          "mineName": "Kusmunda",
+          "coalProduction": 0.0,
+          "validationScore": 80,
+          "financialYear": "2025-26",
+          "state": "Chhattisgarh"
+        },
+        "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
+      }
+    ],
+    "responseTimeMs": 6.29,
+    "useLLM": false,
+    "documentId": null
+  },
+  {
+    "id": "795486df-4c67-461c-8ae0-58cbab46caee",
+    "timestamp": "2026-09-28T17:24:52.216879+00:00",
+    "question": "Which subsidiary produced the highest coal?",
+    "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
+    "queryType": "Subsidiary Question",
+    "confidence": 0.98,
+    "evidenceCount": 2,
+    "evidence": [
+      {
+        "source": "storage/analytics/dashboard.json (rankings)",
+        "detail": "Production Leader: BCCL (142,500.00 MT)"
+      },
+      {
+        "source": "storage/analytics/dashboard.json (rankings)",
+        "detail": "SECL/BCCL Subsidiary Rank #1: 142,500.00 MT (99.8%)"
+      }
+    ],
+    "documentsUsed": [
+      {
+        "sourceDocument": "Executive Analytics Master Dashboard",
+        "documentId": "storage/analytics/dashboard.json",
+        "page": "Subsidiary Rankings",
+        "confidence": 0.99,
+        "supportingFields": {
+          "topSubsidiary": "BCCL",
+          "production": 142500.0,
+          "unit": "MT",
+          "contributionPct": 99.8,
+          "documentsCount": 1,
+          "rank": 1
+        },
+        "excerpt": "BCCL holds Rank #1 with 142,500.00 MT total production."
+      },
+      {
+        "sourceDocument": "Chap3Annualreport2026En",
+        "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "page": 1,
+        "confidence": 0.95,
+        "supportingFields": {
+          "subsidiary": "CIL",
+          "mineName": "Gevra",
+          "coalProduction": 3.1,
+          "validationScore": 100,
+          "financialYear": "2025-26",
+          "state": "Chhattisgarh"
+        },
+        "excerpt": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chha..."
+      },
+      {
+        "sourceDocument": "Chap2Annualreport2026En",
+        "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "page": 1,
+        "confidence": 0.95,
+        "supportingFields": {
+          "subsidiary": "CIL",
+          "mineName": "Kusmunda",
+          "coalProduction": 0.0,
+          "validationScore": 80,
+          "financialYear": "2025-26",
+          "state": "Chhattisgarh"
+        },
+        "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
+      }
+    ],
+    "responseTimeMs": 5.83,
+    "useLLM": false,
+    "documentId": null
+  },
+  {
+    "id": "b5d7c5fc-a63a-4c11-8161-d8aeba5ce655",
+    "timestamp": "2026-09-28T14:25:06.944899+00:00",
+    "question": "Which subsidiary produced the highest coal?",
+    "answer": "BCCL produced the highest coal production with 142,500.00 MT (99.8% national contribution across 1 reporting documents).",
+    "queryType": "Subsidiary Question",
+    "confidence": 0.98,
+    "evidenceCount": 2,
+    "evidence": [
+      {
+        "source": "storage/analytics/dashboard.json (rankings)",
+        "detail": "Production Leader: BCCL (142,500.00 MT)"
+      },
+      {
+        "source": "storage/analytics/dashboard.json (rankings)",
+        "detail": "SECL/BCCL Subsidiary Rank #1: 142,500.00 MT (99.8%)"
+      }
+    ],
+    "documentsUsed": [
+      {
+        "sourceDocument": "Executive Analytics Master Dashboard",
+        "documentId": "storage/analytics/dashboard.json",
+        "page": "Subsidiary Rankings",
+        "confidence": 0.99,
+        "supportingFields": {
+          "topSubsidiary": "BCCL",
+          "production": 142500.0,
+          "unit": "MT",
+          "contributionPct": 99.8,
+          "documentsCount": 1,
+          "rank": 1
+        },
+        "excerpt": "BCCL holds Rank #1 with 142,500.00 MT total production."
+      },
+      {
+        "sourceDocument": "Chap3Annualreport2026En",
+        "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+        "page": 1,
+        "confidence": 0.95,
+        "supportingFields": {
+          "subsidiary": "CIL",
+          "mineName": "Gevra",
+          "coalProduction": 3.1,
+          "validationScore": 100,
+          "financialYear": "2025-26",
+          "state": "Chhattisgarh"
+        },
+        "excerpt": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chha..."
+      },
+      {
+        "sourceDocument": "Chap2Annualreport2026En",
+        "documentId": "217ec505-e2a7-4f93-9f3b-a8463b214770",
+        "page": 1,
+        "confidence": 0.95,
+        "supportingFields": {
+          "subsidiary": "CIL",
+          "mineName": "Kusmunda",
+          "coalProduction": 0.0,
+          "validationScore": 80,
+          "financialYear": "2025-26",
+          "state": "Chhattisgarh"
+        },
+        "excerpt": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data int..."
+      }
+    ],
+    "responseTimeMs": 609.73,
+    "useLLM": false,
+    "documentId": null
+  },
+  {
     "id": "da6be09e-1d95-4206-aaea-e0ba99da8d80",
     "timestamp": "2026-09-24T16:06:26.945982+00:00",
     "question": "Which subsidiary produced the highest coal?",

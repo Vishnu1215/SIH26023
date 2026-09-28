@@ -1,5 +1,29 @@
 [
   {
+    "timestamp": "2026-09-28T17:24:52.232413+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-28T14:40:22.491720+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-28T14:25:06.977999+00:00",
+    "overallRisk": 41.9,
+    "riskLevel": "Medium",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
     "timestamp": "2026-09-24T16:06:26.915568+00:00",
     "overallRisk": 41.9,
     "riskLevel": "Medium",

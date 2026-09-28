@@ -32,6 +32,9 @@ import {
   recomputeRecommendations
 } from '../services/recommendation.service.js';
 import { formatNumber, formatPercent } from '../utils/formatters.js';
+import Button from '../components/common/Button.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 
 export default function RecommendationsPage() {
   const [data, setData] = useState(null);
@@ -156,80 +159,73 @@ export default function RecommendationsPage() {
   return (
     <div className="page-container" style={{ maxWidth: '1440px', margin: '0 auto', paddingBottom: '3rem' }}>
       {/* Page Header */}
-      <div className="card" style={{ padding: '1.25rem 1.75rem', marginBottom: '20px', background: '#ffffff' }}>
+      <div className="card" style={{ padding: '1.25rem 1.75rem', marginBottom: '20px', background: 'var(--bg-card)', border: '1px solid var(--border-default)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
               style={{
-                width: '46px',
-                height: '46px',
-                borderRadius: '12px',
-                background: 'linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%)',
+                width: '42px',
+                height: '42px',
+                borderRadius: '6px',
+                background: 'var(--gov-navy-800)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#ffffff',
-                boxShadow: '0 4px 12px rgba(30, 58, 138, 0.2)'
+                boxShadow: 'var(--shadow-sm)'
               }}
             >
-              <Lightbulb size={26} />
+              <Lightbulb size={24} />
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h1 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
-                  AI Recommendations &amp; Decision Support
+                <h1 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--gov-navy-950)', margin: 0 }}>
+                  Operational Advisory &amp; Decision Support Engine
                 </h1>
                 <span
                   style={{
                     fontSize: '0.72rem',
                     fontWeight: 700,
-                    background: '#eff6ff',
-                    color: '#1e40af',
-                    border: '1px solid #bfdbfe',
+                    background: 'var(--status-validated-bg)',
+                    color: 'var(--status-validated-text)',
+                    border: '1px solid var(--status-validated-border)',
                     padding: '2px 8px',
-                    borderRadius: '12px'
+                    borderRadius: '4px'
                   }}
                 >
-                  Phase 12
+                  Phase 12 Statutory Advisory
                 </span>
               </div>
-              <p style={{ fontSize: '0.84rem', color: '#64748b', margin: '3px 0 0 0' }}>
-                Deterministic Operational Risk Auditing • Actionable Statutory Recommendations • Single Source of Truth
+              <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '3px 0 0 0' }}>
+                Deterministic Operational Risk Auditing &bull; Actionable Statutory Recommendations &bull; Single Source of Truth
               </p>
             </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             {data?.lastUpdated && (
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                 <Clock size={13} />
                 <span>Updated: {new Date(data.lastUpdated).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </span>
             )}
 
-            <button
-              type="button"
-              className="btn-primary"
-              onClick={() => loadData(true)}
+            <Button
+              variant="primary"
+              icon={RefreshCw}
+              loading={recomputing}
               disabled={recomputing || loading}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '8px 16px',
-                fontSize: '0.84rem'
-              }}
+              onClick={() => loadData(true)}
             >
-              <RefreshCw size={14} className={recomputing ? 'animate-spin' : ''} />
-              <span>{recomputing ? 'Recomputing...' : 'Recompute Decision Engine'}</span>
-            </button>
+              {recomputing ? 'Recomputing...' : 'Recompute Decision Engine'}
+            </Button>
           </div>
         </div>
       </div>
 
       {/* Error Notice */}
       {error && (
-        <div className="card" style={{ padding: '1rem 1.25rem', marginBottom: '20px', background: '#fef2f2', border: '1px solid #fecaca', color: '#991b1b', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div className="card" style={{ padding: '1rem 1.25rem', marginBottom: '20px', background: 'rgba(239, 68, 68, 0.12)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#f87171', display: 'flex', alignItems: 'center', gap: '10px' }}>
           <AlertCircle size={20} />
           <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>{error}</span>
         </div>
@@ -238,18 +234,18 @@ export default function RecommendationsPage() {
       {/* Section 1: Executive KPI Summary Cards */}
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '24px' }}>
         {/* KPI 1: Operational Risk */}
-        <div className="card" style={{ padding: '1.25rem', background: '#ffffff', borderTop: `4px solid ${getRiskColor(summary.overallRisk || 0)}` }}>
+        <div className="card" style={{ padding: '1.25rem', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderTop: `4px solid ${getRiskColor(summary.overallRisk || 0)}` }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Operational Risk Score
             </span>
             <Gauge size={20} color={getRiskColor(summary.overallRisk || 0)} />
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
-            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>
+            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>
               {summary.overallRisk !== undefined ? summary.overallRisk : '--'}
             </span>
-            <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>/ 100</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>/ 100</span>
             <span
               style={{
                 marginLeft: 'auto',
@@ -257,78 +253,78 @@ export default function RecommendationsPage() {
                 fontWeight: 700,
                 padding: '2px 8px',
                 borderRadius: '12px',
-                background: summary.riskLevel === 'High' ? '#fef2f2' : summary.riskLevel === 'Medium' ? '#fffbeb' : '#ecfdf5',
-                color: summary.riskLevel === 'High' ? '#b91c1c' : summary.riskLevel === 'Medium' ? '#b45309' : '#047857',
-                border: `1px solid ${summary.riskLevel === 'High' ? '#fca5a5' : summary.riskLevel === 'Medium' ? '#fde68a' : '#a7f3d0'}`
+                background: summary.riskLevel === 'High' ? 'rgba(239, 68, 68, 0.15)' : summary.riskLevel === 'Medium' ? 'rgba(245, 158, 11, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                color: summary.riskLevel === 'High' ? '#f87171' : summary.riskLevel === 'Medium' ? '#fbbf24' : '#34d399',
+                border: `1px solid ${summary.riskLevel === 'High' ? 'rgba(239, 68, 68, 0.3)' : summary.riskLevel === 'Medium' ? 'rgba(245, 158, 11, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`
               }}
             >
               {summary.riskLevel || 'Low'} Risk
             </span>
           </div>
-          <p style={{ fontSize: '0.76rem', color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', margin: 0 }}>
             Weighted index over production, validation &amp; completeness
           </p>
         </div>
 
         {/* KPI 2: Actionable Recommendations */}
-        <div className="card" style={{ padding: '1.25rem', background: '#ffffff', borderTop: '4px solid #0284c7' }}>
+        <div className="card" style={{ padding: '1.25rem', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderTop: '4px solid #0284c7' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Actionable Recommendations
             </span>
             <Lightbulb size={20} color="#0284c7" />
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
-            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>
+            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>
               {summary.totalRecommendations || 0}
             </span>
-            <span style={{ fontSize: '0.78rem', color: '#475569', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
               ({summary.highPriorityRecommendations || 0} High/Critical)
             </span>
           </div>
-          <p style={{ fontSize: '0.76rem', color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', margin: 0 }}>
             Prioritized operational interventions for leadership
           </p>
         </div>
 
         {/* KPI 3: Operational Alerts */}
-        <div className="card" style={{ padding: '1.25rem', background: '#ffffff', borderTop: '4px solid #ea580c' }}>
+        <div className="card" style={{ padding: '1.25rem', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderTop: '4px solid #ea580c' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Operational Alerts
             </span>
             <AlertTriangle size={20} color="#ea580c" />
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
-            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>
+            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>
               {summary.totalAlerts || 0}
             </span>
-            <span style={{ fontSize: '0.78rem', color: '#991b1b', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.78rem', color: '#f87171', fontWeight: 600 }}>
               ({summary.criticalAlertsCount || 0} Critical)
             </span>
           </div>
-          <p style={{ fontSize: '0.76rem', color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', margin: 0 }}>
             Discrepancies, missing metadata &amp; output variances
           </p>
         </div>
 
         {/* KPI 4: Executive Insights */}
-        <div className="card" style={{ padding: '1.25rem', background: '#ffffff', borderTop: '4px solid #16a34a' }}>
+        <div className="card" style={{ padding: '1.25rem', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderTop: '4px solid #10b981' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Executive Insights
             </span>
-            <Sparkles size={20} color="#16a34a" />
+            <Sparkles size={20} color="#10b981" />
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
-            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>
+            <span style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)' }}>
               {summary.insightsCount || 0}
             </span>
-            <span style={{ fontSize: '0.78rem', color: '#166534', fontWeight: 600 }}>
+            <span style={{ fontSize: '0.78rem', color: '#34d399', fontWeight: 600 }}>
               Factual Findings
             </span>
           </div>
-          <p style={{ fontSize: '0.76rem', color: '#64748b', margin: 0 }}>
+          <p style={{ fontSize: '0.76rem', color: 'var(--text-muted)', margin: 0 }}>
             Zero-hallucination key statistics &amp; macro indicators
           </p>
         </div>

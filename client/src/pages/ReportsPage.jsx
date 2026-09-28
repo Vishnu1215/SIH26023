@@ -32,6 +32,9 @@ import {
   regenerateReport,
   deleteReport
 } from '../services/report.service.js';
+import Button from '../components/common/Button.jsx';
+import EmptyState from '../components/common/EmptyState.jsx';
+import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 
 const REPORT_TYPES = [
   {
@@ -452,30 +455,26 @@ export default function ReportsPage() {
         )}
 
         {/* Action Controls */}
-        <div className="reports-actions-bar">
-          <button
-            className="reports-btn reports-btn-preview"
+        <div className="reports-actions-bar" style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+          <Button
+            variant="outline"
+            icon={Eye}
             onClick={handleLivePreview}
+            loading={isLoadingPreview}
             disabled={isLoadingPreview || isGenerating}
           >
-            <Eye size={18} /> {isLoadingPreview ? 'Compiling Preview...' : 'Live HTML Preview'}
-          </button>
+            {isLoadingPreview ? 'Compiling Preview...' : 'Live HTML Preview'}
+          </Button>
 
-          <button
-            className="reports-btn reports-btn-generate"
+          <Button
+            variant="primary"
+            icon={Download}
             onClick={handleGenerate}
+            loading={isGenerating}
             disabled={isGenerating || isLoadingPreview}
           >
-            {isGenerating ? (
-              <>
-                <RefreshCw size={18} className="spin" /> Generating &amp; Exporting...
-              </>
-            ) : (
-              <>
-                <Download size={18} /> Generate &amp; Download {format.toUpperCase()}
-              </>
-            )}
-          </button>
+            Generate & Download {format.toUpperCase()}
+          </Button>
         </div>
       </div>
 
@@ -488,19 +487,30 @@ export default function ReportsPage() {
               Persistent repository of synthesized statutory reports with metadata tracking.
             </p>
           </div>
-          <button className="reports-btn-refresh" onClick={fetchReports} disabled={isLoadingHistory}>
-            <RefreshCw size={16} className={isLoadingHistory ? 'spin' : ''} /> Refresh History
-          </button>
+          <Button
+            variant="outline"
+            size="sm"
+            icon={RefreshCw}
+            loading={isLoadingHistory}
+            disabled={isLoadingHistory}
+            onClick={fetchReports}
+          >
+            Refresh History
+          </Button>
         </div>
 
-        {reports.length === 0 ? (
-          <div className="reports-empty-state">
-            <FileText size={48} color="#94a3b8" />
-            <h3>No Reports Generated Yet</h3>
-            <p>
-              Select a statutory report template and export format above to generate your first publication-ready document.
-            </p>
+        {isLoadingHistory ? (
+          <div style={{ padding: '24px' }}>
+            <SkeletonLoader type="table-row" count={4} />
           </div>
+        ) : reports.length === 0 ? (
+          <EmptyState
+            icon={FileText}
+            title="No Reports Generated Yet"
+            description="Select a statutory report template and export format above to generate your first publication-ready document."
+            actionLabel={`Generate ${format.toUpperCase()}`}
+            onAction={handleGenerate}
+          />
         ) : (
           <div className="reports-table-responsive">
             <table className="reports-table">
@@ -584,9 +594,11 @@ export default function ReportsPage() {
                   Official Government of India / CMPDI Statutory Layout
                 </span>
               </div>
-              <div className="reports-modal-controls">
-                <button
-                  className="reports-btn-modal-action"
+              <div className="reports-modal-controls" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  icon={Printer}
                   onClick={() => {
                     const iframe = document.getElementById('report-preview-frame');
                     if (iframe && iframe.contentWindow) {
@@ -594,8 +606,8 @@ export default function ReportsPage() {
                     }
                   }}
                 >
-                  <Printer size={16} /> Print / Save as PDF
-                </button>
+                  Print / Save as PDF
+                </Button>
                 <button
                   className="reports-btn-modal-close"
                   onClick={() => setIsPreviewOpen(false)}
