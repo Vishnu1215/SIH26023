@@ -169,7 +169,7 @@ export async function validateDocument(documentId) {
 }
 
 /**
- * Retrieve aggregated executive dashboard analytics (Phase 7).
+ * Retrieve aggregated executive dashboard analytics.
  * Reads the single source of truth computed by the analytics engine.
  * @returns {Promise<Object>} Dashboard analytics data
  */

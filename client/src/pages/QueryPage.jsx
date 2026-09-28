@@ -132,7 +132,7 @@ export default function QueryPage() {
             Deterministic Query Console — Natural Language Router
           </h1>
           <p className="page-subtitle">
-            Phase 10 Deterministic rule-based query parser & analytics lookup for the Ministry of Coal &bull; CMPDI. 100% explainable, air-gapped, and reproducible.
+            Deterministic rule-based query parser & analytics lookup for the Ministry of Coal &bull; CMPDI. 100% explainable, air-gapped, and reproducible.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>

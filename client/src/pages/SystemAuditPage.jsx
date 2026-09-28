@@ -42,6 +42,7 @@ import { formatNumber, formatPercent } from '../utils/formatters.js';
 import Button from '../components/common/Button.jsx';
 import EmptyState from '../components/common/EmptyState.jsx';
 import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
+import { usePlatformSync } from '../utils/syncBus.js';
 
 export default function SystemAuditPage() {
   const [activeTab, setActiveTab] = useState('health'); // 'health' | 'statistics' | 'audit' | 'storage' | 'runtime' | 'configuration' | 'activity'
@@ -97,6 +98,9 @@ export default function SystemAuditPage() {
   useEffect(() => {
     loadAllData();
   }, [loadAllData]);
+
+  // Live system-wide synchronization hook
+  usePlatformSync(loadAllData);
 
   // Handle filtered audit fetch
   const handleFilterAudit = async () => {
@@ -178,7 +182,7 @@ export default function SystemAuditPage() {
               System Administration, Audit Trail & Infrastructure Monitoring
             </h1>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-300">
-              Phase 13 Active
+              Governance Active
             </span>
             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 border border-slate-300">
               <Lock className="w-3 h-3 text-emerald-600" /> Air-Gapped Sovereign

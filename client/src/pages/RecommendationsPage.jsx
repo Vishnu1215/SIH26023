@@ -35,6 +35,7 @@ import { formatNumber, formatPercent } from '../utils/formatters.js';
 import Button from '../components/common/Button.jsx';
 import EmptyState from '../components/common/EmptyState.jsx';
 import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
+import { usePlatformSync } from '../utils/syncBus.js';
 
 export default function RecommendationsPage() {
   const [data, setData] = useState(null);
@@ -76,6 +77,9 @@ export default function RecommendationsPage() {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  // Real-time synchronization
+  usePlatformSync(() => loadData(false));
 
   // Extract nested payloads safely
   const summary = data?.summary || {};
@@ -193,7 +197,7 @@ export default function RecommendationsPage() {
                     borderRadius: '4px'
                   }}
                 >
-                  Phase 12 Statutory Advisory
+                  Statutory Advisory System
                 </span>
               </div>
               <p style={{ fontSize: '0.84rem', color: 'var(--text-secondary)', margin: '3px 0 0 0' }}>

@@ -224,7 +224,7 @@ export default function QAPage() {
                       borderRadius: '4px'
                     }}
                   >
-                    Phase 11 Sovereign QA
+                    Sovereign QA System
                   </span>
                 </h1>
                 <p style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', margin: '2px 0 0 0' }}>

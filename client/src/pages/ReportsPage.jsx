@@ -21,7 +21,11 @@ import {
   Clock,
   ShieldCheck,
   Check,
-  ChevronDown
+  ChevronDown,
+  Edit3,
+  FileSignature,
+  History,
+  FileCheck
 } from 'lucide-react';
 import {
   generateReport,
@@ -32,6 +36,14 @@ import {
   regenerateReport,
   deleteReport
 } from '../services/report.service.js';
+import { usePlatformSync, emitPlatformUpdate } from '../utils/syncBus.js';
+import {
+  getReportReview,
+  saveReportDraft,
+  approveReport,
+  rejectReport,
+  getReportAuditTrail
+} from '../services/reportReview.service.js';
 import Button from '../components/common/Button.jsx';
 import EmptyState from '../components/common/EmptyState.jsx';
 import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
@@ -126,6 +138,19 @@ export default function ReportsPage() {
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [previewTitle, setPreviewTitle] = useState('Report Preview');
 
+  // Review Modal State
+  const [activeReviewReport, setActiveReviewReport] = useState(null);
+  const [modalTab, setModalTab] = useState('preview'); // 'preview' | 'edit' | 'audit'
+  const [editTitle, setEditTitle] = useState('');
+  const [editExecutiveSummary, setEditExecutiveSummary] = useState('');
+  const [editRemarks, setEditRemarks] = useState('');
+  const [editRecommendations, setEditRecommendations] = useState('');
+  const [reviewerName, setReviewerName] = useState('Under Secretary, Ministry of Coal');
+  const [reviewerDesignation, setReviewerDesignation] = useState('Coal Division-I, Shastri Bhawan');
+  const [reviewerComments, setReviewerComments] = useState('');
+  const [reviewStatus, setReviewStatus] = useState('Draft');
+  const [reviewAuditTrail, setReviewAuditTrail] = useState([]);
+
   // Load report history on mount
   const fetchReports = useCallback(async () => {
     setIsLoadingHistory(true);
@@ -142,6 +167,85 @@ export default function ReportsPage() {
   useEffect(() => {
     fetchReports();
   }, [fetchReports]);
+
+  // Real-time synchronization
+  usePlatformSync(fetchReports);
+
+  // Open Review & Editorial Workflow
+  const handleOpenReview = async (report) => {
+    setActiveReviewReport(report);
+    const existing = getReportReview(report.reportId);
+    setEditTitle(existing?.title || report.reportName);
+    setEditExecutiveSummary(existing?.executiveSummary || `Statutory analysis synthesizes certified geological extraction data across coal subsidiaries for ${report.filtersApplied?.financialYear || 'All Financial Years'}. Output confirms alignment with statutory quotas.`);
+    setEditRemarks(existing?.remarks || 'Operational production variances observed within permissible tolerance boundaries. Field audits confirmed zero systemic reporting discrepancies.');
+    setEditRecommendations(existing?.recommendations || 'Maintain quarterly verification cycles. Prioritize mechanized longwall expansion at SECL and MCL opencast collieries.');
+    setReviewerName(existing?.reviewerName || 'Under Secretary, Ministry of Coal');
+    setReviewerDesignation(existing?.reviewerDesignation || 'Coal Division-I, Shastri Bhawan');
+    setReviewerComments(existing?.reviewerComments || '');
+    setReviewStatus(existing?.status || 'Draft');
+    setReviewAuditTrail(existing?.auditTrail || []);
+    setModalTab('edit');
+    setPreviewTitle(`${report.reportName} — Review & Endorsement`);
+    setIsLoadingPreview(true);
+    try {
+      const html = await getExistingReportPreview(report.reportId);
+      setPreviewHtml(html);
+      setIsPreviewOpen(true);
+    } catch (err) {
+      alert(`Could not load preview: ${err.message}`);
+    } finally {
+      setIsLoadingPreview(false);
+    }
+  };
+
+  const handleSaveDraft = () => {
+    if (!activeReviewReport) return;
+    const updated = saveReportDraft(activeReviewReport.reportId, {
+      title: editTitle,
+      executiveSummary: editExecutiveSummary,
+      remarks: editRemarks,
+      recommendations: editRecommendations,
+      reviewerName,
+      reviewerDesignation,
+      reviewerComments
+    });
+    setReviewStatus(updated.status);
+    setReviewAuditTrail(updated.auditTrail);
+    setActionMessage({ type: 'success', text: `Draft edits saved for "${editTitle}". Original deterministic data remains preserved.` });
+  };
+
+  const handleApprovePublication = () => {
+    if (!activeReviewReport) return;
+    const updated = approveReport(activeReviewReport.reportId, {
+      title: editTitle,
+      executiveSummary: editExecutiveSummary,
+      remarks: editRemarks,
+      recommendations: editRecommendations,
+      reviewerName,
+      reviewerDesignation,
+      reviewerComments
+    });
+    setReviewStatus(updated.status);
+    setReviewAuditTrail(updated.auditTrail);
+    emitPlatformUpdate({ type: 'REPORT_APPROVED', reportId: activeReviewReport.reportId });
+    setActionMessage({ type: 'success', text: `Report officially approved for publication by ${reviewerName}.` });
+  };
+
+  const handleRejectReport = () => {
+    if (!activeReviewReport) return;
+    const updated = rejectReport(activeReviewReport.reportId, {
+      title: editTitle,
+      executiveSummary: editExecutiveSummary,
+      remarks: editRemarks,
+      recommendations: editRecommendations,
+      reviewerName,
+      reviewerDesignation,
+      reviewerComments
+    });
+    setReviewStatus(updated.status);
+    setReviewAuditTrail(updated.auditTrail);
+    setActionMessage({ type: 'error', text: `Report returned with revision requests to author.` });
+  };
 
   // Toggle custom section checkbox
   const toggleSection = (sectionId) => {
@@ -178,6 +282,7 @@ export default function ReportsPage() {
       }
 
       await fetchReports();
+      emitPlatformUpdate({ type: 'REPORT_GENERATED', reportId: result.report?.reportId });
     } catch (err) {
       setActionMessage({
         type: 'error',
@@ -241,6 +346,7 @@ export default function ReportsPage() {
         text: `Report regenerated with latest analytics data (${res.report.fileName}).`
       });
       await fetchReports();
+      emitPlatformUpdate({ type: 'REPORT_REGENERATED', reportId });
     } catch (err) {
       setActionMessage({
         type: 'error',
@@ -255,6 +361,7 @@ export default function ReportsPage() {
     try {
       await deleteReport(reportId);
       setReports((prev) => prev.filter((r) => r.reportId !== reportId));
+      emitPlatformUpdate({ type: 'REPORT_DELETED', reportId });
     } catch (err) {
       alert(`Failed to delete report: ${err.message}`);
     }
@@ -279,7 +386,7 @@ export default function ReportsPage() {
           </div>
           <h1 className="reports-title">Automated Statutory Report Generator</h1>
           <p className="reports-subtitle">
-            Phase 8 Deterministic Reporting Engine. Synthesizes validated geological and mining analytics into
+            Deterministic Reporting Engine. Synthesizes validated geological and mining analytics into
             multi-format publications strictly consuming <code>dashboard.json</code>.
           </p>
         </div>
@@ -523,6 +630,7 @@ export default function ReportsPage() {
                   <th>Records</th>
                   <th>Size</th>
                   <th>Generated By</th>
+                  <th>Review Status</th>
                   <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
@@ -543,8 +651,40 @@ export default function ReportsPage() {
                     <td>{r.totalRecordsAnalyzed ?? 0}</td>
                     <td>{r.fileSizeFormatted}</td>
                     <td>{r.generatedBy}</td>
+                    <td>
+                      {(() => {
+                        const rev = getReportReview(r.reportId);
+                        if (rev?.status === 'Approved') {
+                          return (
+                            <span className="badge badge-validated" title={`Approved by ${rev.approvedBy}`}>
+                              <CheckCircle2 size={12} /> Approved
+                            </span>
+                          );
+                        }
+                        if (rev?.status === 'Revision Requested') {
+                          return (
+                            <span className="badge badge-rejected" title={rev.comments || 'Revision Requested'}>
+                              <AlertCircle size={12} /> Revision
+                            </span>
+                          );
+                        }
+                        return (
+                          <span className="badge badge-pending" title="Awaiting Officer Review">
+                            <Clock size={12} /> Draft
+                          </span>
+                        );
+                      })()}
+                    </td>
                     <td style={{ textAlign: 'right' }}>
                       <div className="reports-action-buttons">
+                        <button
+                          className="reports-action-btn"
+                          title="Review & Editorial Endorsement"
+                          style={{ color: '#0f2e5a', borderColor: '#bfdbfe', background: '#eff6ff' }}
+                          onClick={() => handleOpenReview(r)}
+                        >
+                          <FileSignature size={15} />
+                        </button>
                         <button
                           className="reports-action-btn reports-action-dl"
                           title="Download File"
@@ -555,7 +695,10 @@ export default function ReportsPage() {
                         <button
                           className="reports-action-btn reports-action-view"
                           title="Live Preview"
-                          onClick={() => handlePreviewExisting(r)}
+                          onClick={() => {
+                            setModalTab('preview');
+                            handlePreviewExisting(r);
+                          }}
                         >
                           <Eye size={15} />
                         </button>
@@ -583,15 +726,15 @@ export default function ReportsPage() {
         )}
       </div>
 
-      {/* Live Preview Modal */}
+      {/* Live Preview & Review Modal */}
       {isPreviewOpen && (
         <div className="reports-modal-overlay">
-          <div className="reports-modal-container">
+          <div className="reports-modal-container" style={{ maxWidth: '1000px', width: '92vw' }}>
             <div className="reports-modal-header">
               <div>
                 <h3 className="reports-modal-title">{previewTitle}</h3>
                 <span className="reports-modal-sub">
-                  Official Government of India / CMPDI Statutory Layout
+                  Official Government of India / CMPDI Statutory Publication Console
                 </span>
               </div>
               <div className="reports-modal-controls" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -616,13 +759,196 @@ export default function ReportsPage() {
                 </button>
               </div>
             </div>
-            <div className="reports-modal-body">
-              <iframe
-                id="report-preview-frame"
-                title="Report Live Preview"
-                srcDoc={previewHtml}
-                className="reports-preview-iframe"
-              />
+
+            {/* Modal Navigation Tabs */}
+            <div className="modal-tabs-header" style={{ padding: '0 20px', borderBottom: '1px solid var(--border-default)', background: '#f8fafc', display: 'flex', gap: '4px' }}>
+              <button
+                type="button"
+                className={`modal-tab-nav-btn ${modalTab === 'preview' ? 'active' : ''}`}
+                onClick={() => setModalTab('preview')}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', borderBottom: modalTab === 'preview' ? '2px solid #0f2e5a' : 'none', fontWeight: modalTab === 'preview' ? 700 : 500, color: modalTab === 'preview' ? '#0f2e5a' : '#64748b', background: 'none', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer', fontSize: '13px' }}
+              >
+                <Eye size={15} />
+                <span>Publication Preview</span>
+              </button>
+
+              <button
+                type="button"
+                className={`modal-tab-nav-btn ${modalTab === 'edit' ? 'active' : ''}`}
+                onClick={() => setModalTab('edit')}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', borderBottom: modalTab === 'edit' ? '2px solid #0f2e5a' : 'none', fontWeight: modalTab === 'edit' ? 700 : 500, color: modalTab === 'edit' ? '#0f2e5a' : '#64748b', background: 'none', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer', fontSize: '13px' }}
+              >
+                <FileSignature size={15} />
+                <span>Editorial Review &amp; Endorsement</span>
+                {reviewStatus === 'Approved' && (
+                  <span style={{ fontSize: '10px', background: '#ecfdf5', color: '#15803d', padding: '1px 6px', borderRadius: '3px', fontWeight: 700 }}>Approved</span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                className={`modal-tab-nav-btn ${modalTab === 'audit' ? 'active' : ''}`}
+                onClick={() => setModalTab('audit')}
+                style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 16px', borderBottom: modalTab === 'audit' ? '2px solid #0f2e5a' : 'none', fontWeight: modalTab === 'audit' ? 700 : 500, color: modalTab === 'audit' ? '#0f2e5a' : '#64748b', background: 'none', borderTop: 'none', borderLeft: 'none', borderRight: 'none', cursor: 'pointer', fontSize: '13px' }}
+              >
+                <History size={15} />
+                <span>Editorial Audit Trail ({reviewAuditTrail.length})</span>
+              </button>
+            </div>
+
+            <div className="reports-modal-body" style={{ maxHeight: '72vh', overflowY: 'auto' }}>
+              {modalTab === 'preview' && (
+                <iframe
+                  id="report-preview-frame"
+                  title="Report Live Preview"
+                  srcDoc={previewHtml}
+                  className="reports-preview-iframe"
+                  style={{ width: '100%', minHeight: '620px', border: 'none' }}
+                />
+              )}
+
+              {modalTab === 'edit' && (
+                <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+                  <div style={{ padding: '12px 16px', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '6px', fontSize: '12px', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <ShieldCheck size={18} color="#1e40af" />
+                    <span><strong>Statutory Integrity Notice:</strong> Original deterministic data and calculated analytics are permanently immutable. Officer remarks, executive modifications, and approval endorsements are stored in an independent statutory review layer.</span>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '14px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f2e5a', marginBottom: '6px', textTransform: 'uppercase' }}>Report Title</label>
+                      <input
+                        type="text"
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid var(--border-default)', borderRadius: '4px' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f2e5a', marginBottom: '6px', textTransform: 'uppercase' }}>Executive Briefing Summary</label>
+                      <textarea
+                        rows={3}
+                        value={editExecutiveSummary}
+                        onChange={(e) => setEditExecutiveSummary(e.target.value)}
+                        style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid var(--border-default)', borderRadius: '4px', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f2e5a', marginBottom: '6px', textTransform: 'uppercase' }}>Operational Remarks &amp; Observations</label>
+                      <textarea
+                        rows={2}
+                        value={editRemarks}
+                        onChange={(e) => setEditRemarks(e.target.value)}
+                        style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid var(--border-default)', borderRadius: '4px', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f2e5a', marginBottom: '6px', textTransform: 'uppercase' }}>Strategic &amp; Policy Recommendations</label>
+                      <textarea
+                        rows={2}
+                        value={editRecommendations}
+                        onChange={(e) => setEditRecommendations(e.target.value)}
+                        style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid var(--border-default)', borderRadius: '4px', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)' }}>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f2e5a', marginBottom: '6px', textTransform: 'uppercase' }}>Reviewing Officer Name</label>
+                        <input
+                          type="text"
+                          value={reviewerName}
+                          onChange={(e) => setReviewerName(e.target.value)}
+                          style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid var(--border-default)', borderRadius: '4px' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f2e5a', marginBottom: '6px', textTransform: 'uppercase' }}>Officer Designation</label>
+                        <input
+                          type="text"
+                          value={reviewerDesignation}
+                          onChange={(e) => setReviewerDesignation(e.target.value)}
+                          style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid var(--border-default)', borderRadius: '4px' }}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#0f2e5a', marginBottom: '6px', textTransform: 'uppercase' }}>Officer Approval Comments / Justification</label>
+                      <textarea
+                        rows={2}
+                        value={reviewerComments}
+                        placeholder="e.g. Verified against CIL production returns. Discrepancy checked and approved for publication."
+                        onChange={(e) => setReviewerComments(e.target.value)}
+                        style={{ width: '100%', padding: '8px 12px', fontSize: '13px', border: '1px solid var(--border-default)', borderRadius: '4px', resize: 'vertical' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid var(--border-default)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Current Status:</span>
+                      <span className={`badge ${reviewStatus === 'Approved' ? 'badge-validated' : reviewStatus === 'Revision Requested' ? 'badge-rejected' : 'badge-pending'}`}>
+                        {reviewStatus}
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <Button variant="outline" onClick={handleSaveDraft}>
+                        Save Draft
+                      </Button>
+                      <Button variant="danger" onClick={handleRejectReport} style={{ backgroundColor: '#dc2626', color: '#ffffff' }}>
+                        Request Revision
+                      </Button>
+                      <Button variant="primary" icon={CheckCircle2} onClick={handleApprovePublication} style={{ backgroundColor: '#15803d' }}>
+                        Approve &amp; Clear for Publication
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {modalTab === 'audit' && (
+                <div style={{ padding: '24px' }}>
+                  <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#0f2e5a', margin: '0 0 16px 0', textTransform: 'uppercase' }}>
+                    Statutory Editorial Audit Trail
+                  </h4>
+                  {reviewAuditTrail.length === 0 ? (
+                    <p style={{ fontSize: '13px', color: '#64748b' }}>No manual modifications recorded yet. Report reflects deterministic system output.</p>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {reviewAuditTrail.map((item, idx) => (
+                        <div key={idx} style={{ padding: '12px 16px', background: '#ffffff', border: '1px solid var(--border-default)', borderRadius: '6px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#0f2e5a' }}>
+                              {item.action === 'REPORT_APPROVED' ? '✅ Officially Approved' : item.action === 'REVISION_REQUESTED' ? '⚠️ Revision Requested' : '✏️ Draft Edit Recorded'}
+                            </span>
+                            <span style={{ fontSize: '11px', color: '#64748b' }}>{new Date(item.timestamp).toLocaleString()}</span>
+                          </div>
+                          <div style={{ fontSize: '12px', color: '#334155' }}>
+                            <strong>Officer:</strong> {item.officer} ({item.designation})
+                          </div>
+                          {item.comments && (
+                            <div style={{ fontSize: '12px', fontStyle: 'italic', color: '#475569', marginTop: '4px' }}>
+                              &ldquo;{item.comments}&rdquo;
+                            </div>
+                          )}
+                          {item.changes && item.changes.length > 0 && (
+                            <ul style={{ margin: '6px 0 0 18px', padding: 0, fontSize: '12px', color: '#64748b' }}>
+                              {item.changes.map((c, i) => (
+                                <li key={i}>{c}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

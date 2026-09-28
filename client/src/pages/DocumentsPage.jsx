@@ -49,6 +49,7 @@ import Button from '../components/common/Button.jsx';
 import EmptyState from '../components/common/EmptyState.jsx';
 import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 import Toast from '../components/common/Toast.jsx';
+import { usePlatformSync, emitPlatformUpdate } from '../utils/syncBus.js';
 
 const ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'docx', 'xlsx', 'csv'];
 const MAX_FILE_SIZE_BYTES = 20 * 1024 * 1024; // 20 MB
@@ -77,6 +78,11 @@ export default function DocumentsPage() {
   const [validatingDocId, setValidatingDocId] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [toast, setToast] = useState(null); // { type: 'success' | 'error', message: string }
+
+  // Multi-File Batch Upload Queue State
+  const [uploadQueue, setUploadQueue] = useState([]); // [{ id, file, name, size, type, progress, status, errorMsg, result }]
+  const [isBatchUploading, setIsBatchUploading] = useState(false);
+  const cancelUploadRef = useRef(false);
 
   // Fetch intelligence on modal open or tab switch
   useEffect(() => {
@@ -117,7 +123,6 @@ export default function DocumentsPage() {
     }
   };
 
-
   const fileInputRef = useRef(null);
 
   // Auto-dismiss toast after 5 seconds
@@ -148,29 +153,49 @@ export default function DocumentsPage() {
     loadDocuments();
   }, [loadDocuments]);
 
-  // Validate and set file
-  const handleValidateAndSetFile = (file) => {
-    if (!file) return;
+  // Real-time platform synchronization
+  usePlatformSync(loadDocuments);
 
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    if (!ext || !ALLOWED_EXTENSIONS.includes(ext)) {
+  // Add multiple files to batch queue
+  const addFilesToQueue = (filesList) => {
+    if (!filesList || filesList.length === 0) return;
+    const newItems = [];
+    const errors = [];
+
+    Array.from(filesList).forEach((file) => {
+      const ext = file.name.split('.').pop()?.toLowerCase();
+      if (!ALLOWED_EXTENSIONS.includes(ext)) {
+        errors.push(`"${file.name}": Unsupported format .${ext}`);
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        errors.push(`"${file.name}": Exceeds maximum 20 MB size`);
+        return;
+      }
+      newItems.push({
+        id: `upload-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        file,
+        name: file.name,
+        size: file.size,
+        type: (ext || 'PDF').toUpperCase(),
+        progress: 0,
+        status: 'queued', // 'queued' | 'uploading' | 'completed' | 'error'
+        errorMsg: null,
+        result: null
+      });
+    });
+
+    if (errors.length > 0) {
       setToast({
         type: 'error',
-        message: `Unsupported file format ".${ext || 'unknown'}". Accepted formats: PDF, JPG, PNG, DOCX, XLSX, CSV.`
+        message: errors.slice(0, 2).join(' • ') + (errors.length > 2 ? ` (+${errors.length - 2} more)` : '')
       });
-      return;
     }
 
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      setToast({
-        type: 'error',
-        message: `File size (${formatFileSize(file.size)}) exceeds the 20 MB limit.`
-      });
-      return;
+    if (newItems.length > 0) {
+      setUploadQueue((prev) => [...prev, ...newItems]);
+      setSelectedFile(newItems[0].file);
     }
-
-    setSelectedFile(file);
-    setToast(null);
   };
 
   // Drag & drop handlers
@@ -193,14 +218,17 @@ export default function DocumentsPage() {
 
     const droppedFiles = e.dataTransfer.files;
     if (droppedFiles && droppedFiles.length > 0) {
-      handleValidateAndSetFile(droppedFiles[0]);
+      addFilesToQueue(droppedFiles);
     }
   };
 
   const handleFileSelect = (e) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      handleValidateAndSetFile(files[0]);
+      addFilesToQueue(files);
+    }
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -211,8 +239,135 @@ export default function DocumentsPage() {
     }
   };
 
-  // Submit upload
+  // Start Batch Upload
+  const handleStartBatchUpload = async () => {
+    const pending = uploadQueue.filter((it) => it.status === 'queued' || it.status === 'error');
+    if (pending.length === 0) return;
+
+    setIsBatchUploading(true);
+    cancelUploadRef.current = false;
+    let completedCount = 0;
+    let failedCount = 0;
+
+    for (const item of pending) {
+      if (cancelUploadRef.current) break;
+
+      setUploadQueue((prev) =>
+        prev.map((it) => (it.id === item.id ? { ...it, status: 'uploading', progress: 30 } : it))
+      );
+
+      try {
+        setUploadQueue((prev) =>
+          prev.map((it) => (it.id === item.id ? { ...it, progress: 65 } : it))
+        );
+
+        const response = await uploadDocumentFile(item.file);
+
+        if (response.document?.status === 'Failed') {
+          setUploadQueue((prev) =>
+            prev.map((it) =>
+              it.id === item.id
+                ? {
+                    ...it,
+                    status: 'error',
+                    progress: 100,
+                    errorMsg: response.document?.errorMessage || 'OCR processing issue'
+                  }
+                : it
+            )
+          );
+          failedCount++;
+        } else {
+          setUploadQueue((prev) =>
+            prev.map((it) =>
+              it.id === item.id
+                ? {
+                    ...it,
+                    status: 'completed',
+                    progress: 100,
+                    result: response.document,
+                    errorMsg: null
+                  }
+                : it
+            )
+          );
+          completedCount++;
+        }
+      } catch (err) {
+        setUploadQueue((prev) =>
+          prev.map((it) =>
+            it.id === item.id
+              ? {
+                  ...it,
+                  status: 'error',
+                  progress: 100,
+                  errorMsg: err.message || 'Upload failed'
+                }
+              : it
+          )
+        );
+        failedCount++;
+      }
+    }
+
+    setIsBatchUploading(false);
+    await loadDocuments();
+
+    // Trigger platform-wide synchronization
+    emitPlatformUpdate({
+      type: 'DOCUMENTS_BATCH_UPLOADED',
+      completedCount,
+      failedCount
+    });
+
+    if (completedCount > 0) {
+      setToast({
+        type: 'success',
+        message: `Batch Ingestion Complete: ${completedCount} document${completedCount === 1 ? '' : 's'} successfully extracted, validated, and indexed into Single Source of Truth.`
+      });
+    } else if (failedCount > 0) {
+      setToast({
+        type: 'error',
+        message: `Batch upload completed with errors on ${failedCount} file(s). You can retry failed files below.`
+      });
+    }
+  };
+
+  const handleCancelBatchUpload = () => {
+    cancelUploadRef.current = true;
+    setIsBatchUploading(false);
+    setToast({
+      type: 'info',
+      message: 'Batch upload cancelled by officer.'
+    });
+  };
+
+  const handleRemoveQueueItem = (id) => {
+    setUploadQueue((prev) => prev.filter((it) => it.id !== id));
+  };
+
+  const handleRetryItem = (item) => {
+    setUploadQueue((prev) =>
+      prev.map((it) => (it.id === item.id ? { ...it, status: 'queued', progress: 0, errorMsg: null } : it))
+    );
+  };
+
+  const handleClearCompleted = () => {
+    setUploadQueue((prev) => prev.filter((it) => it.status !== 'completed'));
+  };
+
+  const handleClearAllQueue = () => {
+    if (isBatchUploading) return;
+    setUploadQueue([]);
+    setSelectedFile(null);
+  };
+
+  // Submit single file upload (fallback for quick single action)
   const handleUploadSubmit = async () => {
+    if (uploadQueue.length > 0) {
+      await handleStartBatchUpload();
+      return;
+    }
     if (!selectedFile) return;
 
     setIsUploading(true);
@@ -230,6 +385,7 @@ export default function DocumentsPage() {
       });
       handleClearSelected();
       await loadDocuments();
+      emitPlatformUpdate({ type: 'DOCUMENT_UPLOADED', doc: response.document });
     } catch (err) {
       setToast({
         type: 'error',
@@ -252,6 +408,7 @@ export default function DocumentsPage() {
         message: result.message || `Loaded sample dataset for SIH demonstration.`
       });
       await loadDocuments();
+      emitPlatformUpdate({ type: 'SAMPLES_LOADED' });
     } catch (err) {
       setToast({
         type: 'error',
@@ -281,6 +438,7 @@ export default function DocumentsPage() {
       });
       // Synchronize full list from backend
       await loadDocuments();
+      emitPlatformUpdate({ type: 'DOCUMENT_VALIDATED', docId });
     } catch (err) {
       setToast({
         type: 'error',
@@ -336,7 +494,7 @@ export default function DocumentsPage() {
         />
       )}
 
-      {/* Drag-and-Drop Upload Section */}
+      {/* Drag-and-Drop Batch Upload Section */}
       <section className="upload-section-card">
         <div
           className={`dropzone-container ${isDragging ? 'dropzone-active' : ''}`}
@@ -348,6 +506,7 @@ export default function DocumentsPage() {
           <input
             ref={fileInputRef}
             type="file"
+            multiple
             className="hidden-file-input"
             accept=".pdf,.jpg,.jpeg,.png,.docx,.xlsx,.csv"
             onChange={handleFileSelect}
@@ -355,63 +514,173 @@ export default function DocumentsPage() {
           <div className="dropzone-icon-box">
             <UploadCloud size={44} color="#ea580c" />
           </div>
-          <h3 className="dropzone-title">Drag & drop your documents here</h3>
+          <h3 className="dropzone-title">Drag &amp; drop multiple statutory records here</h3>
           <p className="dropzone-subtitle">
-            or <span className="browse-link">browse files</span> from your local drive
+            or <span className="browse-link">browse files</span> from your local drive (multi-file selection enabled)
           </p>
           <div className="dropzone-meta">
             <span>Accepted formats: PDF, JPG, PNG, DOCX, XLSX, CSV</span>
             <span>&bull;</span>
-            <span>Maximum file size: 20 MB</span>
+            <span>Maximum file size: 20 MB each</span>
+            <span>&bull;</span>
+            <span>Batch OCR &amp; Analytical Ingestion</span>
           </div>
         </div>
 
-        {/* Selected File Details Bar */}
-        {selectedFile && (
-          <div className="selected-file-card">
-            <div className="selected-file-info">
-              <div className="file-type-icon">
-                <FileText size={24} color="#0284c7" />
-              </div>
-              <div className="file-details">
-                <div className="file-name">{selectedFile.name}</div>
-                <div className="file-meta">
-                  <span className="meta-tag">{selectedFile.name.split('.').pop()?.toUpperCase()}</span>
-                  <span>&bull;</span>
-                  <span>{formatFileSize(selectedFile.size)}</span>
-                  <span>&bull;</span>
-                  <span>{selectedFile.type || 'Standard document'}</span>
+        {/* Batch Upload Queue Manager */}
+        {uploadQueue.length > 0 && (
+          <div className="batch-queue-container" style={{ marginTop: '20px', padding: '18px 20px', backgroundColor: '#ffffff', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+              <div>
+                <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: 'var(--gov-navy-900)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>Batch Ingestion Queue</span>
+                  <span style={{ fontSize: '11px', background: '#eff6ff', color: '#1e40af', border: '1px solid #bfdbfe', padding: '2px 8px', borderRadius: '12px' }}>
+                    {uploadQueue.length} File{uploadQueue.length === 1 ? '' : 's'}
+                  </span>
+                </h4>
+                <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>
+                  Completed: <strong>{uploadQueue.filter(i => i.status === 'completed').length}</strong> &bull; Errors: <strong>{uploadQueue.filter(i => i.status === 'error').length}</strong> &bull; Pending: <strong>{uploadQueue.filter(i => i.status === 'queued').length}</strong>
                 </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {uploadQueue.some(i => i.status === 'completed') && !isBatchUploading && (
+                  <Button variant="ghost" size="sm" onClick={handleClearCompleted}>
+                    Clear Completed
+                  </Button>
+                )}
+                {!isBatchUploading && (
+                  <Button variant="ghost" size="sm" onClick={handleClearAllQueue}>
+                    Clear Queue
+                  </Button>
+                )}
+                {isBatchUploading ? (
+                  <Button variant="outline" size="sm" onClick={handleCancelBatchUpload} style={{ borderColor: '#ef4444', color: '#dc2626' }}>
+                    Cancel Ingestion
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    icon={UploadCloud}
+                    onClick={handleStartBatchUpload}
+                    disabled={uploadQueue.every(i => i.status === 'completed')}
+                  >
+                    Start Batch Ingestion ({uploadQueue.filter(i => i.status === 'queued' || i.status === 'error').length})
+                  </Button>
+                )}
               </div>
             </div>
 
-            <div className="selected-file-actions">
-              <Button
-                variant="ghost"
-                onClick={handleClearSelected}
-                disabled={isUploading}
-              >
-                Clear
-              </Button>
-              <Button
-                variant="secondary"
-                icon={Database}
-                onClick={handleLoadSampleDataset}
-                disabled={isLoadingSamples || isUploading}
-                loading={isLoadingSamples}
-                title="Register representative sample files for SIH demonstration"
-              >
-                Load Sample Dataset
-              </Button>
-              <Button
-                variant="primary"
-                icon={UploadCloud}
-                onClick={handleUploadSubmit}
-                disabled={isUploading}
-                loading={isUploading}
-              >
-                Upload & Process
-              </Button>
+            {/* Overall Progress Bar */}
+            {uploadQueue.length > 0 && (
+              <div style={{ marginBottom: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '5px' }}>
+                  <span>Overall Queue Progress</span>
+                  <span>
+                    {Math.round((uploadQueue.filter(i => i.status === 'completed').length / uploadQueue.length) * 100)}%
+                  </span>
+                </div>
+                <div style={{ width: '100%', height: '7px', backgroundColor: '#e2e8f0', borderRadius: '4px', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      height: '100%',
+                      backgroundColor: uploadQueue.some(i => i.status === 'error') ? '#ea580c' : '#15803d',
+                      width: `${(uploadQueue.filter(i => i.status === 'completed').length / uploadQueue.length) * 100}%`,
+                      transition: 'width 0.4s ease'
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Individual Queued Items List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '280px', overflowY: 'auto' }}>
+              {uploadQueue.map((item) => (
+                <div
+                  key={item.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '10px 14px',
+                    border: '1px solid var(--border-subtle)',
+                    borderRadius: 'var(--radius-sm)',
+                    backgroundColor: item.status === 'uploading' ? '#f0fdf4' : item.status === 'error' ? '#fef2f2' : '#ffffff'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
+                    <div style={{ padding: '6px', background: '#f1f5f9', borderRadius: '4px', flexShrink: 0 }}>
+                      <FileText size={16} color="#0f2e5a" />
+                    </div>
+                    <div style={{ minWidth: 0, flex: 1, paddingRight: '12px' }}>
+                      <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--gov-navy-950)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={item.name}>
+                        {item.name}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span>{formatFileSize(item.size)}</span>
+                        <span>&bull;</span>
+                        <span>{item.type}</span>
+                        {item.errorMsg && (
+                          <>
+                            <span>&bull;</span>
+                            <span style={{ color: '#dc2626', fontWeight: 600 }}>{item.errorMsg}</span>
+                          </>
+                        )}
+                      </div>
+                      {/* Individual progress line if uploading */}
+                      {item.status === 'uploading' && (
+                        <div style={{ width: '100%', height: '3px', background: '#e2e8f0', borderRadius: '2px', marginTop: '4px', overflow: 'hidden' }}>
+                          <div style={{ width: `${item.progress}%`, height: '100%', background: '#0284c7', transition: 'width 0.3s ease' }} />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+                    {item.status === 'queued' && (
+                      <span className="badge badge-pending">Queued</span>
+                    )}
+                    {item.status === 'uploading' && (
+                      <span className="badge" style={{ backgroundColor: '#eff6ff', color: '#1d4ed8', border: '1px solid #bfdbfe', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        <Loader2 size={12} className="animate-spin" /> Ingesting...
+                      </span>
+                    )}
+                    {item.status === 'completed' && (
+                      <span className="badge badge-validated">
+                        <CheckCircle2 size={12} /> Validated
+                      </span>
+                    )}
+                    {item.status === 'error' && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span className="badge badge-rejected">
+                          <AlertCircle size={12} /> Failed
+                        </span>
+                        {!isBatchUploading && (
+                          <button
+                            type="button"
+                            onClick={() => handleRetryItem(item)}
+                            title="Retry ingestion"
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#0284c7', padding: '2px 4px' }}
+                          >
+                            <RotateCcw size={13} />
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    {!isBatchUploading && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveQueueItem(item.id)}
+                        title="Remove from queue"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '2px' }}
+                      >
+                        <X size={15} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
@@ -620,7 +889,7 @@ export default function DocumentsPage() {
               </button>
             </div>
 
-            {/* Phase 7: Document Modal Navigation Tabs */}
+            {/* Document Modal Navigation Tabs */}
             <div className="modal-tabs-header">
               <button
                 type="button"
@@ -1104,7 +1373,7 @@ export default function DocumentsPage() {
                   })()}
                 </div>
               ) : modalTab === 'intelligence' ? (
-                /* Phase 9: Document Intelligence Tab Content */
+                /* Document Intelligence Tab Content */
                 <div className="intelligence-tab-container">
                   {isLoadingIntel ? (
                     <div style={{ padding: '40px', textAlign: 'center', color: '#64748b' }}>
@@ -1274,7 +1543,7 @@ export default function DocumentsPage() {
                   )}
                 </div>
               ) : (
-                /* Phase 10: Ask about Document Tab Content */
+                /* Ask about Document Tab Content */
                 <div className="doc-ask-tab-container" style={{ padding: '0.5rem 0' }}>
                   <div style={{ marginBottom: '1.25rem' }}>
                     <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>

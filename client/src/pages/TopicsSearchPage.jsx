@@ -22,6 +22,7 @@ import Button from '../components/common/Button.jsx';
 import EmptyState from '../components/common/EmptyState.jsx';
 import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 import Toast from '../components/common/Toast.jsx';
+import { usePlatformSync } from '../utils/syncBus.js';
 
 const MINES = ['All', 'Gevra', 'Kusmunda', 'Dipka', 'Talcher', 'Jharia', 'Bokaro', 'Singrauli'];
 const SUBSIDIARIES = ['All', 'CIL', 'SECL', 'MCL', 'BCCL', 'CCL', 'WCL', 'NCL', 'ECL', 'SCCL', 'CMPDI'];
@@ -95,6 +96,9 @@ export default function TopicsSearchPage() {
     executeSearch();
   }, [executeSearch]);
 
+  // Real-time synchronization
+  usePlatformSync(executeSearch);
+
   const handleResetFilters = () => {
     setQuery('');
     setMine('All');
@@ -128,7 +132,7 @@ export default function TopicsSearchPage() {
           </div>
           <h1 className="reports-title">Intelligent Document Understanding &amp; Search</h1>
           <p className="reports-subtitle">
-            Phase 9 Semantic Discovery Engine. Instant multi-attribute search across validated mining reports,
+            Semantic Discovery Engine. Instant multi-attribute search across validated mining reports,
             topic ontologies, extracted entities, and cross-document relationship graphs.
           </p>
         </div>

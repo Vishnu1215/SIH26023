@@ -45,6 +45,7 @@ import {
   HorizontalBarChart,
   ValidationStatusDonut
 } from '../components/common/Charts.jsx';
+import { usePlatformSync } from '../utils/syncBus.js';
 
 export default function DashboardPage() {
   const [analytics, setAnalytics] = useState(null);
@@ -72,6 +73,9 @@ export default function DashboardPage() {
   useEffect(() => {
     loadAnalytics();
   }, [loadAnalytics]);
+
+  // Live system-wide synchronization hook
+  usePlatformSync(loadAnalytics);
 
   // Extract analytics objects with safe defaults
   const docs = analytics?.documents || {};
@@ -313,9 +317,15 @@ export default function DashboardPage() {
             <ShieldCheck size={16} color="var(--tri-green)" />
             <span>Secretary-Level Mining Briefing & Statutory Status</span>
           </div>
-          <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f2e5a', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', padding: '2px 8px', borderRadius: '4px' }}>
-            Statutory Scope: National Tier-1
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#15803d', backgroundColor: '#f0fdf4', border: '1px solid #bbf7d0', padding: '2px 8px', borderRadius: '4px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#15803d', display: 'inline-block' }}></span>
+              Live Synchronized
+            </span>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f2e5a', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', padding: '2px 8px', borderRadius: '4px' }}>
+              Statutory Scope: National Tier-1
+            </span>
+          </div>
         </div>
         <p style={{ margin: 0, fontSize: '13px', color: '#1e293b', lineHeight: 1.5 }}>
           National coal extraction monitoring is active across <strong>{subsidiaries.filter(s => s.subsidiary !== 'Other / Unassigned').length || subsidiaries.length} reporting subsidiaries</strong>. Total verified output stands at <strong>{formatProduction(prod.totalCoalProduction)} MT</strong> against prescribed statutory targets of <strong>{formatProduction(prod.totalTargetProduction)} MT</strong> ({formatPercent(prod.productionAchievement ?? 0)} quota fulfillment). Deterministic validation engine confirms a <strong>{formatPercent(val.validationAccuracy ?? 0)} compliance rating</strong> across <strong>{formatCount(val.validatedDocuments ?? val.totalValidated ?? 0)} audited document records</strong> with zero hallucination risk.
@@ -778,7 +788,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Phase 9: Document Intelligence Overview */}
+      {/* Document Intelligence Overview */}
       <section className="dashboard-section" style={{ marginTop: '28px' }}>
         <div className="section-header">
           <div className="section-title-box">
@@ -786,7 +796,7 @@ export default function DashboardPage() {
             <div>
               <h3 className="section-title">Document Intelligence &amp; Discovery Overview</h3>
               <p className="section-subtitle">
-                Phase 9 deterministic document understanding: categorized formats, topic ontologies, and operational footprints.
+                Deterministic document understanding: categorized formats, topic ontologies, and operational footprints.
               </p>
             </div>
           </div>
@@ -872,7 +882,7 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Phase 11: Ask Coal Intelligence Widget */}
+      {/* Ask Coal Intelligence Widget */}
       <section className="dashboard-section" style={{ marginTop: '28px', marginBottom: '24px' }}>
         <div className="section-header">
           <div className="section-title-box">
@@ -880,7 +890,7 @@ export default function DashboardPage() {
             <div>
               <h3 className="section-title">Ask Coal Intelligence</h3>
               <p className="section-subtitle">
-                Phase 11 Hybrid AI Question Answering with verified citations, evidence-backed reasoning, and single source of truth analytics.
+                Grounded Decision Support Question Answering with verified citations, evidence-backed reasoning, and single source of truth analytics.
               </p>
             </div>
           </div>
