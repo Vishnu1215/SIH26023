@@ -13,7 +13,7 @@ export default function HomePage() {
   return (
     <div className="container">
       <div className="header">
-        <span className="badge">SIH26023 Prototype</span>
+        <span className="badge">SIH26023 Enterprise Platform</span>
         <h1 className="title">CMPDI / CIL AI Reporting Platform</h1>
         <p className="subtitle">
           Geological, Mining, and Reporting Solution - System Foundation

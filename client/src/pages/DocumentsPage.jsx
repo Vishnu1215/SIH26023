@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   UploadCloud,
   File,
@@ -27,7 +28,9 @@ import {
   BarChart3,
   Sparkles,
   Bot,
-  ExternalLink
+  ExternalLink,
+  HelpCircle,
+  Layers
 } from 'lucide-react';
 import {
   uploadDocumentFile,
@@ -529,7 +532,7 @@ export default function DocumentsPage() {
 
         {/* Batch Upload Queue Manager */}
         {uploadQueue.length > 0 && (
-          <div className="batch-queue-container" style={{ marginTop: '20px', padding: '18px 20px', backgroundColor: '#ffffff', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)' }}>
+          <div className="batch-queue-container" style={{ marginTop: '20px', padding: '18px 20px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
               <div>
                 <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 800, color: 'var(--gov-navy-900)', display: 'flex', alignItems: 'center', gap: '8px' }}>

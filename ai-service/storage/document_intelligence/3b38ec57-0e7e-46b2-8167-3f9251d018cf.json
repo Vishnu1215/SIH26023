@@ -1,0 +1,85 @@
+{
+  "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+  "reportTitle": "Chap3Annualreport2026En",
+  "processedAt": "2026-09-28T19:32:03.998473+00:00",
+  "processingTimeMs": 502.06,
+  "classification": {
+    "documentCategory": "Annual Report",
+    "classificationConfidence": 87,
+    "classificationReason": "Title/filename contains 'annual report'; Structured metadata explicitly declared 'Annual Report'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "CIL",
+    "Gevra",
+    "Chhattisgarh",
+    "Korba",
+    "2025-26",
+    "Coal Production",
+    "Opencast",
+    "Chap3Annualreport2026En"
+  ],
+  "entities": {
+    "organizations": [
+      "CIL",
+      "CMPDIL"
+    ],
+    "subsidiaries": [
+      "CIL",
+      "CMPDIL"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [
+      "Korba"
+    ],
+    "mines": [
+      "Gevra"
+    ],
+    "measurements": [
+      "3.1 MT"
+    ],
+    "financialYears": [
+      "2025-26"
+    ],
+    "dates": [],
+    "mineTypes": [
+      "Opencast"
+    ]
+  },
+  "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 3.10 MT. Data integrity audit classifies this record as Valid (Score: 100/100) with zero discrepancies flagged. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {
+    "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+    "reportTitle": "Chap3Annualreport2026En",
+    "reportType": "Annual Report",
+    "financialYear": "2025-26",
+    "reportDate": null,
+    "issuingOrganization": "CMPDIL",
+    "subsidiary": "CIL",
+    "mineName": "Gevra",
+    "mineType": "Opencast",
+    "region": "Like Coalfield",
+    "district": "Korba",
+    "state": "Chhattisgarh",
+    "coalProduction": 3.1,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 12,
+    "extractedAt": "2026-09-28T19:32:03.029380+00:00"
+  },
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

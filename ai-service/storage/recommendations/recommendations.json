@@ -1,23 +1,23 @@
 {
   "status": "success",
-  "lastUpdated": "2026-09-28T18:47:50.443480+00:00",
+  "lastUpdated": "2026-09-28T19:56:10.736757+00:00",
   "summary": {
-    "overallRisk": 46.0,
+    "overallRisk": 53.5,
     "riskLevel": "Medium",
-    "totalRecommendations": 2,
-    "highPriorityRecommendations": 2,
-    "totalAlerts": 1,
+    "totalRecommendations": 3,
+    "highPriorityRecommendations": 3,
+    "totalAlerts": 2,
     "criticalAlertsCount": 0,
-    "insightsCount": 4
+    "insightsCount": 6
   },
   "risk": {
-    "overallRisk": 46.0,
+    "overallRisk": 53.5,
     "riskLevel": "Medium",
     "riskBreakdown": {
       "productionRisk": 85.0,
       "validationRisk": 70.0,
       "qualityRisk": 15.0,
-      "completenessRisk": 0.0,
+      "completenessRisk": 50.0,
       "processingRisk": 0.0
     },
     "riskFactors": [
@@ -32,6 +32,12 @@
         "impact": "High",
         "score": 70.0,
         "description": "0 document(s) flagged with validation rule issues; overall validation accuracy is 0.0%."
+      },
+      {
+        "factor": "Statutory Field Omissions",
+        "impact": "Medium",
+        "score": 50.0,
+        "description": "Multiple reporting records lack complete Financial Year, Colliery Name, or State attributes."
       }
     ]
   },
@@ -53,10 +59,33 @@
       "recommendedAction": "1. Review non-compliant records in the Validation Inspector. 2. Verify colliery tonnage numbers and target arithmetic. 3. Re-validate documents after correcting optical or structural extraction flaws.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-28T18:47:50.442250+00:00"
+      "generatedAt": "2026-09-28T19:56:10.734975+00:00"
     },
     {
-      "id": "REC-REP-002",
+      "id": "REC-QUAL-002",
+      "title": "Review Extraction Rules for Missing Statutory Metadata Fields",
+      "description": "Field completeness score is 50.0%. 1 document(s) lack required Financial Year, State, or Colliery tags.",
+      "category": "Data Quality",
+      "priority": "High",
+      "severity": "High",
+      "confidence": 0.96,
+      "reason": "Field completeness of 50.0% falls below the 85% data governance standard.",
+      "supportingMetrics": {
+        "completenessPercentage": 50.0,
+        "missingFinancialYearCount": 0,
+        "missingStateCount": 1,
+        "missingMineCount": 1
+      },
+      "recommendedAction": "1. Update domain regular expressions in entity_extractor.py to capture varied date & state header layouts. 2. Expand coal colliery gazetteer mappings for regional mine names. 3. Re-run structured extraction.",
+      "affectedDocuments": [
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En"
+      ],
+      "affectedSubsidiaries": [],
+      "generatedAt": "2026-09-28T19:56:10.734975+00:00"
+    },
+    {
+      "id": "REC-REP-003",
       "title": "Generate Periodic Executive & Production Summary Reports",
       "description": "Zero official reports are currently compiled in the statutory registry. Decision makers lack distributable PDF/DOCX summaries.",
       "category": "Compliance",
@@ -66,29 +95,51 @@
       "reason": "Absence of compiled statutory report artifacts in storage/reports/.",
       "supportingMetrics": {
         "existingReportsCount": 0,
-        "totalDocumentsAvailable": 1
+        "totalDocumentsAvailable": 2
       },
       "recommendedAction": "1. Navigate to Report Generator (Phase 8). 2. Generate the Monthly Production Report and Executive Summary for current FY. 3. Export PDF/DOCX for ministry distribution.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-28T18:47:50.442250+00:00"
+      "generatedAt": "2026-09-28T19:56:10.734975+00:00"
     }
   ],
   "alerts": [
     {
-      "id": "ALT-REP-001",
+      "id": "ALT-META-001",
+      "title": "Missing State / Jurisdiction in 1 Record(s)",
+      "description": "1 files lack explicit state attribution, affecting state-level royalty and production breakdowns.",
+      "severity": "Yellow",
+      "source": "storage/structured_data/",
+      "recommendation": "Update colliery gazetteer mappings so mine names automatically resolve to their host states.",
+      "timestamp": "2026-09-28T19:56:10.734908+00:00",
+      "affectedEntities": [
+        "Chap5Annualreport2026En"
+      ]
+    },
+    {
+      "id": "ALT-REP-002",
       "title": "No Certified Statutory Reports Generated",
       "description": "The system currently contains zero generated statutory reports (Executive, Production, or Geological reports) for official dissemination.",
       "severity": "Yellow",
       "source": "storage/reports/report-history.json",
       "recommendation": "Generate the standard Monthly Production Report and Executive Summary using the Phase 8 Report Generator module.",
-      "timestamp": "2026-09-28T18:47:50.442185+00:00",
+      "timestamp": "2026-09-28T19:56:10.734908+00:00",
       "affectedEntities": [
         "Report Generator"
       ]
     }
   ],
   "insights": [
+    {
+      "id": "INS-002",
+      "title": "Production Leader",
+      "statement": "SCCL is the top producing subsidiary, yielding 0.00 MT (0.0% of national reported output).",
+      "category": "Subsidiaries",
+      "impact": "Highlight",
+      "icon": "Award",
+      "metric": "SCCL (0.0%)",
+      "source": "storage/analytics/dashboard.json (rankings)"
+    },
     {
       "id": "INS-003",
       "title": "Statutory Validation Compliance",
@@ -110,13 +161,23 @@
       "source": "storage/analytics/dashboard.json (quality)"
     },
     {
+      "id": "INS-006",
+      "title": "Document Distribution",
+      "statement": "'Unknown' documents constitute the majority of processed records (1 files, 100.0% of total).",
+      "category": "Operations",
+      "impact": "Informational",
+      "icon": "FileText",
+      "metric": "Unknown (100%)",
+      "source": "storage/search_index.json"
+    },
+    {
       "id": "INS-007",
       "title": "Subsidiary Representation",
-      "statement": "0 Coal India subsidiary entities are currently reporting verified performance returns into the centralized registry.",
+      "statement": "1 Coal India subsidiary entities are currently reporting verified performance returns into the centralized registry.",
       "category": "Subsidiaries",
       "impact": "Highlight",
       "icon": "Building2",
-      "metric": "0 Subsidiaries Reporting",
+      "metric": "1 Subsidiaries Reporting",
       "source": "storage/analytics/dashboard.json"
     },
     {
@@ -136,8 +197,8 @@
       "percentageChange": 0.0,
       "reason": "Current baseline reflects consolidated production volume of 0.00 MT across active records.",
       "supportingMetrics": {
-        "latestProduction": 0,
-        "historicalPeriods": 0,
+        "latestProduction": 0.0,
+        "historicalPeriods": 1,
         "achievementPct": 0.0
       }
     },
@@ -153,11 +214,11 @@
     },
     "documentIngestionTrend": {
       "trend": "Declining",
-      "totalDocuments": 0,
-      "reason": "Low document ingestion count (0 records). Additional mining returns should be uploaded.",
+      "totalDocuments": 2,
+      "reason": "Low document ingestion count (2 records). Additional mining returns should be uploaded.",
       "supportingMetrics": {
-        "indexedCount": 0,
-        "categoriesCovered": 0
+        "indexedCount": 2,
+        "categoriesCovered": 1
       }
     },
     "reportGenerationTrend": {
@@ -168,6 +229,12 @@
         "generatedReports": 0
       }
     },
-    "historicalSeries": []
+    "historicalSeries": [
+      {
+        "period": "2025–26",
+        "production": 0.0,
+        "documents": 1
+      }
+    ]
   }
 }

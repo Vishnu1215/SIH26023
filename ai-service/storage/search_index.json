@@ -1,15 +1,171 @@
 {
-  "lastIndexedAt": "2026-09-28T18:39:47.976030+00:00",
-  "totalDocuments": 0,
-  "documents": {},
+  "lastIndexedAt": "2026-09-28T19:56:10.818551+00:00",
+  "totalDocuments": 3,
+  "documents": {
+    "3b38ec57-0e7e-46b2-8167-3f9251d018cf": {
+      "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+      "reportTitle": "Chap3Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "CIL",
+      "mineName": "Gevra",
+      "state": "Chhattisgarh",
+      "district": "Korba",
+      "financialYear": "2025-26",
+      "coalProduction": 3.1,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 3.10 MT. Data integrity audit classifies this record as Valid (Score: 100/100) with zero discrepancies flagged. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "CIL",
+        "Gevra",
+        "Chhattisgarh",
+        "Korba",
+        "2025-26",
+        "Coal Production",
+        "Opencast",
+        "Chap3Annualreport2026En"
+      ],
+      "relatedCount": 0
+    },
+    "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a": {
+      "documentId": "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 90,
+      "validationStatus": "Warning",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 1
+    },
+    "0ecd4359-3668-457e-b65f-5abcae57babd": {
+      "documentId": "0ecd4359-3668-457e-b65f-5abcae57babd",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 90,
+      "validationStatus": "Warning",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 2
+    }
+  },
   "indices": {
-    "by_keyword": {},
-    "by_topic": {},
-    "by_subsidiary": {},
-    "by_mine": {},
-    "by_state": {},
-    "by_fy": {},
-    "by_category": {},
+    "by_keyword": {
+      "cil": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "gevra": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "chhattisgarh": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "korba": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "2025-26": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ],
+      "coal production": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "opencast": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "chap3annualreport2026en": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "sccl": [
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ],
+      "chap5annualreport2026en": [
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ],
+      "none": [
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ]
+    },
+    "by_topic": {
+      "coal production": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ]
+    },
+    "by_subsidiary": {
+      "cil": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ],
+      "sccl": [
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ]
+    },
+    "by_mine": {
+      "gevra": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ]
+    },
+    "by_state": {
+      "chhattisgarh": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+      ]
+    },
+    "by_fy": {
+      "2025-26": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ]
+    },
+    "by_category": {
+      "annual report": [
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "0ecd4359-3668-457e-b65f-5abcae57babd"
+      ]
+    },
     "by_entity": {}
   }
 }

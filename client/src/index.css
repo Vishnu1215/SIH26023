@@ -101,6 +101,95 @@
   --transition-normal: 0.2s ease;
 }
 
+/* ==========================================================================
+   Dark Theme: High-Contrast Executive Command Centre (Power BI / Azure / Bloomberg)
+   ========================================================================== */
+[data-theme="dark"],
+.theme-dark {
+  color-scheme: dark;
+
+  /* Sovereign Government Surfaces (Dark) */
+  --bg-app: #080f1e;               /* Deep slate-navy executive canvas */
+  --bg-sidebar: #050a14;           /* Solid sovereign dark sidebar */
+  --bg-sidebar-hover: #0c1830;     /* Deep navy hover */
+  --bg-sidebar-active: #132448;    /* Active navigation */
+  --bg-navbar: #091326;            /* Dark command masthead */
+  --bg-navbar-top: #030710;
+  --bg-card: #0e1a33;              /* Elevated command panel */
+  --bg-card-subtle: #122040;       /* Secondary dark surface */
+  --bg-card-raised: #15274d;       /* High-emphasis card */
+  --bg-card-hover: #152549;        /* Interactive card hover */
+  --bg-input: #0b1528;             /* Input background */
+  --bg-input-focus: #0f1c36;
+
+  /* Government Navy & Blue Hierarchy (Dark Mode Accents) */
+  --gov-navy-950: #ffffff;
+  --gov-navy-900: #e2e8f0;
+  --gov-navy-800: #38bdf8;         /* Crisp Sky Blue header */
+  --gov-navy-700: #60a5fa;
+  --gov-navy-600: #93c5fd;
+  --gov-blue-500: #3b82f6;
+  --gov-blue-100: #1e3a8a;
+  --gov-blue-50:  #0f172a;
+
+  /* Sovereign Tri-Color Micro-Accents (Dark Mode High Contrast) */
+  --tri-saffron: #f97316;
+  --tri-saffron-subtle: #431407;
+  --tri-saffron-border: #7c2d12;
+  --tri-white: #ffffff;
+  --tri-green: #22c55e;
+  --tri-green-subtle: #052e16;
+  --tri-green-border: #14532d;
+
+  /* Institutional Text Colors (Dark) */
+  --text-primary: #f8fafc;         /* High-contrast crisp white */
+  --text-secondary: #cbd5e1;       /* Light slate body text */
+  --text-muted: #94a3b8;           /* Muted metadata */
+  --text-inverse: #0a192f;
+  --text-navy: #38bdf8;
+
+  /* Official Borders & Grid Lines (Dark) */
+  --border-default: #1e2e4a;       /* Clean dark gridline */
+  --border-subtle: #152238;
+  --border-strong: #334d75;
+  --border-navy: #38bdf8;
+
+  /* Status Indicators (Dark Mode Balanced) */
+  --status-verified-bg: rgba(34, 197, 94, 0.15);
+  --status-verified-border: rgba(34, 197, 94, 0.4);
+  --status-verified-text: #4ade80;
+
+  --status-validated-bg: rgba(56, 189, 248, 0.15);
+  --status-validated-border: rgba(56, 189, 248, 0.4);
+  --status-validated-text: #7dd3fc;
+
+  --status-warning-bg: rgba(245, 158, 11, 0.15);
+  --status-warning-border: rgba(245, 158, 11, 0.4);
+  --status-warning-text: #fcd34d;
+
+  --status-pending-bg: rgba(148, 163, 184, 0.12);
+  --status-pending-border: rgba(148, 163, 184, 0.3);
+  --status-pending-text: #cbd5e1;
+
+  --status-completed-bg: rgba(34, 197, 94, 0.15);
+  --status-completed-border: rgba(34, 197, 94, 0.4);
+  --status-completed-text: #86efac;
+
+  --status-rejected-bg: rgba(239, 68, 68, 0.15);
+  --status-rejected-border: rgba(239, 68, 68, 0.4);
+  --status-rejected-text: #fca5a5;
+
+  --status-review-bg: rgba(249, 115, 22, 0.15);
+  --status-review-border: rgba(249, 115, 22, 0.4);
+  --status-review-text: #fdba74;
+
+  /* Shadows (Dark Mode Glows) */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.6);
+  --shadow-panel: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -109,7 +198,6 @@
 
 html {
   font-size: 14px;
-  color-scheme: light;
 }
 
 body {
@@ -121,6 +209,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 /* Tabular Numerals for Official Mining Figures and Metrics */
@@ -128,7 +217,8 @@ body {
 .stat-card-value,
 .reports-stat-value,
 .prod-kpi-value,
-.metric-value {
+.metric-value,
+.exec-kpi-value {
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum';
 }
@@ -140,20 +230,54 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--bg-app);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--border-strong);
   border-radius: var(--radius-xs);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--text-muted);
 }
 
 /* Accessible High-Contrast Focus Ring */
 :focus-visible {
   outline: 2px solid var(--gov-navy-800);
   outline-offset: 2px;
+}
+
+/* ==========================================================================
+   12-Column Responsive Executive Grid System
+   ========================================================================== */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.col-12 { grid-column: span 12 / span 12; }
+.col-11 { grid-column: span 11 / span 11; }
+.col-10 { grid-column: span 10 / span 10; }
+.col-9  { grid-column: span 9 / span 9; }
+.col-8  { grid-column: span 8 / span 8; }
+.col-7  { grid-column: span 7 / span 7; }
+.col-6  { grid-column: span 6 / span 6; }
+.col-5  { grid-column: span 5 / span 5; }
+.col-4  { grid-column: span 4 / span 4; }
+.col-3  { grid-column: span 3 / span 3; }
+.col-2  { grid-column: span 2 / span 2; }
+.col-1  { grid-column: span 1 / span 1; }
+
+@media (max-width: 1200px) {
+  .col-8-lg-12 { grid-column: span 12 / span 12; }
+  .col-4-lg-12 { grid-column: span 12 / span 12; }
+  .col-6-lg-12 { grid-column: span 12 / span 12; }
+}
+
+@media (max-width: 900px) {
+  .col-6, .col-4, .col-3, .col-8, .col-9, .col-10 {
+    grid-column: span 12 / span 12;
+  }
 }

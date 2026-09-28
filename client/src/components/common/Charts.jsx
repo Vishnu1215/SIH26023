@@ -35,7 +35,7 @@ export function ProductionTrendChart({ data = [], height = 220 }) {
           return (
             <g key={idx}>
               <line x1="45" y1={y} x2="100%" y2={y} stroke="#f1f5f9" strokeDasharray="3 3" />
-              <text x="38" y={y + 3} textAnchor="end" fontSize="10" fill="#94a3b8" fontFamily="system-ui">
+              <text x="38" y={y + 3} textAnchor="end" fill="#94a3b8" style={{ fontSize: '10px', fontFamily: 'system-ui' }}>
                 {labelVal >= 1000 ? `${(labelVal / 1000).toFixed(1)}k` : labelVal}
               </text>
             </g>
@@ -68,9 +68,8 @@ export function ProductionTrendChart({ data = [], height = 220 }) {
                 x={x + barWidth / 2}
                 y={y - 5}
                 textAnchor="middle"
-                fontSize="10"
-                fontWeight="600"
                 fill="#0f172a"
+                style={{ fontSize: '10px', fontWeight: 600 }}
               >
                 {item.production >= 1000 ? `${(item.production / 1000).toFixed(1)}k` : Math.round(item.production)}
               </text>
@@ -79,9 +78,8 @@ export function ProductionTrendChart({ data = [], height = 220 }) {
                 x={x + barWidth / 2}
                 y={chartHeight + 25}
                 textAnchor="middle"
-                fontSize="11"
-                fontWeight="500"
                 fill="#475569"
+                style={{ fontSize: '11px', fontWeight: 500 }}
               >
                 {item.financialYear}
               </text>
@@ -256,13 +254,13 @@ export function ValidationStatusDonut({ data = [], total = 0, accuracy = 0, scor
           )}
 
           {/* Center text */}
-          <text x="50%" y="44%" textAnchor="middle" fontSize="20" fontWeight="800" fill="#0f172a">
+          <text x="50%" y="44%" textAnchor="middle" fill="var(--text-primary)" style={{ fontSize: '20px', fontWeight: 800 }}>
             {accuracy}%
           </text>
-          <text x="50%" y="58%" textAnchor="middle" fontSize="10" fontWeight="700" fill="#64748b" textTransform="uppercase">
+          <text x="50%" y="58%" textAnchor="middle" fill="var(--text-muted)" style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase' }}>
             Accuracy
           </text>
-          <text x="50%" y="71%" textAnchor="middle" fontSize="11" fontWeight="700" fill="#0284c7">
+          <text x="50%" y="71%" textAnchor="middle" fill="#0284c7" style={{ fontSize: '11px', fontWeight: 700 }}>
             {score}/100
           </text>
         </svg>

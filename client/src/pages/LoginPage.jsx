@@ -63,7 +63,7 @@ export default function LoginPage() {
             <circle cx="50" cy="27" r="4" fill="#ea580c" />
             <circle cx="50" cy="80" r="10" stroke="#0f2e5a" strokeWidth="2" fill="none" />
             <rect x="25" y="96" width="50" height="7" rx="2" fill="#0f2e5a" />
-            <text x="50" y="102" fontSize="5" fill="#ffffff" textAnchor="middle" fontWeight="bold">सत्यमेव जयते</text>
+            <text x="50" y="102" fill="#ffffff" textAnchor="middle" style={{ fontSize: '5px', fontWeight: 'bold' }}>सत्यमेव जयते</text>
           </svg>
           <div>
             <div style={{ fontSize: '13px', fontWeight: 700, color: '#0b1d3a', textTransform: 'uppercase' }}>भारत सरकार &bull; Government of India</div>
