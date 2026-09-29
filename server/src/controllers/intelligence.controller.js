@@ -71,3 +71,16 @@ export const reindexSearchAction = async (req, res, next) => {
     });
   }
 };
+
+export const getWordCloudAction = async (req, res, next) => {
+  try {
+    const result = await intelligenceService.getWordCloud();
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error('[IntelligenceController] getWordCloud error:', error?.response?.data || error.message);
+    return res.status(error?.response?.status || 500).json({
+      success: false,
+      message: error?.response?.data?.detail || error.message || 'Failed to fetch word cloud.'
+    });
+  }
+};

@@ -16,7 +16,8 @@ from app.services.search_index import (
     get_document_intelligence,
     search_documents,
     rebuild_search_index,
-    get_all_document_intelligence
+    get_all_document_intelligence,
+    get_dynamic_word_cloud
 )
 
 router = APIRouter(tags=["Document Intelligence"])
@@ -51,6 +52,19 @@ async def api_process_intelligence(req: ProcessIntelligenceRequest):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Intelligence processing failed: {str(e)}")
+
+
+@router.get("/intelligence/word-cloud", summary="Get dynamic top 30 keyword/entity word cloud from MongoDB documents")
+async def api_word_cloud():
+    try:
+        cloud = get_dynamic_word_cloud()
+        return {
+            "status": "success",
+            "count": len(cloud),
+            "wordCloud": cloud
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to generate word cloud: {str(e)}")
 
 
 @router.get("/intelligence/{document_id}", summary="Get semantic intelligence metadata for document")
@@ -112,3 +126,4 @@ async def api_reindex_search():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Search reindex failed: {str(e)}")
+

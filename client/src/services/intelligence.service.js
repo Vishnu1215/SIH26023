@@ -62,3 +62,16 @@ export async function reindexSearch() {
   }
   return data;
 }
+
+/**
+ * Fetch dynamic top 30 keyword/entity word cloud
+ */
+export async function getWordCloud() {
+  const headers = getAuthHeaders();
+  const response = await fetch(`${API_BASE_URL}/intelligence/word-cloud`, { headers });
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error(data.message || data.detail || 'Failed to fetch word cloud');
+  }
+  return data.wordCloud || [];
+}

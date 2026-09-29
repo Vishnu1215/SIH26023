@@ -414,3 +414,58 @@ def validate_structured_richness(record: Dict[str, Any]) -> List[Dict[str, Any]]
         ))
 
     return messages
+
+
+MINE_TO_SUBSIDIARY = {
+    "Gevra": "SECL", "Kusmunda": "SECL", "Dipka": "SECL", "Chirimiri": "SECL", "Hasdeo": "SECL", "Churcha": "SECL",
+    "Jayant": "NCL", "Dudhichua": "NCL", "Nigahi": "NCL", "Amlohri": "NCL", "Bina": "NCL", "Khadia": "NCL", "Jhingurdah": "NCL",
+    "Moonidih": "BCCL", "Jharia": "BCCL",
+    "Bokaro": "CCL", "Kargali": "CCL", "Kathara": "CCL", "Dhori": "CCL", "Rajrappa": "CCL", "Piparwar": "CCL", "Ashoka": "CCL", "Magadh": "CCL", "Amrapali": "CCL",
+    "Rajmahal": "ECL", "Sonepur Bazari": "ECL", "Raniganj": "ECL",
+    "Belpahar": "MCL", "Lakhanpur": "MCL", "Kulda": "MCL", "Samaleswari": "MCL", "Bhubaneswari": "MCL", "Kaniha": "MCL", "Ananta": "MCL", "Lingaraj": "MCL", "Bharatpur": "MCL", "Hingula": "MCL", "Jagannath": "MCL", "Talcher": "MCL"
+}
+
+
+def validate_mine_subsidiary_consistency(record: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """
+    VAL011: Mine vs Subsidiary Geographic Consistency Validation.
+    Verifies that the extracted colliery name maps to the correct operating subsidiary.
+    """
+    messages = []
+    mine_name = str(record.get("mineName") or "").strip()
+    subsidiary = str(record.get("subsidiary") or "").strip().upper()
+
+    if not mine_name or not subsidiary:
+        return messages
+
+    for known_mine, expected_sub in MINE_TO_SUBSIDIARY.items():
+        if known_mine.lower() in mine_name.lower():
+            if subsidiary != expected_sub and subsidiary not in ("CIL", "COAL INDIA LIMITED", "MINISTRY OF COAL", "CMPDIL"):
+                messages.append(make_message(
+                    "VAL011", "subsidiary", "Warning",
+                    f"Colliery '{mine_name}' typically operates under {expected_sub}, but document indicates '{subsidiary}'."
+                ))
+            break
+
+    return messages
+
+
+def validate_table_consistency(record: Dict[str, Any]) -> List[Dict[str, Any]]:
+    """
+    VAL012: Extracted Tabular Data Consistency Validation.
+    Checks tables for anomalous negative values, empty columns, or numeric format conflicts.
+    """
+    messages = []
+    tables = record.get("tables") or []
+    for idx, table in enumerate(tables):
+        rows = table.get("rows") or []
+        for r_idx, row in enumerate(rows):
+            for c_idx, cell in enumerate(row):
+                cell_str = str(cell).strip()
+                if re.match(r"^-\d+(?:\.\d+)?$", cell_str):
+                    messages.append(make_message(
+                        "VAL012", f"tables[{idx}].rows[{r_idx}][{c_idx}]", "Warning",
+                        f"Anomalous negative numerical value '{cell_str}' detected in extracted table."
+                    ))
+                    break
+    return messages

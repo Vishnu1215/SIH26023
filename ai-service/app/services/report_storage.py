@@ -28,8 +28,19 @@ def init_report_storage() -> None:
 
 
 def get_report_history() -> List[Dict[str, Any]]:
-    """Retrieve full history of generated reports, sorted newest first."""
+    """Retrieve full history of generated reports, sorted newest first from MongoDB Atlas."""
     init_report_storage()
+    # 1. Primary Source: MongoDB Atlas
+    try:
+        from app.database import get_sync_db
+        db = get_sync_db()
+        docs = list(db["generated_reports"].find({}, {"_id": 0}).sort("createdAt", -1))
+        if docs:
+            return docs
+    except Exception as e:
+        pass
+
+    # 2. Local fallback
     try:
         if os.path.exists(HISTORY_FILE):
             with open(HISTORY_FILE, "r", encoding="utf-8") as f:
@@ -46,7 +57,16 @@ def get_report_history() -> List[Dict[str, Any]]:
 
 
 def get_report_by_id(report_id: str) -> Optional[Dict[str, Any]]:
-    """Find a report record by reportId."""
+    """Find a report record by reportId from MongoDB Atlas."""
+    try:
+        from app.database import get_sync_db
+        db = get_sync_db()
+        doc = db["generated_reports"].find_one({"reportId": report_id}, {"_id": 0})
+        if doc:
+            return doc
+    except Exception as e:
+        pass
+
     history = get_report_history()
     for item in history:
         if item.get("reportId") == report_id:
@@ -55,11 +75,32 @@ def get_report_by_id(report_id: str) -> Optional[Dict[str, Any]]:
 
 
 def save_report_record(record: Dict[str, Any]) -> Dict[str, Any]:
-    """Save or update a report record in report-history.json."""
+    """Save or update a report record in MongoDB Atlas and local disk."""
     init_report_storage()
-    history = get_report_history()
     
-    # Check if existing to update or append
+    # 1. Persist into MongoDB Atlas 'generated_reports'
+    try:
+        from app.database import get_sync_db
+        db = get_sync_db()
+        # Clean record for MongoDB
+        clean_record = {k: v for k, v in record.items() if k != "_id"}
+        db["generated_reports"].update_one(
+            {"reportId": record.get("reportId")},
+            {"$set": clean_record},
+            upsert=True
+        )
+    except Exception as e:
+        print(f"[report_storage] MongoDB persistence warning: {e}")
+
+    # 2. Also keep local manifest
+    history = []
+    try:
+        if os.path.exists(HISTORY_FILE):
+            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
+                history = json.load(f)
+    except Exception:
+        history = []
+
     existing_idx = next(
         (i for i, r in enumerate(history) if r.get("reportId") == record.get("reportId")),
         None
@@ -79,8 +120,17 @@ def save_report_record(record: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def delete_report(report_id: str) -> bool:
-    """Delete the generated report file and remove it from history."""
+    """Delete the generated report file and remove it from MongoDB and history."""
     init_report_storage()
+
+    # 1. Remove from MongoDB Atlas
+    try:
+        from app.database import get_sync_db
+        db = get_sync_db()
+        db["generated_reports"].delete_one({"reportId": report_id})
+    except Exception as e:
+        pass
+
     history = get_report_history()
     target_record = None
     new_history = []
@@ -100,15 +150,14 @@ def delete_report(report_id: str) -> bool:
         try:
             os.remove(file_path)
         except Exception as e:
-            print(f"[report_storage] Warning deleting file {file_path}: {e}")
+            print(f"[report_storage] Error deleting file {file_path}: {e}")
             
     try:
         with open(HISTORY_FILE, "w", encoding="utf-8") as f:
             json.dump(new_history, f, indent=2)
-        return True
     except Exception as e:
-        print(f"[report_storage] Error updating history after delete: {e}")
-        return False
+        pass
+    return True
 
 
 def get_report_file_path(report_id: str, fmt: str, filename: str) -> str:

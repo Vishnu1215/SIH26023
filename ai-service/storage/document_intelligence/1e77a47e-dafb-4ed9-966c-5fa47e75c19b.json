@@ -1,0 +1,45 @@
+{
+  "documentId": "1e77a47e-dafb-4ed9-966c-5fa47e75c19b",
+  "reportTitle": "Document",
+  "processedAt": "2026-09-29T20:57:06.454172+00:00",
+  "processingTimeMs": 20.9,
+  "classification": {
+    "documentCategory": "Unknown",
+    "classificationConfidence": 30,
+    "classificationReason": "Insufficient conclusive keywords or structured fields to determine category."
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "Gevra",
+    "mine",
+    "annual",
+    "coal",
+    "production"
+  ],
+  "entities": {
+    "organizations": [],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [
+      "Gevra"
+    ],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Unknown document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {},
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

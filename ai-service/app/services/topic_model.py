@@ -8,7 +8,7 @@ import re
 import math
 from typing import List, Dict, Any
 
-# Standard CMPDI / Ministry of Coal Mining Topic Ontology
+# Standard CMPDI / Ministry of Coal 13 Statutory Mining Topics
 TOPIC_ONTOLOGY = {
     "Coal Production": [
         "coal production", "raw coal", "target production", "achieved production",
@@ -22,33 +22,9 @@ TOPIC_ONTOLOGY = {
         "environment", "environmental clearance", "pollution", "tree plantation", "afforestation",
         "air quality", "pm10", "pm2.5", "spcb", "cpcb", "water treatment", "green belt", "reclamation"
     ],
-    "Dispatch": [
-        "dispatch", "offtake", "rake", "wagon", "railway siding", "power sector",
-        "merry-go-round", "mgr", "conveyor", "coal transport", "fsa", "e-auction"
-    ],
-    "Coal Quality": [
-        "gcv", "calorific value", "ash content", "moisture", "volatile matter",
-        "grade", "proximate analysis", "sampling", "third party sampling", "coking index"
-    ],
-    "Overburden": [
-        "overburden", "obr", "stripping ratio", "composite stripping ratio", "waste removal",
-        "dump", "external dump", "internal dump", "dragline", "shovel dumper"
-    ],
     "CSR": [
         "csr", "corporate social responsibility", "community development", "drinking water",
         "healthcare", "education", "skill development", "peripheral development", "tribal"
-    ],
-    "Mine Expansion": [
-        "expansion", "capacity enhancement", "ec expansion", "additional lease",
-        "project report", "feasibility report", "pr", "fr", "peak capacity", "incremental"
-    ],
-    "Financial Performance": [
-        "revenue", "profit", "ebitda", "capex", "turnover", "audit", "expenditure",
-        "capital investment", "dividend", "net worth", "cost per tonne"
-    ],
-    "Land Acquisition": [
-        "land acquisition", "cb act", "cba act", "rfctlarr", "compensation",
-        "r&r", "resettlement", "rehabilitation", "tenancy land", "forest land", "possession"
     ],
     "Exploration": [
         "exploration", "drilling", "borehole", "coring", "geological report",
@@ -57,6 +33,34 @@ TOPIC_ONTOLOGY = {
     "Infrastructure": [
         "chp", "coal handling plant", "silo", "rapid loading system", "rls",
         "workshop", "substation", "road network", "crusher", "washery"
+    ],
+    "Finance": [
+        "revenue", "profit", "ebitda", "capex", "turnover", "audit", "expenditure",
+        "capital investment", "dividend", "net worth", "cost per tonne", "royalty", "dmf"
+    ],
+    "Equipment": [
+        "equipment", "machinery", "dragline", "shovel", "dumper", "surface miner",
+        "continuous miner", "haul truck", "rotary drill", "hemm", "in-pit crusher"
+    ],
+    "Land": [
+        "land acquisition", "cb act", "cba act", "rfctlarr", "compensation",
+        "r&r", "resettlement", "rehabilitation", "tenancy land", "forest land", "possession"
+    ],
+    "Dispatch": [
+        "dispatch", "offtake", "rake", "wagon", "railway siding", "power sector",
+        "merry-go-round", "mgr", "conveyor", "coal transport", "fsa", "e-auction"
+    ],
+    "Quality": [
+        "gcv", "calorific value", "ash content", "moisture", "volatile matter",
+        "grade", "proximate analysis", "sampling", "third party sampling", "coking index"
+    ],
+    "Compliance": [
+        "compliance", "statutory", "dgms approval", "mine closure plan", "standing committee",
+        "cerc", "mop", "guidelines", "gazette", "notification", "audit observation"
+    ],
+    "Production Targets": [
+        "production target", "annual target", "prescribed quota", "target variance",
+        "target achievement", "mou target", "budget target", "operational schedule"
     ]
 }
 

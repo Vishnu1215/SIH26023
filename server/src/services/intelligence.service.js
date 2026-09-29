@@ -53,6 +53,16 @@ class IntelligenceService {
     });
     return response.data;
   }
+
+  /**
+   * Get dynamic word cloud
+   */
+  async getWordCloud() {
+    const response = await axios.get(`${this.aiBaseUrl}/intelligence/word-cloud`, {
+      timeout: 15000
+    });
+    return response.data;
+  }
 }
 
 export default new IntelligenceService();

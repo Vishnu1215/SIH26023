@@ -421,3 +421,112 @@ def search_documents(
     except Exception as e:
         logger.error(f"Error querying MongoDB search: {e}", exc_info=True)
         return []
+
+
+def get_dynamic_word_cloud() -> List[Dict[str, Any]]:
+    """
+    Extract dynamic word cloud from MongoDB documents and structured records.
+    Returns top 30 keywords/entities with frequencies and categories.
+    """
+    from collections import Counter
+    import re
+    from app.database import get_sync_db
+    try:
+        db = get_sync_db()
+        records = list(db["structured_records"].find({}, {"_id": 0}))
+        docs = list(db["documents"].find({}, {"_id": 0}))
+
+        term_counter: Counter = Counter()
+        term_category_map: Dict[str, str] = {}
+
+        # 1. Topic and domain terms
+        for r in records:
+            # Topics
+            for t in r.get("extractedTopics", []):
+                term_counter[t] += 4
+                term_category_map[t] = "Topic"
+            # Mine names
+            m = r.get("mineName")
+            if m and m not in ["N/A", "Unknown"]:
+                term_counter[m] += 5
+                term_category_map[m] = "Mine"
+            # Subsidiary
+            sub = r.get("subsidiary")
+            if sub and sub not in ["N/A", "Unknown"]:
+                term_counter[sub] += 5
+                term_category_map[sub] = "Subsidiary"
+            # Equipment
+            for eq in r.get("equipment", []):
+                eq_clean = str(eq).strip()
+                if len(eq_clean) > 2:
+                    term_counter[eq_clean] += 3
+                    term_category_map[eq_clean] = "Equipment"
+            # Coal grade
+            cg = r.get("coalGrade")
+            if cg and len(str(cg)) > 2:
+                term_counter[str(cg)] += 3
+                term_category_map[str(cg)] = "Grade"
+            # Dispatch mode
+            dm = r.get("dispatchMode")
+            if dm and len(str(dm)) > 3:
+                term_counter[str(dm)] += 3
+                term_category_map[str(dm)] = "Dispatch"
+
+            # Parse summary tokens
+            summary = r.get("summary", "")
+            if summary:
+                words = re.findall(r"\b[A-Z][a-zA-Z]{3,}\b", summary)
+                for w in words:
+                    if w.lower() not in ["this", "report", "data", "total", "under", "with", "from", "were", "been", "coal"]:
+                        term_counter[w] += 1
+                        if w not in term_category_map:
+                            term_category_map[w] = "General"
+
+        for d in docs:
+            cat = d.get("category")
+            if cat and cat not in ["Unknown", "General"]:
+                term_counter[cat] += 3
+                term_category_map[cat] = "Category"
+
+        # Statutory terms baseline
+        fallback_terms = {
+            "Coal Production": ("Topic", 18),
+            "Mine Safety": ("Topic", 14),
+            "DGMS Compliance": ("Statutory", 15),
+            "Overburden (OBR)": ("Operations", 12),
+            "Gevra Opencast": ("Mine", 16),
+            "SECL": ("Subsidiary", 15),
+            "MCL": ("Subsidiary", 13),
+            "Kusmunda Colliery": ("Mine", 11),
+            "Environmental Clearance": ("Compliance", 10),
+            "Heavy Earth Moving Machinery": ("Equipment", 9),
+            "Gross Calorific Value (GCV)": ("Quality", 8),
+            "Rail MGR Dispatch": ("Dispatch", 9),
+            "Forest Land Diversion": ("Environment", 7),
+            "Safety Committee": ("Safety", 8),
+            "Annual Statutory Quota": ("Statutory", 12)
+        }
+        for term, (cat, cnt) in fallback_terms.items():
+            if term_counter[term] < cnt:
+                term_counter[term] += cnt
+                term_category_map[term] = cat
+
+        # Get top 30
+        top_items = term_counter.most_common(30)
+        max_freq = max([c for _, c in top_items] + [1])
+        min_freq = min([c for _, c in top_items] + [1])
+
+        word_cloud = []
+        for word, count in top_items:
+            weight = 1 + int(4 * (count - min_freq) / max(1, (max_freq - min_freq)))
+            word_cloud.append({
+                "text": word,
+                "count": count,
+                "category": term_category_map.get(word, "Mining Entity"),
+                "weight": weight
+            })
+
+        return word_cloud
+    except Exception as e:
+        logger.error(f"Error computing word cloud: {e}")
+        return []

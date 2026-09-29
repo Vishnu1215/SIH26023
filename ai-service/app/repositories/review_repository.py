@@ -31,13 +31,13 @@ class ReviewRepository:
         timestamp = datetime.now(timezone.utc).isoformat()
         changes = []
         if review_data.get("title") is not None and review_data.get("title") != existing.get("title"):
-            changes.push(f"Updated title to '{review_data.get('title')}'")
+            changes.append(f"Updated title to '{review_data.get('title')}'")
         if review_data.get("executiveSummary") is not None and review_data.get("executiveSummary") != existing.get("executiveSummary"):
-            changes.push("Modified executive briefing summary")
+            changes.append("Modified executive briefing summary")
         if review_data.get("remarks") is not None and review_data.get("remarks") != existing.get("remarks"):
-            changes.push("Updated operational remarks")
+            changes.append("Updated operational remarks")
         if review_data.get("recommendations") is not None and review_data.get("recommendations") != existing.get("recommendations"):
-            changes.push("Refined strategic recommendations")
+            changes.append("Refined strategic recommendations")
 
         audit_trail = list(existing.get("auditTrail") or [])
         if changes:

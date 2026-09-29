@@ -51,8 +51,10 @@ class QAQueryRequestSchema(BaseModel):
     filters: Optional[Dict[str, Any]] = None
 
 class ReportReviewDraftSchema(BaseModel):
+    model_config = {"extra": "allow"}
     title: Optional[str] = None
     executiveSummary: Optional[str] = None
+    executiveBriefing: Optional[str] = None
     remarks: Optional[str] = None
     recommendations: Optional[str] = None
     reviewerName: Optional[str] = None
@@ -60,6 +62,7 @@ class ReportReviewDraftSchema(BaseModel):
     comments: Optional[str] = None
 
 class ReportReviewDecisionSchema(BaseModel):
+    model_config = {"extra": "allow"}
     reviewerName: Optional[str] = None
     reviewerDesignation: Optional[str] = None
     reviewerComments: Optional[str] = None

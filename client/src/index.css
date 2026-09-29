@@ -373,3 +373,46 @@ body {
   background-color: var(--bg-card-hover) !important;
 }
 
+/* ==========================================================================
+   High-Contrast Dark Mode Overrides (WCAG AA Compliance)
+   ========================================================================== */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: var(--bg-input, #0b1528) !important;
+  color: var(--text-primary, #f8fafc) !important;
+  border-color: var(--border-default, #1e2e4a) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted, #94a3b8) !important;
+}
+
+[data-theme="dark"] .reports-modal-container,
+[data-theme="dark"] .reports-config-card,
+[data-theme="dark"] .reports-history-card,
+[data-theme="dark"] .search-control-box,
+[data-theme="dark"] .search-card-clean,
+[data-theme="dark"] .dossier-tab-card {
+  background-color: var(--bg-card, #0e1a33) !important;
+  border-color: var(--border-default, #1e2e4a) !important;
+  color: var(--text-primary, #f8fafc) !important;
+}
+
+[data-theme="dark"] .modal-tabs-header {
+  background-color: var(--bg-card-subtle, #122040) !important;
+  border-color: var(--border-default, #1e2e4a) !important;
+}
+
+[data-theme="dark"] .reports-table th {
+  background-color: var(--bg-card-subtle, #122040) !important;
+  color: var(--text-muted, #94a3b8) !important;
+}
+
+[data-theme="dark"] .reports-table td {
+  border-bottom-color: var(--border-subtle, #152238) !important;
+  color: var(--text-primary, #f8fafc) !important;
+}
+
+

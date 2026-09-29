@@ -22,7 +22,7 @@ import {
   Bot,
   BarChart3
 } from 'lucide-react';
-import { searchDocuments, reindexSearch } from '../services/intelligence.service.js';
+import { searchDocuments, reindexSearch, getWordCloud } from '../services/intelligence.service.js';
 import Button from '../components/common/Button.jsx';
 import EmptyState from '../components/common/EmptyState.jsx';
 import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
@@ -77,6 +77,27 @@ export default function TopicsSearchPage() {
   const [isReindexing, setIsReindexing] = useState(false);
   const [notification, setNotification] = useState(null);
 
+  // Dynamic Word Cloud State (SIH Requirement 5, 17)
+  const [wordCloud, setWordCloud] = useState([]);
+  const [isLoadingWordCloud, setIsLoadingWordCloud] = useState(false);
+  const [selectedWordCloudTerm, setSelectedWordCloudTerm] = useState(null);
+
+  const fetchWordCloud = useCallback(async () => {
+    setIsLoadingWordCloud(true);
+    try {
+      const data = await getWordCloud();
+      setWordCloud(data || []);
+    } catch (err) {
+      console.warn('Word cloud fetch warning:', err);
+    } finally {
+      setIsLoadingWordCloud(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchWordCloud();
+  }, [fetchWordCloud]);
+
   const executeSearch = useCallback(async () => {
     setIsSearching(true);
     try {
@@ -103,7 +124,32 @@ export default function TopicsSearchPage() {
   }, [executeSearch]);
 
   // Real-time synchronization
-  usePlatformSync(executeSearch);
+  usePlatformSync(() => {
+    executeSearch();
+    fetchWordCloud();
+  });
+
+  const handleWordCloudClick = (item) => {
+    if (selectedWordCloudTerm === item.text) {
+      // Toggle off
+      setSelectedWordCloudTerm(null);
+      setQuery('');
+      setTopic('All');
+      setMine('All');
+      setSubsidiary('All');
+    } else {
+      setSelectedWordCloudTerm(item.text);
+      if (item.category === 'Topic') {
+        setTopic(item.text);
+      } else if (item.category === 'Mine') {
+        setMine(item.text);
+      } else if (item.category === 'Subsidiary') {
+        setSubsidiary(item.text);
+      } else {
+        setQuery(item.text);
+      }
+    }
+  };
 
   const handleResetFilters = () => {
     setQuery('');
@@ -113,6 +159,7 @@ export default function TopicsSearchPage() {
     setFinancialYear('All');
     setCategory('All');
     setTopic('All');
+    setSelectedWordCloudTerm(null);
   };
 
   const handleReindex = async () => {
@@ -277,6 +324,119 @@ export default function TopicsSearchPage() {
               {t}
             </button>
           ))}
+        </div>
+      </div>
+
+      {/* Dynamic Word Cloud Card (SIH Requirement 5, 17) */}
+      <div className="search-control-box" style={{ marginTop: '14px', marginBottom: '20px', padding: '16px 20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Sparkles size={16} color="var(--primary-600, #0f2e5a)" />
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--gov-navy-900, #0f172a)', margin: 0 }}>
+                Dynamic Statutory Word Cloud
+              </h3>
+              <span className="badge badge-verified" style={{ fontSize: '10px', padding: '1px 6px' }}>
+                MongoDB Live Extraction
+              </span>
+            </div>
+            <p style={{ fontSize: '12px', color: 'var(--text-muted, #64748b)', margin: '2px 0 0 0' }}>
+              Extracted terms from uploaded mining returns, DGMS safety logs, and geological dossiers. Click to isolate records.
+            </p>
+          </div>
+          {selectedWordCloudTerm && (
+            <button
+              onClick={() => handleWordCloudClick({ text: selectedWordCloudTerm })}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+                padding: '3px 8px',
+                fontSize: '11px',
+                fontWeight: 600,
+                color: '#dc2626',
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              <X size={12} /> Clear Filter ({selectedWordCloudTerm})
+            </button>
+          )}
+        </div>
+
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', minHeight: '60px' }}>
+          {isLoadingWordCloud ? (
+            <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic', padding: '12px 0' }}>
+              Computing statutory word cloud frequencies from MongoDB Atlas...
+            </div>
+          ) : wordCloud.length === 0 ? (
+            <div style={{ fontSize: '12px', color: '#64748b', fontStyle: 'italic' }}>
+              No terms extracted yet. Upload mining reports to build word cloud.
+            </div>
+          ) : (
+            wordCloud.map((item) => {
+              const isSelected = selectedWordCloudTerm === item.text;
+              const sizeMap = { 1: '11px', 2: '12px', 3: '13.5px', 4: '15px', 5: '16.5px' };
+              const weightMap = { 1: 500, 2: 600, 3: 600, 4: 700, 5: 800 };
+              const fontSize = sizeMap[item.weight] || '12px';
+              const fontWeight = weightMap[item.weight] || 600;
+
+              // Color badge styling based on category
+              let bg = '#f1f5f9';
+              let textCol = '#334155';
+              let borderCol = '#cbd5e1';
+              if (item.category === 'Topic') {
+                bg = '#eff6ff'; textCol = '#1d4ed8'; borderCol = '#bfdbfe';
+              } else if (item.category === 'Mine') {
+                bg = '#ecfdf5'; textCol = '#047857'; borderCol = '#a7f3d0';
+              } else if (item.category === 'Subsidiary') {
+                bg = '#faf5ff'; textCol = '#7e22ce'; borderCol = '#e9d5ff';
+              } else if (item.category === 'Statutory' || item.category === 'Compliance') {
+                bg = '#fffbeb'; textCol = '#b45309'; borderCol = '#fde68a';
+              } else if (item.category === 'Equipment') {
+                bg = '#f0fdfa'; textCol = '#0f766e'; borderCol = '#99f6e4';
+              }
+
+              return (
+                <button
+                  key={item.text}
+                  onClick={() => handleWordCloudClick(item)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    padding: item.weight >= 4 ? '5px 12px' : '3px 8px',
+                    fontSize,
+                    fontWeight,
+                    backgroundColor: isSelected ? 'var(--gov-navy-900, #0f2e5a)' : bg,
+                    color: isSelected ? '#ffffff' : textCol,
+                    border: `1px solid ${isSelected ? 'var(--gov-navy-900, #0f2e5a)' : borderCol}`,
+                    borderRadius: '20px',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease',
+                    boxShadow: isSelected ? '0 2px 4px rgba(15, 46, 90, 0.25)' : 'none',
+                    transform: isSelected ? 'scale(1.04)' : 'none'
+                  }}
+                  title={`${item.text} (${item.category}) — ${item.count} occurrences across returns`}
+                >
+                  <span>{item.text}</span>
+                  <span
+                    style={{
+                      fontSize: '9.5px',
+                      opacity: 0.8,
+                      background: isSelected ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.06)',
+                      padding: '1px 5px',
+                      borderRadius: '10px'
+                    }}
+                  >
+                    {item.count}
+                  </span>
+                </button>
+              );
+            })
+          )}
         </div>
       </div>
 

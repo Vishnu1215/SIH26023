@@ -15,7 +15,9 @@ from app.services.validation_rules import (
     validate_duplicate_document,
     validate_logical_production,
     validate_ocr_confidence,
-    validate_structured_richness
+    validate_structured_richness,
+    validate_mine_subsidiary_consistency,
+    validate_table_consistency
 )
 from app.services.validation_storage import save_validation_report
 
@@ -84,6 +86,8 @@ def validate_document(
         ("VAL008", "Logical Production", lambda: validate_logical_production(record)),
         ("VAL009", "OCR Confidence", lambda: validate_ocr_confidence(confidence)),
         ("VAL010", "Structured Richness", lambda: validate_structured_richness(record)),
+        ("VAL011", "Mine-Subsidiary Mismatch", lambda: validate_mine_subsidiary_consistency(record)),
+        ("VAL012", "Table Consistency", lambda: validate_table_consistency(record)),
     ]
 
     # Execute rules with timing and trace logging (Requirement 11)
@@ -149,29 +153,61 @@ def validate_document(
     # Compute unique rule IDs triggered
     rules_triggered = sorted(list({m.get("ruleId") for m in sorted_messages if m.get("ruleId")}))
 
-    # Issue 5: Scoring Formula (Base 100, -20 per Error, -5 per Warning)
+    # Scoring Formula (Base 100, -20 per Error, -5 per Warning)
     score = 100 - (error_count * 20) - (warning_count * 5)
     score = max(0, min(100, score))
 
-    # Overall Status Classification
+    # Requirement 11: Overall Status Classification (Passed, Failed, Warning, Needs Review)
     if error_count > 0:
-        status = "Error"
+        status = "Failed"
+    elif (confidence is not None and float(confidence) < 0.80) or score < 60:
+        status = "Needs Review"
     elif warning_count > 0:
         status = "Warning"
     else:
-        status = "Valid"
+        status = "Passed"
 
     # Execution time
     validation_time = round(time.time() - start_time, 4)
 
-    # Issue 3: Structured Deterministic Validation Summary
-    if status == "Valid":
+    # Structured Deterministic Validation Summary
+    if status == "Passed":
         summary = (
             "Validation completed successfully.\n\n"
-            f"Status: Valid (Score: {score}/100)\n\n"
-            "All integrity, formatting, and consistency checks passed."
+            f"Status: Passed (Score: {score}/100)\n\n"
+            "All integrity, formatting, and consistency checks passed with zero discrepancies."
         )
-    elif status == "Error":
+    elif status == "Failed":
+        primary_err = next(
+            (m.get("message") for m in sorted_messages if m.get("severity") == "Error"),
+            "Integrity discrepancy detected."
+        )
+        warning_bullets = [m.get("message") for m in sorted_messages if m.get("severity") == "Warning"]
+        
+        summary_lines = [
+            "Validation failed.",
+            "",
+            f"Status: Failed (Score: {score}/100)",
+            "",
+            "Primary Issue:",
+            primary_err
+        ]
+        if warning_bullets:
+            summary_lines.append("")
+            summary_lines.append("Warnings:")
+            for wb in warning_bullets[:5]:
+                summary_lines.append(f"• {wb}")
+        summary = "\n".join(summary_lines)
+    elif status == "Needs Review":
+        summary_lines = [
+            "Validation indicates manual review required.",
+            "",
+            f"Status: Needs Review (Score: {score}/100)",
+            "",
+            "Low extraction confidence or multiple advisory rule triggers detected."
+        ]
+        summary = "\n".join(summary_lines)
+    elif status == "Error" or status == "Failed":
         primary_err = next(
             (m.get("message") for m in sorted_messages if m.get("severity") == "Error"),
             "Integrity discrepancy detected."

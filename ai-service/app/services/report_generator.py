@@ -25,7 +25,23 @@ from app.services.docx_generator import generate_docx_report
 from app.services.excel_generator import generate_excel_report
 
 
-VALID_TYPES = ["executive", "production", "validation", "dashboard", "mine_performance", "custom"]
+VALID_TYPES = [
+    "executive",
+    "production",
+    "statutory",
+    "environmental",
+    "safety",
+    "quarterly",
+    "annual",
+    "cross_subsidiary",
+    "historical_trend",
+    "ai_insight",
+    "parliament_draft",
+    "validation",
+    "dashboard",
+    "mine_performance",
+    "custom"
+]
 VALID_FORMATS = ["pdf", "docx", "xlsx", "excel", "html"]
 
 
@@ -78,8 +94,17 @@ def generate_report(
     size_formatted = f"{file_size_bytes / 1024:.1f} KB" if file_size_bytes < 1048576 else f"{file_size_bytes / 1048576:.2f} MB"
 
     type_display_names = {
-        "executive": "Executive Mining & Analytics Report",
+        "executive": "Executive Mining & Analytics Summary",
         "production": "National Coal Production & Subsidiary Performance Report",
+        "statutory": "Statutory Compliance & Regulatory Review",
+        "environmental": "Mine Environmental Clearance & Forestry Report",
+        "safety": "DGMS Mine Safety & Accident Prevention Audit",
+        "quarterly": "Quarterly Operational & Fiscal Performance Return",
+        "annual": "Consolidated Annual Coal Production & Offtake Review",
+        "cross_subsidiary": "Cross-Subsidiary Production & Efficiency Benchmark",
+        "historical_trend": "Historical Production & Overburden Trend Analysis",
+        "ai_insight": "AI Intelligence & Operational Anomaly Brief",
+        "parliament_draft": "Parliamentary Question Response Dossier & Starred Query Brief",
         "validation": "Deterministic Validation & Data Discrepancy Audit",
         "dashboard": "Executive Dashboard Comprehensive Snapshot",
         "mine_performance": "Mine Performance & Extraction Register",
@@ -102,7 +127,8 @@ def generate_report(
         "parameters": {
             "filters": filters or {},
             "customSections": custom_sections or []
-        }
+        },
+        "provenance": context.get("provenance", {})
     }
 
     # Save to history manifest
