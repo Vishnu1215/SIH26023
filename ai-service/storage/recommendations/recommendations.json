@@ -1,6 +1,6 @@
 {
   "status": "success",
-  "lastUpdated": "2026-09-29T14:29:33.309584+00:00",
+  "lastUpdated": "2026-09-29T16:09:08.898389+00:00",
   "summary": {
     "overallRisk": 46.3,
     "riskLevel": "Medium",
@@ -59,7 +59,7 @@
       "recommendedAction": "1. Review non-compliant records in the Validation Inspector. 2. Verify colliery tonnage numbers and target arithmetic. 3. Re-validate documents after correcting optical or structural extraction flaws.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-29T14:29:33.280840+00:00"
+      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
     },
     {
       "id": "REC-QUAL-002",
@@ -85,7 +85,7 @@
         "Chap5Annualreport2026En"
       ],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-29T14:29:33.280840+00:00"
+      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
     },
     {
       "id": "REC-OPS-003",
@@ -106,7 +106,7 @@
       "affectedSubsidiaries": [
         "CIL"
       ],
-      "generatedAt": "2026-09-29T14:29:33.280840+00:00"
+      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
     },
     {
       "id": "REC-REP-004",
@@ -123,7 +123,7 @@
       "recommendedAction": "1. Generate Geological Report and Financial Year Review via the Report Generator module.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-29T14:29:33.280840+00:00"
+      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
     }
   ],
   "alerts": [
@@ -134,7 +134,7 @@
       "severity": "Yellow",
       "source": "storage/structured_data/",
       "recommendation": "Update colliery gazetteer mappings so mine names automatically resolve to their host states.",
-      "timestamp": "2026-09-29T14:29:33.280706+00:00",
+      "timestamp": "2026-09-29T16:09:08.897865+00:00",
       "affectedEntities": [
         "Chap5Annualreport2026En",
         "Chap5Annualreport2026En",
@@ -148,7 +148,7 @@
       "severity": "Yellow",
       "source": "storage/analytics/dashboard.json (rankings)",
       "recommendation": "Verify whether monthly returns from other CIL subsidiaries (MCL, NCL, CCL, WCL, ECL) are awaiting ingestion.",
-      "timestamp": "2026-09-29T14:29:33.280706+00:00",
+      "timestamp": "2026-09-29T16:09:08.897865+00:00",
       "affectedEntities": [
         "CIL"
       ]
