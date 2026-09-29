@@ -1,6 +1,6 @@
 {
-  "lastIndexedAt": "2026-09-28T19:56:10.818551+00:00",
-  "totalDocuments": 3,
+  "lastIndexedAt": "2026-09-29T13:01:33.558743+00:00",
+  "totalDocuments": 6,
   "documents": {
     "3b38ec57-0e7e-46b2-8167-3f9251d018cf": {
       "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
@@ -83,87 +83,211 @@
         "None"
       ],
       "relatedCount": 2
+    },
+    "bed37a79-8105-4765-8e62-2510d348d6d3": {
+      "documentId": "bed37a79-8105-4765-8e62-2510d348d6d3",
+      "reportTitle": "Chap3Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "CIL",
+      "mineName": "Gevra",
+      "state": "Chhattisgarh",
+      "district": "Korba",
+      "financialYear": "2025-26",
+      "coalProduction": 3.1,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Annual Report document records statutory operations for CMPDIL (CIL) during Financial Year 2025-26. Operational data pertains to Gevra Mine (Opencast), in Korba district, Chhattisgarh. Key physical metrics record total coal production of 3.10 MT. Data integrity audit classifies this record as Valid (Score: 100/100) with zero discrepancies flagged. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "CIL",
+        "Gevra",
+        "Chhattisgarh",
+        "Korba",
+        "2025-26",
+        "Coal Production",
+        "Opencast",
+        "Chap3Annualreport2026En"
+      ],
+      "relatedCount": 3
+    },
+    "80efe9b0-ba2f-4632-9d3d-bcbac24a153d": {
+      "documentId": "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+      "reportTitle": "Chap5Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "SCCL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 90,
+      "validationStatus": "Warning",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "SCCL",
+        "2025-26",
+        "Chap5Annualreport2026En",
+        "None"
+      ],
+      "relatedCount": 4
+    },
+    "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b": {
+      "documentId": "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b",
+      "reportTitle": "Chap2Annualreport2026En",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 87,
+      "subsidiary": "CIL",
+      "mineName": "Kusmunda",
+      "state": "Chhattisgarh",
+      "district": "N/A",
+      "financialYear": "2025-26",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data integrity audit classifies this record as Valid (Score: 100/100) with zero discrepancies flagged. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [
+        "CIL",
+        "Kusmunda",
+        "Chhattisgarh",
+        "2025-26",
+        "Opencast",
+        "Chap2Annualreport2026En"
+      ],
+      "relatedCount": 5
     }
   },
   "indices": {
     "by_keyword": {
       "cil": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ],
       "gevra": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3"
       ],
       "chhattisgarh": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ],
       "korba": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3"
       ],
       "2025-26": [
         "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ],
       "coal production": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3"
       ],
       "opencast": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ],
       "chap3annualreport2026en": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3"
       ],
       "sccl": [
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d"
       ],
       "chap5annualreport2026en": [
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d"
       ],
       "none": [
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d"
+      ],
+      "kusmunda": [
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
+      ],
+      "chap2annualreport2026en": [
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ]
     },
     "by_topic": {
       "coal production": [
         "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ]
     },
     "by_subsidiary": {
       "cil": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ],
       "sccl": [
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d"
       ]
     },
     "by_mine": {
       "gevra": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3"
+      ],
+      "kusmunda": [
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ]
     },
     "by_state": {
       "chhattisgarh": [
-        "3b38ec57-0e7e-46b2-8167-3f9251d018cf"
+        "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ]
     },
     "by_fy": {
       "2025-26": [
         "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ]
     },
     "by_category": {
       "annual report": [
         "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
         "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
-        "0ecd4359-3668-457e-b65f-5abcae57babd"
+        "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
       ]
     },
     "by_entity": {}

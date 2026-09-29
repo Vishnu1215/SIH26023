@@ -1,0 +1,134 @@
+{
+  "documentId": "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b",
+  "reportTitle": "Chap2Annualreport2026En",
+  "processedAt": "2026-09-29T13:01:33.546410+00:00",
+  "processingTimeMs": 15.01,
+  "classification": {
+    "documentCategory": "Annual Report",
+    "classificationConfidence": 87,
+    "classificationReason": "Title/filename contains 'annual report'; Structured metadata explicitly declared 'Annual Report'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [
+    "CIL",
+    "Kusmunda",
+    "Chhattisgarh",
+    "2025-26",
+    "Opencast",
+    "Chap2Annualreport2026En"
+  ],
+  "entities": {
+    "organizations": [
+      "CIL",
+      "SCCL"
+    ],
+    "subsidiaries": [
+      "CIL",
+      "SCCL"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [],
+    "mines": [
+      "Kusmunda"
+    ],
+    "measurements": [],
+    "financialYears": [
+      "2025-26"
+    ],
+    "dates": [],
+    "mineTypes": [
+      "Opencast"
+    ]
+  },
+  "summary": "This Annual Report document records statutory operations for SCCL (CIL) during Financial Year 2025-26. Operational data pertains to Kusmunda Mine (Opencast), Chhattisgarh. Data integrity audit classifies this record as Valid (Score: 100/100) with zero discrepancies flagged. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 60,
+        "sharedAttributes": [
+          "Subsidiary (CIL)",
+          "FY (2025-26)",
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 60,
+        "sharedAttributes": [
+          "Subsidiary (CIL)",
+          "FY (2025-26)",
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      },
+      {
+        "documentId": "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      },
+      {
+        "documentId": "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      }
+    ],
+    "totalRelated": 5
+  },
+  "structuredData": {
+    "documentId": "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b",
+    "reportTitle": "Chap2Annualreport2026En",
+    "reportType": "Annual Report",
+    "financialYear": "2025-26",
+    "reportDate": "2025-04-01",
+    "issuingOrganization": "SCCL",
+    "subsidiary": "CIL",
+    "mineName": "Kusmunda",
+    "mineType": "Opencast",
+    "region": null,
+    "district": null,
+    "state": "Chhattisgarh",
+    "coalProduction": null,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 10,
+    "extractedAt": "2026-09-29T13:01:33.378735+00:00"
+  },
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

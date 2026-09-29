@@ -1,0 +1,23 @@
+{
+  "documentId": "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b",
+  "validationStatus": "Valid",
+  "validationScore": 100,
+  "validationSummary": "Validation completed successfully.\n\nStatus: Valid (Score: 100/100)\n\nAll integrity, formatting, and consistency checks passed.",
+  "validationMessages": [],
+  "messages": [],
+  "rulesTriggered": [],
+  "errorCount": 0,
+  "warningCount": 0,
+  "infoCount": 0,
+  "validationTime": 0.0246,
+  "validatedAt": "2026-09-29T13:01:33.483863+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-29T13:01:33.483863+00:00",
+      "score": 100,
+      "status": "Valid",
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  ]
+}

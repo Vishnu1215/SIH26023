@@ -1,0 +1,113 @@
+{
+  "documentId": "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+  "reportTitle": "Chap5Annualreport2026En",
+  "processedAt": "2026-09-29T13:01:32.529979+00:00",
+  "processingTimeMs": 2.97,
+  "classification": {
+    "documentCategory": "Annual Report",
+    "classificationConfidence": 87,
+    "classificationReason": "Title/filename contains 'annual report'; Structured metadata explicitly declared 'Annual Report'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [
+    "SCCL",
+    "2025-26",
+    "Chap5Annualreport2026En",
+    "None"
+  ],
+  "entities": {
+    "organizations": [
+      "Ministry of Coal",
+      "SCCL"
+    ],
+    "subsidiaries": [
+      "SCCL"
+    ],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [
+      "2025-26"
+    ],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Annual Report document records statutory operations for Ministry of Coal (SCCL) during Financial Year 2025-26. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 45,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)",
+          "FY (2025-26)"
+        ]
+      },
+      {
+        "documentId": "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 45,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)",
+          "FY (2025-26)"
+        ]
+      },
+      {
+        "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      },
+      {
+        "documentId": "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 20,
+        "sharedAttributes": [
+          "FY (2025-26)"
+        ]
+      }
+    ],
+    "totalRelated": 4
+  },
+  "structuredData": {
+    "documentId": "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+    "reportTitle": "Chap5Annualreport2026En",
+    "reportType": "Annual Report",
+    "financialYear": "2025-26",
+    "reportDate": null,
+    "issuingOrganization": "Ministry of Coal",
+    "subsidiary": "SCCL",
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": null,
+    "coalProduction": null,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 6,
+    "extractedAt": "2026-09-29T13:01:32.353313+00:00"
+  },
+  "validationScore": 90,
+  "validationStatus": "Warning"
+}

@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "reportId": "55b86d08-8058-444a-a7dc-15b9c014ef92",
+    "reportName": "Executive Mining & Analytics Report",
+    "reportType": "executive",
+    "format": "pdf",
+    "fileName": "55b86d08-8058-444a-a7dc-15b9c014ef92_executive_20260929_130318.pdf",
+    "filePath": "C:\\Users\\harip_new\\SIH26023\\ai-service\\storage\\reports\\pdf\\55b86d08-8058-444a-a7dc-15b9c014ef92_executive_20260929_130318.pdf",
+    "fileSize": 5660,
+    "fileSizeFormatted": "5.5 KB",
+    "createdAt": "2026-09-29T13:03:26.578576+00:00",
+    "generatedBy": "Executive User",
+    "sourceAnalyticsVersion": 1,
+    "totalRecordsAnalyzed": 6,
+    "parameters": {
+      "filters": {},
+      "customSections": []
+    }
+  }
+]
