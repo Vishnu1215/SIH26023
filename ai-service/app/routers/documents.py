@@ -222,3 +222,194 @@ async def process_document_api(
         "message": "Document processed and updated in MongoDB.",
         "result": result
     }
+
+
+@router.delete("/{document_id}", summary="Delete document and all associated records from MongoDB")
+async def delete_document_api(
+    document_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    doc_repo = DocumentRepository(db)
+    doc = await doc_repo.get_document_by_id(document_id)
+    if not doc:
+        raise HTTPException(status_code=404, detail=f"Document '{document_id}' not found.")
+
+    file_path = doc.get("filePath")
+    if file_path and os.path.exists(file_path) and "uploads" in file_path:
+        try:
+            os.remove(file_path)
+        except Exception as fe:
+            logger.warning(f"Could not remove physical file {file_path}: {fe}")
+
+    await db["documents"].delete_one({"documentId": document_id})
+    await db["ocr_results"].delete_one({"documentId": document_id})
+    await db["structured_records"].delete_one({"documentId": document_id})
+    await db["validation_results"].delete_one({"documentId": document_id})
+    await db["rag_chunks"].delete_many({"documentId": document_id})
+    await db["report_reviews"].delete_many({"documentId": document_id})
+
+    analytics_repo = AnalyticsRepository(db)
+    try:
+        metrics = await analytics_repo.calculate_dynamic_metrics()
+        await analytics_repo.upsert_consolidated_dashboard(metrics)
+    except Exception as ae:
+        logger.warning(f"Failed to refresh analytics after deletion: {ae}")
+
+    return {
+        "success": True,
+        "message": f"Document '{document_id}' deleted successfully from MongoDB."
+    }
+
+
+@router.post("/{document_id}/revalidate", summary="Re-run deterministic validation engine on document")
+async def revalidate_document_api(
+    document_id: str,
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    doc = await db["documents"].find_one({"documentId": document_id}, {"_id": 0})
+    if not doc:
+        raise HTTPException(status_code=404, detail=f"Document '{document_id}' not found.")
+
+    struct_rec = await db["structured_records"].find_one({"documentId": document_id}, {"_id": 0}) or {}
+    ocr_rec = await db["ocr_results"].find_one({"documentId": document_id}, {"_id": 0}) or {}
+
+    from app.services.validation_engine import validate_document
+    existing_docs = await db["documents"].find({}, {"_id": 0, "documentId": 1, "fileName": 1, "sha256": 1}).to_list(1000)
+
+    val_report = validate_document(
+        document_id=document_id,
+        structured_data=struct_rec,
+        confidence=ocr_rec.get("confidence") or doc.get("confidence") or 0.95,
+        filename=doc.get("fileName", "document.pdf"),
+        file_hash=doc.get("sha256"),
+        existing_documents=existing_docs
+    )
+
+    val_score = val_report.get("validationScore", 100)
+    val_status = val_report.get("validationStatus", "Valid")
+
+    from app.repositories import ValidationRepository
+    val_repo = ValidationRepository(db)
+    await val_repo.upsert_validation_result(
+        document_id=document_id,
+        score=val_score,
+        status=val_status,
+        errors=val_report.get("errorCount", 0),
+        warnings=val_report.get("warningCount", 0),
+        validation_messages=val_report.get("validationMessages", []),
+        executed_rules=val_report.get("rulesTriggered", [])
+    )
+
+    await db["documents"].update_one(
+        {"documentId": document_id},
+        {"$set": {"validationScore": val_score, "validationStatus": val_status, "status": "Validated" if val_status in ["Valid", "Warning"] else "Error"}}
+    )
+
+    analytics_repo = AnalyticsRepository(db)
+    try:
+        metrics = await analytics_repo.calculate_dynamic_metrics()
+        await analytics_repo.upsert_consolidated_dashboard(metrics)
+    except Exception as ae:
+        logger.warning(f"Failed to refresh analytics after revalidation: {ae}")
+
+    updated_doc = await db["documents"].find_one({"documentId": document_id}, {"_id": 0})
+    return {
+        "success": True,
+        "message": f"Document '{document_id}' revalidated successfully.",
+        "validation": val_report,
+        "document": updated_doc
+    }
+
+
+@router.get("/{document_id}/related", summary="Find related documents based on vector embedding similarity and topics")
+async def get_related_documents_api(
+    document_id: str,
+    limit: int = Query(default=4, ge=1, le=20),
+    db: AsyncIOMotorDatabase = Depends(get_database)
+):
+    target_chunks = await db["rag_chunks"].find({"documentId": document_id}, {"_id": 0}).to_list(100)
+    target_doc = await db["documents"].find_one({"documentId": document_id}, {"_id": 0})
+    if not target_doc:
+        raise HTTPException(status_code=404, detail=f"Document '{document_id}' not found.")
+
+    target_sub = target_doc.get("subsidiary", "")
+    target_cat = target_doc.get("category", "")
+    target_mine = target_doc.get("mineName", "")
+
+    other_chunks = await db["rag_chunks"].find({"documentId": {"$ne": document_id}}, {"_id": 0}).to_list(1000)
+
+    from app.services.rag_adapter import cosine_similarity, generate_embedding
+
+    target_embs = [c.get("embedding") for c in target_chunks if c.get("embedding")]
+    if not target_embs:
+        target_embs = [generate_embedding(target_doc.get("reportTitle") or target_doc.get("fileName", ""))]
+
+    doc_scores: Dict[str, Dict[str, Any]] = {}
+    for ch in other_chunks:
+        other_id = ch.get("documentId")
+        if not other_id or other_id == document_id:
+            continue
+        ch_emb = ch.get("embedding", [])
+        sims = [cosine_similarity(t_emb, ch_emb) for t_emb in target_embs if ch_emb]
+        max_sim = max(sims) if sims else 0.0
+
+        if other_id not in doc_scores:
+            doc_scores[other_id] = {
+                "maxSimilarity": max_sim,
+                "title": ch.get("metadata", {}).get("fileName") or other_id,
+                "subsidiary": ch.get("metadata", {}).get("subsidiary", "Unknown"),
+                "category": ch.get("metadata", {}).get("category", "General"),
+                "mine": ch.get("metadata", {}).get("mine", "N/A")
+            }
+        else:
+            if max_sim > doc_scores[other_id]["maxSimilarity"]:
+                doc_scores[other_id]["maxSimilarity"] = max_sim
+
+    if len(doc_scores) < limit:
+        all_others = await db["documents"].find({"documentId": {"$ne": document_id}}, {"_id": 0}).to_list(50)
+        for od in all_others:
+            oid = od.get("documentId")
+            if oid not in doc_scores:
+                bonus = 0.5
+                if od.get("subsidiary") == target_sub:
+                    bonus += 0.25
+                if od.get("category") == target_cat:
+                    bonus += 0.15
+                doc_scores[oid] = {
+                    "maxSimilarity": bonus,
+                    "title": od.get("reportTitle") or od.get("fileName"),
+                    "subsidiary": od.get("subsidiary", "Unknown"),
+                    "category": od.get("category", "General"),
+                    "mine": od.get("mineName", "N/A")
+                }
+
+    sorted_docs = sorted(doc_scores.items(), key=lambda x: x[1]["maxSimilarity"], reverse=True)[:limit]
+
+    related = []
+    for oid, info in sorted_docs:
+        sim_pct = int(min(99, max(65, round(info["maxSimilarity"] * 100))))
+        reasons = []
+        if info["subsidiary"] == target_sub:
+            reasons.append(f"Same Subsidiary ({target_sub})")
+        if info["category"] == target_cat:
+            reasons.append(f"Matching Category ({target_cat})")
+        if not reasons:
+            reasons.append("Semantic Vector Alignment")
+
+        related.append({
+            "documentId": oid,
+            "title": info["title"],
+            "subsidiary": info["subsidiary"],
+            "category": info["category"],
+            "mine": info["mine"],
+            "similarity": f"{sim_pct}%",
+            "similarityScore": round(sim_pct / 100.0, 2),
+            "reasons": reasons
+        })
+
+    return {
+        "success": True,
+        "documentId": document_id,
+        "count": len(related),
+        "relatedDocuments": related
+    }

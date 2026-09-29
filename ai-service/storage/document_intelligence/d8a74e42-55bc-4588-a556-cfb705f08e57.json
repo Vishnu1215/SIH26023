@@ -1,0 +1,37 @@
+{
+  "documentId": "d8a74e42-55bc-4588-a556-cfb705f08e57",
+  "reportTitle": "PS023_Real_World_Test_Bundle.xlsx",
+  "processedAt": "2026-09-29T19:30:54.572642+00:00",
+  "processingTimeMs": 7.88,
+  "classification": {
+    "documentCategory": "Unknown",
+    "classificationConfidence": 30,
+    "classificationReason": "Insufficient conclusive keywords or structured fields to determine category."
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [],
+  "entities": {
+    "organizations": [],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Unknown document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {},
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

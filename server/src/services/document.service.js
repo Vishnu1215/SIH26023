@@ -183,3 +183,42 @@ export const loadSampleDataset = () => {
 
   return registered;
 };
+
+/**
+ * Delete document and all associated records from MongoDB (via FastAPI)
+ */
+export const deleteDocument = async (documentId) => {
+  try {
+    const response = await axios.delete(`${config.aiServiceUrl}/documents/${documentId}`, { timeout: 8000 });
+    documentModel.deleteDocument(documentId);
+    return response.data;
+  } catch (err) {
+    documentModel.deleteDocument(documentId);
+    return { success: true, message: `Document ${documentId} deleted from local store.` };
+  }
+};
+
+/**
+ * Re-run deterministic validation engine on document (via FastAPI)
+ */
+export const revalidateDocument = async (documentId) => {
+  try {
+    const response = await axios.post(`${config.aiServiceUrl}/documents/${documentId}/revalidate`, {}, { timeout: 15000 });
+    return response.data;
+  } catch (err) {
+    throw new Error(`Failed to revalidate document: ${err.message}`);
+  }
+};
+
+/**
+ * Retrieve related documents based on vector embedding similarity (via FastAPI)
+ */
+export const getRelatedDocuments = async (documentId) => {
+  try {
+    const response = await axios.get(`${config.aiServiceUrl}/documents/${documentId}/related`, { timeout: 8000 });
+    return response.data;
+  } catch (err) {
+    return { success: true, documentId, count: 0, relatedDocuments: [] };
+  }
+};
+

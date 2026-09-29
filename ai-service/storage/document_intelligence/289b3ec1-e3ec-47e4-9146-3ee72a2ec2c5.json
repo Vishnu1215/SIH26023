@@ -1,0 +1,37 @@
+{
+  "documentId": "289b3ec1-e3ec-47e4-9146-3ee72a2ec2c5",
+  "reportTitle": "06_PS023_Official_Data_Extract_Test.pdf",
+  "processedAt": "2026-09-29T19:30:51.228468+00:00",
+  "processingTimeMs": 26.07,
+  "classification": {
+    "documentCategory": "Policy",
+    "classificationConfidence": 65,
+    "classificationReason": "Title/filename contains 'act'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [],
+  "entities": {
+    "organizations": [],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Policy document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {},
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

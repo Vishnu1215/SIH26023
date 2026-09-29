@@ -6,7 +6,10 @@ import {
   extractDocumentStructured,
   validateDocumentAction,
   loadSamples,
-  getDashboardAnalytics
+  getDashboardAnalytics,
+  deleteDocumentAction,
+  revalidateDocumentAction,
+  getRelatedDocumentsAction
 } from '../controllers/document.controller.js';
 import { handleUpload } from '../middleware/upload.middleware.js';
 import express, { Router } from "express";
@@ -24,6 +27,15 @@ router.get('/', getDocuments);
 
 // POST /api/documents/load-sample - Register representative sample dataset into memory
 router.post('/load-sample', loadSamples);
+
+// GET /api/documents/:documentId/related - Retrieve related documents via embedding similarity
+router.get('/:documentId/related', getRelatedDocumentsAction);
+
+// POST /api/documents/:documentId/revalidate - Re-validate document
+router.post('/:documentId/revalidate', revalidateDocumentAction);
+
+// DELETE /api/documents/:documentId - Delete document
+router.delete('/:documentId', deleteDocumentAction);
 
 // GET /api/documents/:documentId - Retrieve single document by ID
 router.get('/:documentId', getDocument);

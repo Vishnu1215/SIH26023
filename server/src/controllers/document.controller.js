@@ -224,3 +224,61 @@ export const getDashboardAnalytics = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Delete document and all associated records
+ * DELETE /api/documents/:documentId
+ */
+export const deleteDocumentAction = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const { deleteDocument } = await import('../services/document.service.js');
+    const result = await deleteDocument(documentId);
+    return res.status(200).json({
+      success: true,
+      message: 'Document deleted successfully.',
+      result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Re-run deterministic validation engine on document
+ * POST /api/documents/:documentId/revalidate
+ */
+export const revalidateDocumentAction = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const { revalidateDocument } = await import('../services/document.service.js');
+    const result = await revalidateDocument(documentId);
+    return res.status(200).json({
+      success: true,
+      message: 'Document revalidated successfully.',
+      result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Retrieve related documents based on vector embedding similarity
+ * GET /api/documents/:documentId/related
+ */
+export const getRelatedDocumentsAction = async (req, res, next) => {
+  try {
+    const { documentId } = req.params;
+    const { getRelatedDocuments } = await import('../services/document.service.js');
+    const result = await getRelatedDocuments(documentId);
+    return res.status(200).json({
+      success: true,
+      documentId,
+      relatedDocuments: result.relatedDocuments || []
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

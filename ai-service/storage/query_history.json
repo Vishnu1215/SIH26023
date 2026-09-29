@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "id": "qh-5135a039",
+    "query": "Which subsidiary has the highest production?",
+    "timestamp": "2026-09-29T20:01:50.831023+00:00",
+    "intent": "analytics_lookup",
+    "totalResults": 5,
+    "filters": {}
+  },
+  {
+    "id": "qh-d7057d1d",
+    "query": "Which documents failed validation?",
+    "timestamp": "2026-09-29T19:32:40.397789+00:00",
+    "intent": "validation_lookup",
+    "totalResults": 6,
+    "filters": {
+      "validationStatus": "Error"
+    }
+  },
+  {
+    "id": "qh-3cf329b4",
+    "query": "Show production reports for SECL",
+    "timestamp": "2026-09-29T19:32:35.583420+00:00",
+    "intent": "report_lookup",
+    "totalResults": 0,
+    "filters": {
+      "category": "Production Report",
+      "subsidiary": "SECL"
+    }
+  },
+  {
+    "id": "qh-bbc370c9",
+    "query": "Which documents belong to FY 2023-24?",
+    "timestamp": "2026-09-29T19:32:20.402633+00:00",
+    "intent": "search_documents",
+    "totalResults": 7,
+    "filters": {
+      "financialYear": "2023-24"
+    }
+  }
+]

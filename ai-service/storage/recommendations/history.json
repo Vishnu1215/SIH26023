@@ -1,5 +1,101 @@
 [
   {
+    "timestamp": "2026-09-29T19:49:37.885529+00:00",
+    "overallRisk": 61.5,
+    "riskLevel": "High",
+    "recommendationsCount": 5,
+    "criticalAlertsCount": 0,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:30:54.682492+00:00",
+    "overallRisk": 65.5,
+    "riskLevel": "High",
+    "recommendationsCount": 6,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:30:51.352954+00:00",
+    "overallRisk": 61.0,
+    "riskLevel": "High",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:30:47.886902+00:00",
+    "overallRisk": 61.0,
+    "riskLevel": "High",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:30:46.094461+00:00",
+    "overallRisk": 60.6,
+    "riskLevel": "High",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:30:44.443309+00:00",
+    "overallRisk": 60.1,
+    "riskLevel": "High",
+    "recommendationsCount": 4,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:30:42.784344+00:00",
+    "overallRisk": 63.5,
+    "riskLevel": "High",
+    "recommendationsCount": 5,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:30:41.010270+00:00",
+    "overallRisk": 62.8,
+    "riskLevel": "High",
+    "recommendationsCount": 5,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:29:51.348404+00:00",
+    "overallRisk": 62.8,
+    "riskLevel": "High",
+    "recommendationsCount": 5,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:20:54.633493+00:00",
+    "overallRisk": 62.8,
+    "riskLevel": "High",
+    "recommendationsCount": 5,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T19:01:50.789666+00:00",
+    "overallRisk": 62.0,
+    "riskLevel": "High",
+    "recommendationsCount": 5,
+    "criticalAlertsCount": 1,
+    "insightsCount": 9
+  },
+  {
+    "timestamp": "2026-09-29T18:57:31.122227+00:00",
+    "overallRisk": 53.5,
+    "riskLevel": "Medium",
+    "recommendationsCount": 3,
+    "criticalAlertsCount": 0,
+    "insightsCount": 7
+  },
+  {
     "timestamp": "2026-09-29T18:24:55.120885+00:00",
     "overallRisk": 53.5,
     "riskLevel": "Medium",

@@ -598,10 +598,10 @@ export default function RecommendationsPage() {
                         >
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', fontWeight: 700, color: '#1e40af', marginBottom: '4px' }}>
                             <CheckCircle2 size={15} color="#2563eb" />
-                            <span>Recommended Action for CMPDI / Ministry Officials:</span>
+                            <span>Suggested Fix &amp; Action for CMPDI / Ministry Officials:</span>
                           </div>
                           <p style={{ margin: 0, fontSize: '0.82rem', color: '#1e3a8a', lineHeight: 1.5 }}>
-                            {rec.recommendedAction}
+                            {rec.suggestedFix || rec.recommendedAction}
                           </p>
                         </div>
 

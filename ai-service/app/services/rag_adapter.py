@@ -108,12 +108,16 @@ class RAGAdapter:
                 boost = (overlap / max(1, len(query_terms))) * 0.35 if query_terms else 0.0
 
                 total_score = min(1.0, vec_sim + boost)
+                page_match = re.search(r'---\s*Page\s*(\d+)\s*---', text, re.IGNORECASE)
+                page_num = int(page_match.group(1)) if page_match else ch.get("metadata", {}).get("page", ch.get("chunkNumber", 1))
+
                 scored.append({
                     "chunkId": f"{ch.get('documentId')}_c{ch.get('chunkNumber', 1)}",
                     "documentId": ch.get("documentId"),
                     "chunkNumber": ch.get("chunkNumber", 1),
                     "documentTitle": ch.get("metadata", {}).get("fileName") or ch.get("documentId"),
                     "section": ch.get("metadata", {}).get("section", "Statutory Report"),
+                    "page": page_num,
                     "text": text,
                     "score": round(total_score, 4),
                     "metadata": ch.get("metadata", {})

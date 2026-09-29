@@ -1,0 +1,7 @@
+entity | financial_year | coal_production_mt | unit | growth_percent
+All India | 2023-24 | 997.83 |  | 
+All India | 2024-25 | 1047.523 |  | 4.98
+CIL | 2023-24 | 773.81 |  | 
+CIL | 2024-25 | 781.056 |  | 0.94
+SCCL | 2023-24 | 70.02 |  | 
+SCCL | 2024-25 | 69.01 |  | 2.8

@@ -1,0 +1,7 @@
+agency_category | target_lakh_meter | achieved_lakh_meter | achievement_percent | fy2023_24_lakh_meter | growth_percent
+Departmental | 4.2 | 4.638 | 110 | 4.317 | 7
+St. Govts | 0.012 | 0.023 | 194 | 0.022 | 7
+MECL-MOU | 3.375 | 3.594 | 106 | 2.837 | 27
+Tendering | 2.413 | 1.86 | 77 | 1.449 | 28
+Sub-Total Outsourcing | 5.8 | 5.477 | 94 | 4.308 | 27
+Grand Total | 10.0 | 10.115 | 101 | 8.625 | 17

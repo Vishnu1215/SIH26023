@@ -1,0 +1,37 @@
+{
+  "documentId": "c7b789e8-af45-42e3-a5a1-bb2529257f17",
+  "reportTitle": "01_coal_production_official_extract.csv",
+  "processedAt": "2026-09-29T19:30:41.226314+00:00",
+  "processingTimeMs": 51.86,
+  "classification": {
+    "documentCategory": "Production Report",
+    "classificationConfidence": 65,
+    "classificationReason": "Title/filename contains 'production'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [],
+  "entities": {
+    "organizations": [],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Production Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {},
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

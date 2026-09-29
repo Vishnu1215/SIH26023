@@ -200,4 +200,96 @@ export async function fetchDashboardAnalytics() {
   }
 }
 
+/**
+ * Delete a document and all related artifacts from MongoDB
+ * @param {string} documentId
+ * @returns {Promise<Object>} Deletion result
+ */
+export async function deleteDocument(documentId) {
+  const headers = {};
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/documents/${documentId}`, {
+      method: 'DELETE',
+      headers
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || `Failed to delete document (HTTP ${response.status})`);
+    }
+
+    return data;
+  } catch (error) {
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      throw new Error('Server unavailable. Unable to connect to backend.');
+    }
+    throw error;
+  }
+}
+
+/**
+ * Fetch related documents based on vector embedding similarity
+ * @param {string} documentId
+ * @returns {Promise<Array>} List of related documents
+ */
+export async function getRelatedDocuments(documentId) {
+  const headers = {};
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/documents/${documentId}/related`, {
+      method: 'GET',
+      headers
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      return [];
+    }
+
+    return data.relatedDocuments || [];
+  } catch (error) {
+    console.warn(`Failed to fetch related documents for ${documentId}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetch full document intelligence including OCR, validation, tables, entities
+ * @param {string} documentId
+ * @returns {Promise<Object>} Full document intelligence
+ */
+export async function getFullDocumentDetails(documentId) {
+  const headers = {};
+  const token = getToken();
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/documents/${documentId}`, {
+      method: 'GET',
+      headers
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || `Failed to fetch document details (HTTP ${response.status})`);
+    }
+
+    return data.document || data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 

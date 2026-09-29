@@ -18,7 +18,9 @@ import {
   TrendingUp,
   X,
   ArrowRight,
-  ExternalLink
+  ExternalLink,
+  Bot,
+  BarChart3
 } from 'lucide-react';
 import { searchDocuments, reindexSearch } from '../services/intelligence.service.js';
 import Button from '../components/common/Button.jsx';
@@ -334,9 +336,9 @@ export default function TopicsSearchPage() {
                     </p>
                   </div>
 
-                  {/* Clean Footer: Topics Chips + Open Document Button */}
-                  <div className="search-card-clean-footer">
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', flex: 1, minWidth: 0 }}>
+                  {/* Clean Footer: Topics Chips + Quick Action Buttons */}
+                  <div className="search-card-clean-footer" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {(doc.topTopics && doc.topTopics.length > 0 ? doc.topTopics.slice(0, 3) : ['Coal Production', 'Mine Safety']).map((t) => (
                         <span key={t} className="search-topic-pill" style={{ fontSize: '10.5px' }}>
                           <Sparkles size={10} /> {t}
@@ -344,14 +346,58 @@ export default function TopicsSearchPage() {
                       ))}
                     </div>
 
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      icon={ArrowRight}
-                      onClick={() => navigate(`/documents?docId=${doc.documentId}`)}
-                    >
-                      Open Document
-                    </Button>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', paddingTop: '8px', borderTop: '1px solid var(--border-default)', width: '100%' }}>
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/documents?docId=${doc.documentId}&tab=qa`)}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          padding: '4px 8px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          borderRadius: '4px',
+                          border: '1px solid var(--border-default)',
+                          backgroundColor: 'var(--bg-card-subtle)',
+                          color: 'var(--text-secondary)',
+                          cursor: 'pointer'
+                        }}
+                        title="Query this report with AI"
+                      >
+                        <Bot size={12} color="var(--gov-blue-500)" /> Ask AI
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => navigate(`/documents?docId=${doc.documentId}&tab=analytics`)}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          padding: '4px 8px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          borderRadius: '4px',
+                          border: '1px solid var(--border-default)',
+                          backgroundColor: 'var(--bg-card-subtle)',
+                          color: 'var(--text-secondary)',
+                          cursor: 'pointer'
+                        }}
+                        title="View extracted quota analytics"
+                      >
+                        <BarChart3 size={12} color="var(--gov-navy-800)" /> Analytics
+                      </button>
+
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        icon={ArrowRight}
+                        onClick={() => navigate(`/documents?docId=${doc.documentId}`)}
+                      >
+                        Open Dossier
+                      </Button>
+                    </div>
                   </div>
                 </div>
               );

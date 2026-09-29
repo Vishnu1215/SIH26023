@@ -1,0 +1,37 @@
+{
+  "documentId": "607c8df0-409d-4a62-8471-1e1b2ab7b5c3",
+  "reportTitle": "03_cmpdi_exploratory_drilling_2024_25.csv",
+  "processedAt": "2026-09-29T19:30:44.309817+00:00",
+  "processingTimeMs": 4.86,
+  "classification": {
+    "documentCategory": "Geological Report",
+    "classificationConfidence": 65,
+    "classificationReason": "Title/filename contains 'drilling'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [],
+  "entities": {
+    "organizations": [],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Geological Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {},
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

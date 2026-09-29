@@ -1,6 +1,6 @@
 {
-  "lastIndexedAt": "2026-09-29T16:51:22.246662+00:00",
-  "totalDocuments": 13,
+  "lastIndexedAt": "2026-09-29T19:30:54.575981+00:00",
+  "totalDocuments": 21,
   "documents": {
     "3b38ec57-0e7e-46b2-8167-3f9251d018cf": {
       "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
@@ -367,6 +367,174 @@
         "Test"
       ],
       "relatedCount": 5
+    },
+    "b8686ae5-67c4-41f9-a157-27f4346943dd": {
+      "documentId": "b8686ae5-67c4-41f9-a157-27f4346943dd",
+      "reportTitle": "CMPDI Annual Report 2025-26.pdf",
+      "documentCategory": "Annual Report",
+      "classificationConfidence": 67,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Annual Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
+    },
+    "c7b789e8-af45-42e3-a5a1-bb2529257f17": {
+      "documentId": "c7b789e8-af45-42e3-a5a1-bb2529257f17",
+      "reportTitle": "01_coal_production_official_extract.csv",
+      "documentCategory": "Production Report",
+      "classificationConfidence": 65,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Production Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
+    },
+    "8b328e2c-0287-4faf-ad53-e8627c32844d": {
+      "documentId": "8b328e2c-0287-4faf-ad53-e8627c32844d",
+      "reportTitle": "02_coal_imports_official_extract.csv",
+      "documentCategory": "Policy",
+      "classificationConfidence": 65,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Policy document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
+    },
+    "607c8df0-409d-4a62-8471-1e1b2ab7b5c3": {
+      "documentId": "607c8df0-409d-4a62-8471-1e1b2ab7b5c3",
+      "reportTitle": "03_cmpdi_exploratory_drilling_2024_25.csv",
+      "documentCategory": "Geological Report",
+      "classificationConfidence": 65,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Geological Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
+    },
+    "b91cdfb9-1796-44dd-aedf-06c3124911d8": {
+      "documentId": "b91cdfb9-1796-44dd-aedf-06c3124911d8",
+      "reportTitle": "04_cmpdi_exploration_blocks_2024_25.csv",
+      "documentCategory": "Geological Report",
+      "classificationConfidence": 65,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Geological Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
+    },
+    "5c74bbb1-39b4-4d22-85d5-96eff382843c": {
+      "documentId": "5c74bbb1-39b4-4d22-85d5-96eff382843c",
+      "reportTitle": "05_cmpdi_exploration_state_distribution_2024_25.csv",
+      "documentCategory": "Geological Report",
+      "classificationConfidence": 65,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Geological Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
+    },
+    "289b3ec1-e3ec-47e4-9146-3ee72a2ec2c5": {
+      "documentId": "289b3ec1-e3ec-47e4-9146-3ee72a2ec2c5",
+      "reportTitle": "06_PS023_Official_Data_Extract_Test.pdf",
+      "documentCategory": "Policy",
+      "classificationConfidence": 65,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Policy document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
+    },
+    "d8a74e42-55bc-4588-a556-cfb705f08e57": {
+      "documentId": "d8a74e42-55bc-4588-a556-cfb705f08e57",
+      "reportTitle": "PS023_Real_World_Test_Bundle.xlsx",
+      "documentCategory": "Unknown",
+      "classificationConfidence": 30,
+      "subsidiary": "CIL",
+      "mineName": "N/A",
+      "state": "N/A",
+      "district": "N/A",
+      "financialYear": "N/A",
+      "coalProduction": 0.0,
+      "productionUnit": "MT",
+      "validationScore": 100,
+      "validationStatus": "Valid",
+      "summary": "This Unknown document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+      "topTopics": [
+        "Coal Production"
+      ],
+      "keywords": [],
+      "relatedCount": 0
     }
   },
   "indices": {
@@ -532,7 +700,15 @@
         "098f0895-c208-448a-a04d-5b3f68b18193",
         "ea24b9d5-ccaa-4ba8-a323-e5f86b4c149a",
         "660b1a9e-ca46-4770-b7e4-8796e5ee746a",
-        "0de08e8a-81d5-45f8-83ed-fa12e06eb873"
+        "0de08e8a-81d5-45f8-83ed-fa12e06eb873",
+        "b8686ae5-67c4-41f9-a157-27f4346943dd",
+        "c7b789e8-af45-42e3-a5a1-bb2529257f17",
+        "8b328e2c-0287-4faf-ad53-e8627c32844d",
+        "607c8df0-409d-4a62-8471-1e1b2ab7b5c3",
+        "b91cdfb9-1796-44dd-aedf-06c3124911d8",
+        "5c74bbb1-39b4-4d22-85d5-96eff382843c",
+        "289b3ec1-e3ec-47e4-9146-3ee72a2ec2c5",
+        "d8a74e42-55bc-4588-a556-cfb705f08e57"
       ],
       "exploration": [
         "ea24b9d5-ccaa-4ba8-a323-e5f86b4c149a",
@@ -600,20 +776,30 @@
         "0ecd4359-3668-457e-b65f-5abcae57babd",
         "bed37a79-8105-4765-8e62-2510d348d6d3",
         "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
-        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b"
+        "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b",
+        "b8686ae5-67c4-41f9-a157-27f4346943dd"
       ],
       "production report": [
         "8bb4d6c7-9db1-4ef8-9101-d48347e0f754",
-        "0de08e8a-81d5-45f8-83ed-fa12e06eb873"
+        "0de08e8a-81d5-45f8-83ed-fa12e06eb873",
+        "c7b789e8-af45-42e3-a5a1-bb2529257f17"
       ],
       "policy": [
         "098f0895-c208-448a-a04d-5b3f68b18193",
-        "660b1a9e-ca46-4770-b7e4-8796e5ee746a"
+        "660b1a9e-ca46-4770-b7e4-8796e5ee746a",
+        "8b328e2c-0287-4faf-ad53-e8627c32844d",
+        "289b3ec1-e3ec-47e4-9146-3ee72a2ec2c5"
       ],
       "geological report": [
         "ea24b9d5-ccaa-4ba8-a323-e5f86b4c149a",
         "cafdac89-97f7-4fe9-8e90-2b8e32f76bc7",
-        "114d9ce8-d0c2-4506-8877-134085bbb62a"
+        "114d9ce8-d0c2-4506-8877-134085bbb62a",
+        "607c8df0-409d-4a62-8471-1e1b2ab7b5c3",
+        "b91cdfb9-1796-44dd-aedf-06c3124911d8",
+        "5c74bbb1-39b4-4d22-85d5-96eff382843c"
+      ],
+      "unknown": [
+        "d8a74e42-55bc-4588-a556-cfb705f08e57"
       ]
     },
     "by_entity": {}

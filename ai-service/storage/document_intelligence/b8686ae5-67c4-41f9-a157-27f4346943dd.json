@@ -1,0 +1,37 @@
+{
+  "documentId": "b8686ae5-67c4-41f9-a157-27f4346943dd",
+  "reportTitle": "CMPDI Annual Report 2025-26.pdf",
+  "processedAt": "2026-09-29T19:01:51.147150+00:00",
+  "processingTimeMs": 289.5,
+  "classification": {
+    "documentCategory": "Annual Report",
+    "classificationConfidence": 67,
+    "classificationReason": "Title/filename contains 'annual report'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [],
+  "entities": {
+    "organizations": [],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Annual Report document records statutory operations for Ministry of Coal enterprise for standard operational monitoring. Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {},
+  "validationScore": 100,
+  "validationStatus": "Valid"
+}

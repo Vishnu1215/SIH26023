@@ -492,6 +492,53 @@ export default function QAPage() {
                           {msg.data?.queryType || 'Statutory Query'}
                         </span>
 
+                        {/* Grounded Source Pages */}
+                        {msg.data?.sourcePages && msg.data.sourcePages.length > 0 && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            {msg.data.sourcePages.map((pg) => (
+                              <span
+                                key={pg}
+                                style={{
+                                  padding: '2px 7px',
+                                  background: '#f1f5f9',
+                                  color: '#334155',
+                                  border: '1px solid #cbd5e1',
+                                  borderRadius: '10px',
+                                  fontSize: '0.72rem',
+                                  fontWeight: 700
+                                }}
+                              >
+                                {pg}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Grounded Ingested Source Dossier */}
+                        {msg.data?.retrievedFrom && (
+                          <span
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                              padding: '2px 8px',
+                              background: '#f8fafc',
+                              color: '#475569',
+                              border: '1px solid #e2e8f0',
+                              borderRadius: '12px',
+                              fontSize: '0.72rem',
+                              maxWidth: '220px',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap'
+                            }}
+                            title={msg.data.retrievedFrom}
+                          >
+                            <FileText size={11} color="#64748b" />
+                            {msg.data.retrievedFrom}
+                          </span>
+                        )}
+
                         {msg.data?.responseTimeMs && (
                           <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
                             {msg.data.responseTimeMs} ms
@@ -705,13 +752,49 @@ export default function QAPage() {
                           )}
 
                           <div style={{ fontWeight: 700, marginBottom: '4px' }}>Extracted Evidence Items:</div>
-                          <ul style={{ margin: 0, paddingLeft: '16px' }}>
+                          <ul style={{ margin: '0 0 10px 0', paddingLeft: '16px' }}>
                             {msg.data?.evidence?.map((ev, eIdx) => (
                               <li key={eIdx}>
                                 <strong>{ev.source}:</strong> {ev.detail}
                               </li>
                             ))}
                           </ul>
+
+                          {/* Grounded RAG Retrieved Chunks */}
+                          {msg.data?.retrievedChunks && msg.data.retrievedChunks.length > 0 && (
+                            <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid #cbd5e1' }}>
+                              <div style={{ fontWeight: 700, color: '#1e3a8a', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                <Database size={13} />
+                                <span>Grounded Vector Chunks Retrieved ({msg.data.retrievedChunks.length}):</span>
+                              </div>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                {msg.data.retrievedChunks.map((chunk, chIdx) => (
+                                  <div
+                                    key={chIdx}
+                                    style={{
+                                      padding: '8px 10px',
+                                      background: '#ffffff',
+                                      border: '1px solid #cbd5e1',
+                                      borderRadius: '4px',
+                                      fontSize: '0.74rem'
+                                    }}
+                                  >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px', fontWeight: 700, color: '#0f172a' }}>
+                                      <span>{chunk.documentTitle || 'Document'} &bull; Page {chunk.page} ({chunk.section})</span>
+                                      {chunk.score && (
+                                        <span style={{ color: '#059669', fontSize: '0.7rem', fontWeight: 700 }}>
+                                          {(chunk.score * 100).toFixed(1)}% match
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div style={{ color: '#475569', fontStyle: 'italic', lineHeight: 1.4 }}>
+                                      &ldquo;{chunk.text?.slice(0, 220)}...&rdquo;
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>

@@ -1,0 +1,8 @@
+resource_type | block_category | blocks
+Coal | CIL | 45
+Coal | Non-CIL | 43
+Coal | Promotional | 31
+Coal | Private/Consultancy | 8
+Coal | NMET-funded | 4
+Lignite | Non-CIL + Promotional | 4
+Non-coal | Bauxite under NMET | 1

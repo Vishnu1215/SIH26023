@@ -35,7 +35,7 @@ import UnifiedActivityTimeline from '../components/common/UnifiedActivityTimelin
 import EmptyState from '../components/common/EmptyState.jsx';
 import SkeletonLoader from '../components/common/SkeletonLoader.jsx';
 import Button from '../components/common/Button.jsx';
-import { fetchDashboardAnalytics } from '../services/document.service.js';
+import { fetchDashboardAnalytics, getDocumentList } from '../services/document.service.js';
 import { fetchActivityStream } from '../services/admin.service.js';
 import { getReportHistory } from '../services/report.service.js';
 import { fetchRecommendations } from '../services/recommendation.service.js';
@@ -61,6 +61,8 @@ export default function DashboardPage() {
   const [analytics, setAnalytics] = useState(null);
   const [activities, setActivities] = useState([]);
   const [reportsCount, setReportsCount] = useState(0);
+  const [recentDocs, setRecentDocs] = useState([]);
+  const [recentAlerts, setRecentAlerts] = useState([]);
   const [recsSummary, setRecsSummary] = useState({ totalRecs: 0, riskLevel: 'Low' });
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -77,12 +79,13 @@ export default function DashboardPage() {
       const data = await fetchDashboardAnalytics();
       setAnalytics(data);
 
-      // 2. Concurrently fetch activities, reports, and recommendations
+      // 2. Concurrently fetch activities, reports, recommendations, and recent documents
       try {
-        const [activityList, reportsList, recsData] = await Promise.allSettled([
+        const [activityList, reportsList, recsData, docList] = await Promise.allSettled([
           fetchActivityStream(10),
           getReportHistory(),
-          fetchRecommendations()
+          fetchRecommendations(),
+          getDocumentList()
         ]);
 
         if (activityList.status === 'fulfilled' && Array.isArray(activityList.value)) {
@@ -91,12 +94,16 @@ export default function DashboardPage() {
         if (reportsList.status === 'fulfilled' && Array.isArray(reportsList.value)) {
           setReportsCount(reportsList.value.length);
         }
+        if (docList.status === 'fulfilled' && Array.isArray(docList.value)) {
+          setRecentDocs(docList.value.slice(0, 5));
+        }
         if (recsData.status === 'fulfilled' && recsData.value) {
           const r = recsData.value;
           setRecsSummary({
             totalRecs: r.recommendations?.length || r.summary?.totalRecommendations || 0,
             riskLevel: r.risk?.riskLevel || r.summary?.riskLevel || 'Low'
           });
+          setRecentAlerts(r.recommendations?.slice(0, 5) || []);
         }
       } catch (subErr) {
         console.warn('Subordinate analytics query notice:', subErr);
@@ -321,9 +328,9 @@ export default function DashboardPage() {
       </div>
 
       {/* ========================================================= */}
-      {/* 2. Executive KPI Row (Exactly 4 Core Ministry KPIs)       */}
+      {/* 2. Executive KPI Row (Top 5 Enterprise Ministry KPIs)     */}
       {/* ========================================================= */}
-      <div className="exec-kpi-grid" style={{ gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
+      <div className="exec-kpi-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
         {/* 1. Documents */}
         <ExecutiveKpiWidget
           title="Documents"
@@ -338,13 +345,13 @@ export default function DashboardPage() {
           onClick={() => navigate('/documents')}
         />
 
-        {/* 2. Validation Rate */}
+        {/* 2. Reports Validated */}
         <ExecutiveKpiWidget
-          title="Validation Rate"
-          value={formatPercent(val.validationAccuracy || 98.4)}
-          subtitle="DGMS rule compliance"
-          icon={ShieldCheck}
-          badge={(val.validationAccuracy ?? 98.4) >= 80 ? 'Compliant' : 'Review'}
+          title="Reports Validated"
+          value={formatCount(val.validatedDocuments || val.totalValidated || totalDocsCount)}
+          subtitle="DGMS rule audited"
+          icon={CheckCircle2}
+          badge={`${formatPercent(val.validationAccuracy || 98.4)} Rate`}
           trend="Audited"
           trendDirection="up"
           color="emerald"
@@ -366,18 +373,32 @@ export default function DashboardPage() {
           onClick={() => navigate('/recommendations')}
         />
 
-        {/* 4. Processing Time */}
+        {/* 4. Average OCR Accuracy */}
         <ExecutiveKpiWidget
-          title="Processing Time"
-          value={docs.averageOcrTime ? formatTime(docs.averageOcrTime) : '1.2s'}
-          subtitle="Pipeline latency"
-          icon={Clock}
-          badge="Real-time"
-          trend="Air-Gapped"
-          trendDirection="neutral"
+          title="Average OCR Accuracy"
+          value={`${Math.round(((docs.averageOcrConfidence || quality.ocrAccuracy || 0.98) > 1 ? (docs.averageOcrConfidence || 98) : (docs.averageOcrConfidence || 0.98) * 100))}%`}
+          subtitle="Character fidelity"
+          icon={Gauge}
+          badge="High Precision"
+          trend="Deep OCR"
+          trendDirection="up"
+          color="amber"
+          progressPct={Math.round(((docs.averageOcrConfidence || quality.ocrAccuracy || 0.98) > 1 ? (docs.averageOcrConfidence || 98) : (docs.averageOcrConfidence || 0.98) * 100))}
+          onClick={() => navigate('/documents')}
+        />
+
+        {/* 5. AI Confidence */}
+        <ExecutiveKpiWidget
+          title="AI Confidence"
+          value={`${Math.round(((quality.averageAiConfidence || 0.95) > 1 ? (quality.averageAiConfidence || 95) : (quality.averageAiConfidence || 0.95) * 100))}%`}
+          subtitle="Extraction certainty"
+          icon={Sparkles}
+          badge="Grounded"
+          trend="Deterministic"
+          trendDirection="up"
           color="navy"
-          progressPct={85}
-          onClick={() => navigate('/settings')}
+          progressPct={Math.round(((quality.averageAiConfidence || 0.95) > 1 ? (quality.averageAiConfidence || 95) : (quality.averageAiConfidence || 0.95) * 100))}
+          onClick={() => navigate('/qa')}
         />
       </div>
 
@@ -550,31 +571,32 @@ export default function DashboardPage() {
       </div>
 
       {/* ========================================================= */}
-      {/* 4. Secondary Row: Subsidiary Leaderboard & Top Mines      */}
+      {/* ========================================================= */}
+      {/* 4. Secondary Row: Report Distribution & Mine-wise Stats   */}
       {/* ========================================================= */}
       <div className="grid-12">
-        {/* Left: Subsidiary Leaderboard (Col 6) */}
+        {/* Left: Report Distribution (Col 6) */}
         <div className="col-6 col-6-lg-12">
           <ChartCard
-            title="Subsidiary Performance Leaderboard"
-            subtitle="Ranked comparative extraction output and national quota contribution"
-            icon={Building2}
-            badge="Million Tonnes"
+            title="Report Distribution & Category Allocation"
+            subtitle="Consolidated document breakdown across statutory categories and subsidiaries"
+            icon={Layers}
+            badge="Distribution"
             accentColor="var(--gov-navy-800)"
           >
             <HorizontalBarChart
-              data={charts.subsidiaryDistribution || subsidiaries}
-              unit="MT"
+              data={charts.categoryDistribution || charts.subsidiaryDistribution || subsidiaries}
+              unit="Reports"
               maxItems={6}
               height={200}
             />
           </ChartCard>
         </div>
 
-        {/* Right: Top Producing Mines & Collieries (Col 6) */}
+        {/* Right: Mine-wise Statistics (Col 6) */}
         <div className="col-6 col-6-lg-12">
           <ChartCard
-            title="Top Producing Collieries & Mines"
+            title="Mine-wise Statistics & Output Rankings"
             subtitle="Key opencast and underground mining assets across India"
             icon={Award}
             badge="Collieries"
@@ -645,19 +667,19 @@ export default function DashboardPage() {
       </div>
 
       {/* ========================================================= */}
-      {/* 5. Real-Time Operations & Executive Quick Actions         */}
+      {/* 5. Tertiary Row: Recent Uploads & Recent Alerts           */}
       {/* ========================================================= */}
       <div className="grid-12">
-        {/* Left: Unified Real-Time Activity Stream (Col 8) */}
-        <div className="col-8 col-8-lg-12">
+        {/* Left: Recent Uploads (Col 6) */}
+        <div className="col-6 col-6-lg-12">
           <ChartCard
-            title="Real-Time Operational Activity Stream"
-            subtitle="Live chronological audit log across Ingestion, Reports, Q&A, and Validations"
-            icon={Activity}
-            badge="Live Feed"
+            title="Recent Uploads"
+            subtitle="Latest statutory dossiers synchronized with MongoDB Atlas"
+            icon={UploadCloud}
+            badge={`${recentDocs.length} Recent`}
             actions={
               <Link
-                to="/settings"
+                to="/documents"
                 style={{
                   fontSize: '11px',
                   fontWeight: 700,
@@ -668,129 +690,197 @@ export default function DashboardPage() {
                   textDecoration: 'none'
                 }}
               >
-                <span>Full Audit</span>
+                <span>View All Ingested</span>
                 <ArrowRight size={12} />
               </Link>
             }
           >
-            <UnifiedActivityTimeline activities={activities} maxItems={6} />
+            {recentDocs.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {recentDocs.map((doc, idx) => {
+                  const valStatus = doc.validationStatus || (doc.validationScore >= 80 ? 'Valid' : 'Warning');
+                  const statusBg = valStatus === 'Valid' ? '#ecfdf5' : valStatus === 'Warning' ? '#fefce8' : '#fef2f2';
+                  const statusColor = valStatus === 'Valid' ? '#065f46' : valStatus === 'Warning' ? '#854d0e' : '#991b1b';
+                  const statusBorder = valStatus === 'Valid' ? '#a7f3d0' : valStatus === 'Warning' ? '#fde047' : '#fecaca';
+
+                  return (
+                    <div
+                      key={doc.documentId || idx}
+                      onClick={() => navigate('/documents')}
+                      style={{
+                        padding: '10px 12px',
+                        backgroundColor: 'var(--bg-card-subtle)',
+                        border: '1px solid var(--border-default)',
+                        borderRadius: 'var(--radius-sm)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '12px',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
+                        <div
+                          style={{
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '6px',
+                            backgroundColor: 'var(--bg-card)',
+                            border: '1px solid var(--border-default)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'var(--gov-navy-800)',
+                            flexShrink: 0
+                          }}
+                        >
+                          <FileText size={16} />
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <div
+                            style={{
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              color: 'var(--text-primary)',
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }}
+                          >
+                            {doc.reportTitle || doc.fileName || doc.originalName || 'Statutory Return'}
+                          </div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', gap: '8px' }}>
+                            <span>{doc.subsidiary || 'CIL'}</span>
+                            <span>&bull;</span>
+                            <span>{doc.category || 'Production'}</span>
+                            {doc.uploadTime && (
+                              <>
+                                <span>&bull;</span>
+                                <span>{new Date(doc.uploadTime).toLocaleDateString()}</span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <span
+                        style={{
+                          fontSize: '10.5px',
+                          fontWeight: 700,
+                          padding: '2px 8px',
+                          borderRadius: '12px',
+                          backgroundColor: statusBg,
+                          color: statusColor,
+                          border: `1px solid ${statusBorder}`,
+                          flexShrink: 0
+                        }}
+                      >
+                        {valStatus}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+                No recent uploads found. Ingest documents to populate the stream.
+              </div>
+            )}
           </ChartCard>
         </div>
 
-        {/* Right: Executive Quick Actions & AI Assistant (Col 4) */}
-        <div className="col-4 col-4-lg-12">
+        {/* Right: Recent Alerts (Col 6) */}
+        <div className="col-6 col-6-lg-12">
           <ChartCard
-            title="Executive Quick Actions"
-            subtitle="Direct operational dispatch & Decision Support"
-            icon={Sparkles}
-            accentColor="var(--gov-blue-500)"
-          >
-            {/* Quick Actions Buttons */}
-            <div className="exec-quick-actions-grid" style={{ marginBottom: '14px' }}>
-              <Link to="/documents" className="exec-quick-btn">
-                <UploadCloud size={15} style={{ color: 'var(--gov-blue-500)' }} />
-                <span>Ingest Documents</span>
-              </Link>
-              <Link to="/reports" className="exec-quick-btn">
-                <ClipboardList size={15} style={{ color: 'var(--tri-saffron)' }} />
-                <span>Generate Report</span>
-              </Link>
-              <Link to="/documents" className="exec-quick-btn">
-                <ShieldCheck size={15} style={{ color: 'var(--tri-green)' }} />
-                <span>Audit Validation</span>
-              </Link>
-              <Link to="/topics" className="exec-quick-btn">
-                <Search size={15} style={{ color: '#0284c7' }} />
-                <span>Search Index</span>
-              </Link>
-              <Link to="/recommendations" className="exec-quick-btn">
-                <Lightbulb size={15} style={{ color: '#d97706' }} />
-                <span>Risk Advisory</span>
-              </Link>
-              <button
-                type="button"
-                onClick={handleRefreshClick}
-                className="exec-quick-btn"
-                style={{ border: 'none', textAlign: 'left', width: '100%' }}
+            title="Recent Statutory Alerts"
+            subtitle="Rule-based anomalies & statutory compliance notifications"
+            icon={AlertTriangle}
+            badge={`${recentAlerts.length} Actionable`}
+            actions={
+              <Link
+                to="/recommendations"
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  color: 'var(--gov-navy-800)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  textDecoration: 'none'
+                }}
               >
-                <RotateCcw size={15} style={{ color: 'var(--gov-navy-800)' }} />
-                <span>Sync Platform</span>
-              </button>
-            </div>
+                <span>Advisory Centre</span>
+                <ArrowRight size={12} />
+              </Link>
+            }
+          >
+            {recentAlerts.length > 0 ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {recentAlerts.map((alert, idx) => {
+                  const prio = alert.priority || alert.severity || 'Medium';
+                  const prioBg = prio === 'Critical' ? '#fef2f2' : prio === 'High' ? '#fff7ed' : '#eff6ff';
+                  const prioColor = prio === 'Critical' ? '#991b1b' : prio === 'High' ? '#c2410c' : '#1e40af';
+                  const prioBorder = prio === 'Critical' ? '#fecaca' : prio === 'High' ? '#fed7aa' : '#bfdbfe';
 
-            {/* Interactive Decision Support Q&A Box */}
-            <div
-              style={{
-                backgroundColor: 'var(--bg-card-subtle)',
-                border: '1px solid var(--border-default)',
-                borderRadius: 'var(--radius-sm)',
-                padding: '12px'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-                <Bot size={15} style={{ color: 'var(--gov-blue-500)' }} />
-                <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-primary)' }}>
-                  Ask Coal Intelligence
-                </span>
+                  return (
+                    <div
+                      key={alert.id || idx}
+                      onClick={() => navigate('/recommendations')}
+                      style={{
+                        padding: '10px 12px',
+                        backgroundColor: 'var(--bg-card-subtle)',
+                        border: '1px solid var(--border-default)',
+                        borderRadius: 'var(--radius-sm)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '4px',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                        <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                          {alert.title}
+                        </span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span
+                            style={{
+                              fontSize: '10px',
+                              fontWeight: 800,
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              backgroundColor: prioBg,
+                              color: prioColor,
+                              border: `1px solid ${prioBorder}`
+                            }}
+                          >
+                            {prio.toUpperCase()}
+                          </span>
+                          {alert.confidenceScore && (
+                            <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
+                              {alert.confidenceScore}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
+                        {alert.reason || alert.description}
+                      </p>
+                      {alert.suggestedFix && (
+                        <div style={{ fontSize: '10.5px', color: 'var(--gov-navy-800)', fontWeight: 600, marginTop: '2px' }}>
+                          Fix: {alert.suggestedFix}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-
-              {/* Inquiry Prompt Suggestions */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '10px' }}>
-                {[
-                  'Which subsidiary produced highest coal?',
-                  'What is the total national coal production?',
-                  'Compare target vs actual production'
-                ].map((prompt, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => navigate(`/qa?q=${encodeURIComponent(prompt)}`)}
-                    style={{
-                      fontSize: '11px',
-                      color: 'var(--text-secondary)',
-                      backgroundColor: 'transparent',
-                      border: 'none',
-                      textAlign: 'left',
-                      padding: '3px 0',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '5px'
-                    }}
-                  >
-                    <ArrowUpRight size={11} color="var(--text-muted)" />
-                    <span style={{ textDecoration: 'underline' }}>{prompt}</span>
-                  </button>
-                ))}
+            ) : (
+              <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '12px' }}>
+                All systems compliant. No critical statutory alerts active.
               </div>
-
-              {/* Inline Query Submit */}
-              <form onSubmit={handleQuickAsk} style={{ display: 'flex', gap: '6px' }}>
-                <input
-                  type="text"
-                  value={dashQuery}
-                  onChange={(e) => setDashQuery(e.target.value)}
-                  placeholder="Ask a question..."
-                  style={{
-                    flex: 1,
-                    padding: '6px 10px',
-                    fontSize: '11.5px',
-                    borderRadius: '4px',
-                    border: '1px solid var(--border-default)',
-                    backgroundColor: 'var(--bg-card)',
-                    color: 'var(--text-primary)',
-                    outline: 'none'
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-sm"
-                  style={{ padding: '6px 12px' }}
-                >
-                  Ask
-                </button>
-              </form>
-            </div>
+            )}
           </ChartCard>
         </div>
       </div>

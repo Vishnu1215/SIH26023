@@ -426,7 +426,7 @@ def compose_qa_response(
                 "What is the total coal production?"
             ]
         else:
-            answer = "No supporting evidence found in verified repository records."
+            answer = "Information not found in uploaded coal documents."
             metrics = {}
             reasoning = "Query did not match any verified records, entities, or analytics in storage."
             confidence = 0.0
