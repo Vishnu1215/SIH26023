@@ -35,11 +35,39 @@ const FOLDER_CATEGORY_MAP = {
 };
 
 /**
- * Retrieve all documents sorted newest first
- * @returns {Array<Object>} List of document records
+ * Retrieve all documents sorted newest first from MongoDB (via FastAPI)
+ * @returns {Promise<Array<Object>>} List of document records
  */
-export const getAllDocuments = () => {
+export const getAllDocuments = async () => {
+  try {
+    const response = await axios.get(`${config.aiServiceUrl}/documents`, { timeout: 8000 });
+    if (response.data && response.data.documents) {
+      return response.data.documents;
+    }
+  } catch (err) {
+    console.warn(`[DocumentService] Falling back to memory store for documents: ${err.message}`);
+  }
   return documentModel.getAllDocuments();
+};
+
+/**
+ * Retrieve single document details by ID from MongoDB (via FastAPI)
+ */
+export const getDocumentById = async (documentId) => {
+  try {
+    const response = await axios.get(`${config.aiServiceUrl}/documents/${documentId}/full`, { timeout: 8000 });
+    if (response.data) {
+      return response.data;
+    }
+  } catch (err) {
+    try {
+      const resp2 = await axios.get(`${config.aiServiceUrl}/documents/${documentId}`, { timeout: 5000 });
+      if (resp2.data && resp2.data.document) {
+        return resp2.data.document;
+      }
+    } catch (_) {}
+  }
+  return documentModel.getDocumentById(documentId);
 };
 
 /**

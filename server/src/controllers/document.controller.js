@@ -135,12 +135,12 @@ export const validateDocumentAction = async (req, res, next) => {
 
 
 /**
- * Get all documents sorted newest first
+ * Get all documents sorted newest first from MongoDB
  * GET /api/documents
  */
-export const getDocuments = (req, res) => {
+export const getDocuments = async (req, res) => {
   try {
-    const documents = getAllDocuments();
+    const documents = await getAllDocuments();
     return res.status(200).json({
       success: true,
       count: documents.length,
@@ -155,13 +155,16 @@ export const getDocuments = (req, res) => {
 };
 
 /**
- * Get single document by ID
+ * Get single document by ID from MongoDB
  * GET /api/documents/:documentId
  */
-export const getDocument = (req, res) => {
+export const getDocument = async (req, res) => {
   try {
     const { documentId } = req.params;
-    const document = documentModel.getDocumentById(documentId);
+    let document = await getDocumentById(documentId);
+    if (!document) {
+      document = documentModel.getDocumentById(documentId);
+    }
     if (!document) {
       return res.status(404).json({
         success: false,
@@ -181,20 +184,20 @@ export const getDocument = (req, res) => {
 };
 
 /**
- * Load representative sample dataset into in-memory store
+ * Load representative sample dataset into MongoDB
  * POST /api/documents/load-sample
  */
-export const loadSamples = (req, res, next) => {
+export const loadSamples = async (req, res, next) => {
   try {
-    const loaded = loadSampleDataset();
-    const allDocs = getAllDocuments();
+    const loaded = await loadSampleDataset();
+    const allDocs = await getAllDocuments();
 
     return res.status(200).json({
       success: true,
       message:
         loaded.length > 0
           ? `Loaded ${loaded.length} sample documents successfully.`
-          : 'Sample dataset already loaded in memory.',
+          : 'Sample dataset synchronized with MongoDB Atlas.',
       loadedCount: loaded.length,
       totalCount: allDocs.length,
       documents: allDocs

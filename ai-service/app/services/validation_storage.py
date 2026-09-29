@@ -1,81 +1,107 @@
-import os
-import json
 import logging
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional, List
-
-from app.core.config import settings
+from typing import Dict, Any, Optional
+from app.database import get_sync_db
 
 logger = logging.getLogger("ai_service.validation_storage")
 
-
-def get_validation_file_path(document_id: str) -> str:
-    """Return absolute file path for a document's validation JSON."""
-    return os.path.join(settings.VALIDATION_STORAGE_DIR, f"{document_id}.json")
-
-
 def save_validation_report(document_id: str, report: Dict[str, Any]) -> str:
     """
-    Persist validation report to storage/validation/{documentId}.json.
-    Maintains a validationHistory list across multiple runs.
+    Persist validation report directly into MongoDB collection 'validation_results'.
+    Also updates document validation score and status in 'documents' collection.
     """
-    os.makedirs(settings.VALIDATION_STORAGE_DIR, exist_ok=True)
-    file_path = get_validation_file_path(document_id)
-
-    # Check for previous report to preserve and append history
-    existing_history = []
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                old_data = json.load(f)
-                existing_history = old_data.get("validationHistory", [])
-                # If old data had no history array, add the previous snapshot
-                if not existing_history and "validatedAt" in old_data:
-                    existing_history.append({
-                        "validatedAt": old_data.get("validatedAt"),
-                        "score": old_data.get("validationScore"),
-                        "status": old_data.get("validationStatus"),
-                        "errorCount": old_data.get("errorCount", 0),
-                        "warningCount": old_data.get("warningCount", 0)
-                    })
-        except Exception as read_err:
-            logger.warning(f"Could not read previous validation file for {document_id}: {read_err}")
-
-    # Append current validation run to history
-    current_snapshot = {
-        "validatedAt": report.get("validatedAt") or datetime.now(timezone.utc).isoformat(),
-        "score": report.get("validationScore"),
-        "status": report.get("validationStatus"),
-        "errorCount": report.get("errorCount", 0),
-        "warningCount": report.get("warningCount", 0)
-    }
-    updated_history = [current_snapshot] + existing_history
-
-    report["validationHistory"] = updated_history
-
     try:
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(report, f, indent=2, ensure_ascii=False)
-        logger.info(f"Validation report saved: {file_path}")
-        return file_path
+        db = get_sync_db()
+        clean = dict(report)
+        clean.pop("_id", None)
+        
+        # Get existing history from database
+        existing = db["validation_results"].find_one({"documentId": document_id})
+        existing_history = []
+        if existing:
+            existing_history = existing.get("validationHistory", [])
+            if not existing_history and "timestamp" in existing:
+                existing_history.append({
+                    "validatedAt": existing.get("timestamp"),
+                    "score": existing.get("score"),
+                    "status": existing.get("status"),
+                    "errorCount": existing.get("errors", 0),
+                    "warningCount": existing.get("warnings", 0)
+                })
+
+        now_iso = clean.get("validatedAt") or datetime.now(timezone.utc).isoformat()
+        current_snapshot = {
+            "validatedAt": now_iso,
+            "score": clean.get("validationScore", 100),
+            "status": clean.get("validationStatus", "Valid"),
+            "errorCount": clean.get("errorCount", 0),
+            "warningCount": clean.get("warningCount", 0)
+        }
+        updated_history = [current_snapshot] + existing_history
+
+        payload = {
+            "documentId": document_id,
+            "score": clean.get("validationScore", 100),
+            "status": clean.get("validationStatus", "Valid"),
+            "errors": clean.get("errorCount", 0),
+            "warnings": clean.get("warningCount", 0),
+            "validationMessages": clean.get("validationMessages", clean.get("messages", [])),
+            "executedRules": clean.get("rulesTriggered", []),
+            "timestamp": now_iso,
+            "validationSummary": clean.get("validationSummary"),
+            "validationHistory": updated_history,
+            "confidence": clean.get("confidence")
+        }
+
+        db["validation_results"].update_one(
+            {"documentId": document_id},
+            {"$set": payload},
+            upsert=True
+        )
+
+        # Sync to documents collection
+        db["documents"].update_one(
+            {"documentId": document_id},
+            {"$set": {
+                "validationScore": payload["score"],
+                "validationStatus": payload["status"]
+            }}
+        )
+
+        logger.info(f"Validation report saved to MongoDB for document: {document_id}")
+        return f"mongodb://coal_portal/validation_results/{document_id}"
     except Exception as exc:
-        logger.error(f"Failed to save validation report for {document_id}: {exc}", exc_info=True)
+        logger.error(f"Failed to save validation report to MongoDB for {document_id}: {exc}", exc_info=True)
         raise
 
-
 def load_validation_report(document_id: str) -> Optional[Dict[str, Any]]:
-    """Load persisted validation JSON report."""
-    file_path = get_validation_file_path(document_id)
-    if not os.path.exists(file_path):
-        return None
+    """Load validation report directly from MongoDB collection 'validation_results'."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception as exc:
-        logger.error(f"Failed to load validation report for {document_id}: {exc}")
+        db = get_sync_db()
+        rec = db["validation_results"].find_one({"documentId": document_id}, {"_id": 0})
+        if rec:
+            return {
+                "documentId": document_id,
+                "validationScore": rec.get("score", 100),
+                "validationStatus": rec.get("status", "Valid"),
+                "errorCount": rec.get("errors", 0),
+                "warningCount": rec.get("warnings", 0),
+                "validationMessages": rec.get("validationMessages", []),
+                "messages": rec.get("validationMessages", []),
+                "rulesTriggered": rec.get("executedRules", []),
+                "validationSummary": rec.get("validationSummary"),
+                "validatedAt": rec.get("timestamp"),
+                "validationHistory": rec.get("validationHistory", [])
+            }
         return None
-
+    except Exception as exc:
+        logger.error(f"Failed to load validation report from MongoDB for {document_id}: {exc}")
+        return None
 
 def validation_report_exists(document_id: str) -> bool:
-    """Check if a validation report exists on disk."""
-    return os.path.exists(get_validation_file_path(document_id))
+    """Check if validation report exists in MongoDB."""
+    try:
+        db = get_sync_db()
+        return db["validation_results"].count_documents({"documentId": document_id}) > 0
+    except Exception:
+        return False

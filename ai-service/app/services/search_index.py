@@ -310,103 +310,114 @@ def search_documents(
     limit: int = 50
 ) -> List[Dict[str, Any]]:
     """
-    Search documents using inverted indices and deterministic text scoring.
-    Supports multi-field filtering with robust type coercion.
+    Search documents directly from MongoDB Atlas across:
+    document name, subsidiary, mine, topic, report type, financial year, and metadata.
+    Returns ranked results without filesystem lookup.
     """
-    index_data = load_search_index()
-    docs_map = index_data.get("documents", {})
-    indices = index_data.get("indices", {})
+    from app.database import get_sync_db
+    try:
+        db = get_sync_db()
+        c_query = _to_clean_str(query).lower()
+        c_mine = _to_clean_str(mine)
+        c_subsidiary = _to_clean_str(subsidiary)
+        c_state = _to_clean_str(state)
+        c_fy = _to_clean_str(financial_year)
+        c_category = _to_clean_str(category)
+        c_topic = _to_clean_str(topic)
 
-    matching_doc_ids: Optional[Set[str]] = None
+        # Build MongoDB filter
+        mongo_filter: Dict[str, Any] = {}
+        if c_subsidiary and c_subsidiary.lower() != "all":
+            mongo_filter["subsidiary"] = {"$regex": f"^{c_subsidiary}$", "$options": "i"}
+        if c_mine and c_mine.lower() != "all":
+            mongo_filter["mineName"] = {"$regex": c_mine, "$options": "i"}
+        if c_state and c_state.lower() != "all":
+            mongo_filter["state"] = {"$regex": c_state, "$options": "i"}
+        if c_fy and c_fy.lower() != "all":
+            mongo_filter["financialYear"] = {"$regex": c_fy, "$options": "i"}
+        if c_category and c_category.lower() != "all":
+            mongo_filter["category"] = {"$regex": c_category, "$options": "i"}
 
-    # Coerce parameters to string safely
-    c_query = _to_clean_str(query)
-    c_mine = _to_clean_str(mine)
-    c_subsidiary = _to_clean_str(subsidiary)
-    c_state = _to_clean_str(state)
-    c_fy = _to_clean_str(financial_year)
-    c_category = _to_clean_str(category)
-    c_topic = _to_clean_str(topic)
+        docs_cursor = db["documents"].find(mongo_filter, {"_id": 0})
+        matching_docs = list(docs_cursor)
 
-    # Attribute filter intersections
-    def _intersect_filter(group_name: str, val: str):
-        nonlocal matching_doc_ids
-        if not val or val.lower() == "all":
-            return
-        clean_val = val.lower()
-        matched = set()
-        for idx_key, doc_ids in indices.get(group_name, {}).items():
-            if clean_val in idx_key:
-                matched.update(doc_ids)
-        if matching_doc_ids is None:
-            matching_doc_ids = matched
-        else:
-            matching_doc_ids = matching_doc_ids.intersection(matched)
+        # If topic filter provided, match via structured_records
+        if c_topic and c_topic.lower() != "all":
+            topic_docs = db["structured_records"].find(
+                {"extractedTopics": {"$regex": c_topic, "$options": "i"}},
+                {"documentId": 1, "_id": 0}
+            )
+            topic_ids = {td["documentId"] for td in topic_docs}
+            matching_docs = [d for d in matching_docs if d.get("documentId") in topic_ids]
 
-    _intersect_filter("by_mine", c_mine)
-    _intersect_filter("by_subsidiary", c_subsidiary)
-    _intersect_filter("by_state", c_state)
-    _intersect_filter("by_fy", c_fy)
-    _intersect_filter("by_category", c_category)
-    _intersect_filter("by_topic", c_topic)
+        # Fetch structured summaries and topics in batch for ranking
+        doc_ids = [d.get("documentId") for d in matching_docs if d.get("documentId")]
+        struct_map = {}
+        if doc_ids:
+            struct_cursor = db["structured_records"].find({"documentId": {"$in": doc_ids}}, {"_id": 0})
+            for s in struct_cursor:
+                struct_map[s["documentId"]] = s
 
-    if matching_doc_ids is None:
-        candidate_ids = set(docs_map.keys())
-    else:
-        candidate_ids = matching_doc_ids
+        scored_results = []
+        for doc in matching_docs:
+            d_id = doc.get("documentId")
+            s_rec = struct_map.get(d_id, {})
+            topics = s_rec.get("extractedTopics") or []
+            summary = s_rec.get("summary") or doc.get("summary", "")
 
-    # Text query scoring
-    query_clean = query.strip().lower()
-    scored_results = []
+            match_score = 1.0
+            highlights = []
 
-    for doc_id in candidate_ids:
-        doc = docs_map.get(doc_id)
-        if not doc:
-            continue
+            title = doc.get("fileName") or doc.get("reportTitle", "")
+            d_mine_name = doc.get("mineName") or ""
+            d_sub = doc.get("subsidiary") or ""
 
-        match_score = 1.0  # Base match for passing attribute filters
-        highlights = []
+            if c_query:
+                # Check title match
+                if c_query in title.lower():
+                    match_score += 15.0
+                    highlights.append(f"Title: {title}")
+                # Check mine or subsidiary
+                if d_mine_name and c_query in d_mine_name.lower():
+                    match_score += 12.0
+                    highlights.append(f"Mine: {d_mine_name}")
+                if d_sub and c_query in d_sub.lower():
+                    match_score += 10.0
+                    highlights.append(f"Subsidiary: {d_sub}")
+                # Check topic match
+                for t in topics:
+                    if c_query in t.lower():
+                        match_score += 8.0
+                        highlights.append(f"Topic: {t}")
+                # Check summary match
+                if summary and c_query in summary.lower():
+                    match_score += 4.0
+                    highlights.append("Executive Summary")
 
-        if query_clean:
-            # Check title match (highest weight)
-            if query_clean in doc.get("reportTitle", "").lower():
-                match_score += 15.0
-                highlights.append(f"Title: {doc.get('reportTitle')}")
+                # If query was specified and got no boost, skip unless filtered specifically
+                if match_score <= 1.0 and not (c_mine or c_subsidiary or c_state or c_fy or c_category or c_topic):
+                    continue
 
-            # Check mine or subsidiary match
-            if query_clean in doc.get("mineName", "").lower():
-                match_score += 12.0
-                highlights.append(f"Mine: {doc.get('mineName')}")
-            if query_clean in doc.get("subsidiary", "").lower():
-                match_score += 10.0
-                highlights.append(f"Subsidiary: {doc.get('subsidiary')}")
+            scored_results.append({
+                "documentId": d_id,
+                "reportTitle": title,
+                "fileName": title,
+                "documentCategory": doc.get("category", "General"),
+                "subsidiary": d_sub,
+                "mineName": d_mine_name,
+                "state": doc.get("state", "National"),
+                "district": doc.get("district"),
+                "financialYear": doc.get("financialYear", "FY 2023-24"),
+                "validationScore": doc.get("validationScore", 100),
+                "validationStatus": doc.get("validationStatus", "Valid"),
+                "summary": summary,
+                "topTopics": topics[:3],
+                "searchScore": round(match_score, 1),
+                "matchHighlights": highlights[:4]
+            })
 
-            # Check topic match
-            for t in doc.get("topTopics", []):
-                if query_clean in t.lower():
-                    match_score += 8.0
-                    highlights.append(f"Topic: {t}")
-
-            # Check keyword match
-            for kw in doc.get("keywords", []):
-                if query_clean in kw.lower():
-                    match_score += 5.0
-                    highlights.append(f"Keyword: {kw}")
-
-            # Check summary match
-            if query_clean in doc.get("summary", "").lower():
-                match_score += 3.0
-
-            # If user entered a query but document got zero score boost, skip
-            if match_score <= 1.0:
-                continue
-
-        scored_results.append({
-            **doc,
-            "searchScore": round(match_score, 1),
-            "matchHighlights": highlights[:4]
-        })
-
-    # Sort descending by searchScore
-    scored_results.sort(key=lambda x: x.get("searchScore", 0), reverse=True)
-    return scored_results[:limit]
+        scored_results.sort(key=lambda x: x.get("searchScore", 0), reverse=True)
+        return scored_results[:limit]
+    except Exception as e:
+        logger.error(f"Error querying MongoDB search: {e}", exc_info=True)
+        return []

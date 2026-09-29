@@ -1,53 +1,63 @@
 /**
- * Report Review & Manual Editing Service
+ * Report Review & Manual Editing Service backed by MongoDB Atlas.
  * Supports review, title editing, executive summary refinement, remarks, recommendations,
  * reviewer comments, approval/rejection decisions, and maintains an audit trail of manual edits.
  * 
  * Strict Constraint: The original deterministic analytics/report data is never overwritten.
- * Edits and review states are stored separately in the review registry.
+ * Edits and review states are stored separately in MongoDB collection 'report_reviews'.
+ * LocalStorage has been completely removed.
  */
 
-const STORAGE_KEY = 'sih_coal_report_reviews';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
-function getReviewStore() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch (err) {
-    console.warn('[ReportReviewService] Failed to read reviews from localStorage:', err);
-    return {};
-  }
-}
+// In-memory cache for ultra-fast synchronous UI access
+const _reviewStore = {};
 
-function saveReviewStore(store) {
+/**
+ * Fetch review record from MongoDB API
+ * @param {string} reportId
+ */
+export async function fetchReportReview(reportId) {
+  if (!reportId) return null;
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    const res = await fetch(`${API_BASE_URL}/reviews/${reportId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.review) {
+        _reviewStore[reportId] = data.review;
+        return data.review;
+      }
+    }
   } catch (err) {
-    console.warn('[ReportReviewService] Failed to save reviews to localStorage:', err);
+    console.warn(`[ReportReviewService] Error fetching review for ${reportId} from MongoDB:`, err);
   }
+  return _reviewStore[reportId] || null;
 }
 
 /**
- * Get review record for a specific report
+ * Get review record for a specific report (synchronous read from memory cache)
  * @param {string} reportId 
  * @returns {Object|null}
  */
 export function getReportReview(reportId) {
   if (!reportId) return null;
-  const store = getReviewStore();
-  return store[reportId] || null;
+  // Trigger background fetch if not present
+  if (!_reviewStore[reportId]) {
+    fetchReportReview(reportId).catch(() => {});
+  }
+  return _reviewStore[reportId] || null;
 }
 
 /**
- * Save draft edits for a report
+ * Save draft edits for a report into MongoDB Atlas
  * @param {string} reportId 
  * @param {Object} reviewData - { title, executiveSummary, remarks, recommendations, reviewerName, reviewerDesignation, comments }
  * @returns {Object} Updated review record
  */
 export function saveReportDraft(reportId, reviewData) {
   if (!reportId) throw new Error('Report ID required');
-  const store = getReviewStore();
-  const existing = store[reportId] || {
+  
+  const existing = _reviewStore[reportId] || {
     reportId,
     status: 'Draft',
     auditTrail: [],
@@ -88,21 +98,37 @@ export function saveReportDraft(reportId, reviewData) {
     auditTrail: updatedAuditTrail
   };
 
-  store[reportId] = record;
-  saveReviewStore(store);
+  _reviewStore[reportId] = record;
+
+  // Persist directly to MongoDB via API
+  fetch(`${API_BASE_URL}/reviews/${reportId}/draft`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record)
+  }).then(async (r) => {
+    if (r.ok) {
+      const resp = await r.json();
+      if (resp && resp.review) {
+        _reviewStore[reportId] = resp.review;
+      }
+    }
+  }).catch((err) => {
+    console.warn('[ReportReviewService] Background MongoDB draft save error:', err);
+  });
+
   return record;
 }
 
 /**
- * Approve report publication
+ * Approve report publication in MongoDB Atlas
  * @param {string} reportId 
  * @param {Object} reviewData 
  * @returns {Object}
  */
 export function approveReport(reportId, reviewData) {
   if (!reportId) throw new Error('Report ID required');
-  const store = getReviewStore();
-  const existing = store[reportId] || {
+  
+  const existing = _reviewStore[reportId] || {
     reportId,
     auditTrail: [],
     createdAt: new Date().toISOString()
@@ -131,21 +157,37 @@ export function approveReport(reportId, reviewData) {
     auditTrail: updatedAuditTrail
   };
 
-  store[reportId] = record;
-  saveReviewStore(store);
+  _reviewStore[reportId] = record;
+
+  // Persist to MongoDB via API
+  fetch(`${API_BASE_URL}/reviews/${reportId}/approve`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record)
+  }).then(async (r) => {
+    if (r.ok) {
+      const resp = await r.json();
+      if (resp && resp.review) {
+        _reviewStore[reportId] = resp.review;
+      }
+    }
+  }).catch((err) => {
+    console.warn('[ReportReviewService] Background MongoDB approve error:', err);
+  });
+
   return record;
 }
 
 /**
- * Reject report with revision requests
+ * Reject report with revision requests in MongoDB Atlas
  * @param {string} reportId 
  * @param {Object} reviewData 
  * @returns {Object}
  */
 export function rejectReport(reportId, reviewData) {
   if (!reportId) throw new Error('Report ID required');
-  const store = getReviewStore();
-  const existing = store[reportId] || {
+  
+  const existing = _reviewStore[reportId] || {
     reportId,
     auditTrail: [],
     createdAt: new Date().toISOString()
@@ -174,8 +216,24 @@ export function rejectReport(reportId, reviewData) {
     auditTrail: updatedAuditTrail
   };
 
-  store[reportId] = record;
-  saveReviewStore(store);
+  _reviewStore[reportId] = record;
+
+  // Persist to MongoDB via API
+  fetch(`${API_BASE_URL}/reviews/${reportId}/reject`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record)
+  }).then(async (r) => {
+    if (r.ok) {
+      const resp = await r.json();
+      if (resp && resp.review) {
+        _reviewStore[reportId] = resp.review;
+      }
+    }
+  }).catch((err) => {
+    console.warn('[ReportReviewService] Background MongoDB reject error:', err);
+  });
+
   return record;
 }
 

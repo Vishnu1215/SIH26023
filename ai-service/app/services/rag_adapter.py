@@ -1,29 +1,47 @@
 """
-Phase 11 - Hybrid AI Question Answering: RAG Adapter Abstraction Layer.
-
-Provides a decoupled retrieval interface for context grounding.
-Retrieves relevant factual text chunks without requiring external vector databases.
-Designed to be plug-and-play with future Vector Stores (Chroma, FAISS, Milvus, Qdrant).
-
-Currently powered deterministically by:
-- storage/search_index.json (Inverted full-text index)
-- storage/document_intelligence/{id}.json (Executive summaries, topics, entities)
-- storage/structured_data/{id}.json (Factual data tables)
+RAG Adapter: Grounded retrieval interface for context synthesis backed by MongoDB Atlas.
+Retrieves top matching evidence chunks directly from the 'rag_chunks' collection.
 """
 
-import os
-import json
+import re
+import math
 import logging
 from typing import Dict, Any, List, Optional
-
-from app.services.search_index import search_documents, get_document_intelligence, load_search_index
+from app.database import get_sync_db
 
 logger = logging.getLogger(__name__)
 
+EMBEDDING_DIM = 128
+
+def generate_embedding(text: str, dim: int = EMBEDDING_DIM) -> List[float]:
+    if not text:
+        return [0.0] * dim
+    vec = [0.0] * dim
+    words = re.findall(r'\b\w+\b', text.lower())
+    if not words:
+        return [0.0] * dim
+    for w in words:
+        h = 0
+        for char in w:
+            h = (h * 31 + ord(char)) % 1000000007
+        vec[h % dim] += 1.0
+    norm = math.sqrt(sum(x * x for x in vec))
+    if norm > 0:
+        vec = [round(x / norm, 6) for x in vec]
+    return vec
+
+
+def cosine_similarity(v1: List[float], v2: List[float]) -> float:
+    if not v1 or not v2 or len(v1) != len(v2):
+        return 0.0
+    dot = sum(a * b for a, b in zip(v1, v2))
+    return max(0.0, min(1.0, dot))
+
+
 class RAGAdapter:
     def __init__(self):
-        self.backend: str = "deterministic_index" # options: deterministic_index, faiss_ready, chroma_ready
-        self.embedding_dimension: int = 384 # Standard MiniLM dimension for future use
+        self.backend: str = "mongodb_rag_chunks"
+        self.embedding_dimension: int = EMBEDDING_DIM
         self.vector_store_ready: bool = True
 
     def get_status(self) -> Dict[str, Any]:
@@ -32,8 +50,8 @@ class RAGAdapter:
             "backend": self.backend,
             "vectorStoreReady": self.vector_store_ready,
             "embeddingDimension": self.embedding_dimension,
-            "retrievalMethod": "Deterministic Inverted Index + Metadata Grounding",
-            "futureBackendsSupported": ["ChromaDB", "FAISS", "Milvus", "Qdrant", "pgvector"]
+            "retrievalMethod": "MongoDB Atlas Vector & Text Chunk Collection",
+            "futureBackendsSupported": ["MongoDB Atlas Vector Search", "FAISS", "pgvector"]
         }
 
     def retrieve_relevant_chunks(
@@ -44,85 +62,68 @@ class RAGAdapter:
         filters: Optional[Dict[str, Any]] = None
     ) -> List[Dict[str, Any]]:
         """
-        Retrieves top-k most relevant evidence chunks for a given natural language query.
-        Returns standardized chunk records compatible with LLM context windows or deterministic synthesizers.
+        Retrieves top-k most relevant evidence chunks for a query from MongoDB 'rag_chunks'.
+        No filesystem lookup.
         """
-        chunks: List[Dict[str, Any]] = []
-        clean_query = (query or "").strip().lower()
+        try:
+            db = get_sync_db()
+            query_filter: Dict[str, Any] = {}
+            if document_id:
+                query_filter["documentId"] = document_id
+            if filters:
+                for k, v in filters.items():
+                    if v:
+                        query_filter[f"metadata.{k}"] = v
 
-        # If document_id is specified, pull directly from document intelligence and summary
-        if document_id:
-            intel = get_document_intelligence(document_id)
-            index_data = load_search_index()
-            doc_meta = index_data.get("documents", {}).get(document_id, {})
+            cursor = db["rag_chunks"].find(query_filter, {"_id": 0})
+            candidate_chunks = list(cursor)
 
-            if intel or doc_meta:
-                summary_text = (intel or {}).get("summary") or doc_meta.get("summary") or ""
-                if summary_text:
-                    chunks.append({
-                        "chunkId": f"{document_id}_summary",
-                        "documentId": document_id,
-                        "documentTitle": doc_meta.get("reportTitle") or doc_meta.get("fileName", document_id),
-                        "section": "Executive Summary",
-                        "text": summary_text,
-                        "score": 0.95,
-                        "metadata": {
-                            "subsidiary": doc_meta.get("subsidiary"),
-                            "mineName": doc_meta.get("mineName"),
-                            "financialYear": doc_meta.get("financialYear"),
-                            "validationScore": doc_meta.get("validationScore")
-                        }
-                    })
+            if not candidate_chunks:
+                # If specific document requested had no chunks, fallback to structured summary in MongoDB
+                if document_id:
+                    doc = db["structured_records"].find_one({"documentId": document_id}, {"_id": 0})
+                    if doc and doc.get("summary"):
+                        return [{
+                            "chunkId": f"{document_id}_summary",
+                            "documentId": document_id,
+                            "documentTitle": doc.get("metadata", {}).get("fileName", document_id),
+                            "section": "Executive Summary",
+                            "text": doc.get("summary"),
+                            "score": 0.95,
+                            "metadata": doc.get("metadata", {})
+                        }]
+                return []
 
-                # Add structured entity chunk
-                entities = (intel or {}).get("namedEntities") or {}
-                mines = ", ".join(entities.get("mines", []))
-                orgs = ", ".join(entities.get("organizations", []))
-                if mines or orgs:
-                    chunks.append({
-                        "chunkId": f"{document_id}_entities",
-                        "documentId": document_id,
-                        "documentTitle": doc_meta.get("reportTitle") or doc_meta.get("fileName", document_id),
-                        "section": "Statutory Entities",
-                        "text": f"Mines: {mines or 'N/A'}. Organizations: {orgs or 'N/A'}. State: {doc_meta.get('state', 'N/A')}.",
-                        "score": 0.88,
-                        "metadata": {"subsidiary": doc_meta.get("subsidiary")}
-                    })
-            return chunks[:top_k]
+            query_vec = generate_embedding(query)
+            query_terms = set(re.findall(r'\b\w+\b', query.lower()))
 
-        # General multi-document search across search index
-        search_res = search_documents(
-            query=query,
-            subsidiary=filters.get("subsidiary") if filters else None,
-            state=filters.get("state") if filters else None,
-            financial_year=filters.get("financialYear") if filters else None,
-            category=filters.get("category") if filters else None,
-            limit=top_k
-        )
-        results_list = search_res if isinstance(search_res, list) else search_res.get("results", [])
-        for idx, item in enumerate(results_list):
-            doc_id = item.get("documentId", f"doc_{idx}")
-            doc_title = item.get("reportTitle") or item.get("fileName", doc_id)
-            summary = item.get("summary") or item.get("highlightSnippet") or "Validated statutory coal mining record."
+            scored = []
+            for ch in candidate_chunks:
+                emb = ch.get("embedding", [])
+                vec_sim = cosine_similarity(query_vec, emb)
 
-            chunks.append({
-                "chunkId": f"{doc_id}_c1",
-                "documentId": doc_id,
-                "documentTitle": doc_title,
-                "section": item.get("category", "Mining Return"),
-                "text": summary,
-                "score": round(max(0.6, 1.0 - (idx * 0.08)), 2),
-                "metadata": {
-                    "subsidiary": item.get("subsidiary"),
-                    "mineName": item.get("mineName"),
-                    "financialYear": item.get("financialYear"),
-                    "validationScore": item.get("validationScore"),
-                    "coalProduction": item.get("coalProduction")
-                }
-            })
+                text = ch.get("text", "")
+                text_lower = text.lower()
+                overlap = sum(1 for term in query_terms if term in text_lower)
+                boost = (overlap / max(1, len(query_terms))) * 0.35 if query_terms else 0.0
 
-        return chunks[:top_k]
+                total_score = min(1.0, vec_sim + boost)
+                scored.append({
+                    "chunkId": f"{ch.get('documentId')}_c{ch.get('chunkNumber', 1)}",
+                    "documentId": ch.get("documentId"),
+                    "chunkNumber": ch.get("chunkNumber", 1),
+                    "documentTitle": ch.get("metadata", {}).get("fileName") or ch.get("documentId"),
+                    "section": ch.get("metadata", {}).get("section", "Statutory Report"),
+                    "text": text,
+                    "score": round(total_score, 4),
+                    "metadata": ch.get("metadata", {})
+                })
+
+            scored.sort(key=lambda x: x["score"], reverse=True)
+            return scored[:top_k]
+        except Exception as e:
+            logger.error(f"Error retrieving RAG chunks from MongoDB: {e}", exc_info=True)
+            return []
 
 
-# Global singleton instance
 rag_adapter = RAGAdapter()

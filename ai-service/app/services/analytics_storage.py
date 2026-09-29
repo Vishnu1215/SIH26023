@@ -1,53 +1,51 @@
-import os
-import json
 import logging
 from typing import Dict, Any, Optional
-
-from app.core.config import settings
+from datetime import datetime, timezone
+from app.database import get_sync_db
 
 logger = logging.getLogger("ai_service.analytics_storage")
 
-DASHBOARD_FILE_PATH = os.path.join(settings.ANALYTICS_STORAGE_DIR, "dashboard.json")
-
-
-def get_dashboard_file_path(storage_dir: Optional[str] = None) -> str:
-    """Return absolute file path to persisted analytics dashboard JSON."""
-    base_dir = storage_dir or settings.ANALYTICS_STORAGE_DIR
-    return os.path.join(base_dir, "dashboard.json")
-
-
 def save_dashboard(dashboard_data: Dict[str, Any], storage_dir: Optional[str] = None) -> str:
     """
-    Persist aggregated analytics to storage/analytics/dashboard.json.
-    Single source of truth for all analytics queries.
+    Persist aggregated analytics to MongoDB collection 'analytics'.
+    Single source of truth for all dashboard and analytics queries.
     """
-    base_dir = storage_dir or settings.ANALYTICS_STORAGE_DIR
-    os.makedirs(base_dir, exist_ok=True)
-    file_path = os.path.join(base_dir, "dashboard.json")
     try:
-        with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(dashboard_data, f, indent=2, ensure_ascii=False)
-        logger.info(f"Analytics dashboard saved successfully at: {file_path}")
-        return file_path
+        db = get_sync_db()
+        clean = dict(dashboard_data)
+        clean.pop("_id", None)
+        clean["documentId"] = "consolidated_dashboard"
+        clean["type"] = "consolidated"
+        clean["updatedAt"] = datetime.now(timezone.utc).isoformat()
+
+        db["analytics"].update_one(
+            {"documentId": "consolidated_dashboard", "type": "consolidated"},
+            {"$set": clean},
+            upsert=True
+        )
+        logger.info("Analytics dashboard saved successfully to MongoDB collection 'analytics'")
+        return "mongodb://coal_portal/analytics/consolidated_dashboard"
     except Exception as exc:
-        logger.error(f"Failed to save analytics dashboard: {exc}", exc_info=True)
+        logger.error(f"Failed to save analytics dashboard to MongoDB: {exc}", exc_info=True)
         raise
 
-
 def load_dashboard(storage_dir: Optional[str] = None) -> Optional[Dict[str, Any]]:
-    """Load persisted analytics dashboard JSON from storage."""
-    file_path = get_dashboard_file_path(storage_dir)
-    if not os.path.exists(file_path):
-        return None
+    """Load persisted analytics dashboard from MongoDB collection 'analytics'."""
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+        db = get_sync_db()
+        doc = db["analytics"].find_one(
+            {"documentId": "consolidated_dashboard", "type": "consolidated"},
+            {"_id": 0}
+        )
+        return doc
     except Exception as exc:
-        logger.error(f"Failed to read analytics dashboard from {file_path}: {exc}")
+        logger.error(f"Failed to read analytics dashboard from MongoDB: {exc}")
         return None
-
 
 def dashboard_exists(storage_dir: Optional[str] = None) -> bool:
-    """Check if the analytics dashboard JSON exists."""
-    file_path = get_dashboard_file_path(storage_dir)
-    return os.path.exists(file_path)
+    """Check if the analytics dashboard exists in MongoDB."""
+    try:
+        db = get_sync_db()
+        return db["analytics"].count_documents({"documentId": "consolidated_dashboard", "type": "consolidated"}) > 0
+    except Exception:
+        return False

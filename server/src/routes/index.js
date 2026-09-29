@@ -9,6 +9,7 @@ import queryRoutes from './query.routes.js';
 import qaRoutes from './qa.routes.js';
 import recommendationRoutes from './recommendation.routes.js';
 import adminRoutes from './admin.routes.js';
+import reviewRoutes from './review.routes.js';
 import { getDashboardAnalytics } from '../controllers/document.controller.js';
 
 const apiRouter = Router();
@@ -23,6 +24,7 @@ apiRouter.use('/query', queryRoutes);
 apiRouter.use('/qa', qaRoutes);
 apiRouter.use('/recommendations', recommendationRoutes);
 apiRouter.use('/admin', adminRoutes);
+apiRouter.use('/reviews', reviewRoutes);
 apiRouter.get('/dashboard/analytics', getDashboardAnalytics);
 
 export default apiRouter;

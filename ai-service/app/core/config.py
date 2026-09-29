@@ -12,6 +12,10 @@ class Settings:
     HOST: str = os.getenv("HOST", "0.0.0.0")
     TESSERACT_PATH: str = os.getenv("TESSERACT_PATH", "")
 
+    # MongoDB Atlas settings
+    MONGODB_URI: str = os.getenv("MONGODB_URI", "")
+    DATABASE_NAME: str = os.getenv("DATABASE_NAME", "coal_portal")
+
     # Storage paths
     BASE_DIR: str = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     TEXT_STORAGE_DIR: str = os.getenv(

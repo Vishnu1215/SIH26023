@@ -710,19 +710,34 @@ def generate_dashboard_summary(
     source_structured_dir = structured_dir or settings.STRUCTURED_DATA_DIR
     source_validation_dir = validation_dir or settings.VALIDATION_STORAGE_DIR
 
-    # 1. Load all structured data JSON files from disk
+    # 1. Load all structured data records directly from MongoDB Atlas
     disk_structured_records: List[Dict[str, Any]] = []
-    structured_files = glob.glob(os.path.join(source_structured_dir, "*.json"))
-    for fpath in structured_files:
-        try:
-            with open(fpath, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                if isinstance(data, dict):
-                    disk_structured_records.append(data)
-        except Exception as e:
-            logger.warning(f"Error reading structured data file {fpath}: {e}")
+    try:
+        from app.database import get_sync_db
+        db = get_sync_db()
+        for rec in db["structured_records"].find({}, {"_id": 0}):
+            flat = dict(rec)
+            flat.update(rec.get("metadata", {}))
+            norm = rec.get("normalizedJson", {})
+            if isinstance(norm, dict):
+                flat.update(norm)
+            disk_structured_records.append(flat)
+    except Exception as e:
+        logger.warning(f"Error reading structured data from MongoDB: {e}")
 
-    # Normalize disk records
+    # Fallback to disk if MongoDB is empty
+    if not disk_structured_records:
+        structured_files = glob.glob(os.path.join(source_structured_dir, "*.json"))
+        for fpath in structured_files:
+            try:
+                with open(fpath, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, dict):
+                        disk_structured_records.append(data)
+            except Exception as e:
+                logger.warning(f"Error reading structured data file {fpath}: {e}")
+
+    # Normalize records
     normalized_disk = []
     for r in disk_structured_records:
         flat = dict(r)
@@ -734,21 +749,42 @@ def generate_dashboard_summary(
         normalized_disk.append(flat)
     disk_structured_records = normalized_disk
 
-    # 2. Load disk validation reports
+    # 2. Load validation reports directly from MongoDB Atlas
     disk_validation_reports: List[Dict[str, Any]] = []
     disk_validation_map: Dict[str, Dict[str, Any]] = {}
-    validation_files = glob.glob(os.path.join(source_validation_dir, "*.json"))
-    for fpath in validation_files:
-        try:
-            with open(fpath, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                if isinstance(data, dict):
-                    disk_validation_reports.append(data)
-                    doc_id = data.get("documentId")
-                    if doc_id:
-                        disk_validation_map[doc_id] = data
-        except Exception as e:
-            logger.warning(f"Error reading validation report file {fpath}: {e}")
+    try:
+        from app.database import get_sync_db
+        db = get_sync_db()
+        for v in db["validation_results"].find({}, {"_id": 0}):
+            v_dict = {
+                "documentId": v.get("documentId"),
+                "validationStatus": v.get("status", "Valid"),
+                "validationScore": v.get("score", 100),
+                "errorCount": v.get("errors", 0),
+                "warningCount": v.get("warnings", 0),
+                "validationMessages": v.get("validationMessages", []),
+                "validationTime": v.get("timestamp")
+            }
+            disk_validation_reports.append(v_dict)
+            if v.get("documentId"):
+                disk_validation_map[v["documentId"]] = v_dict
+    except Exception as e:
+        logger.warning(f"Error reading validation reports from MongoDB: {e}")
+
+    # Fallback to disk if empty
+    if not disk_validation_reports:
+        validation_files = glob.glob(os.path.join(source_validation_dir, "*.json"))
+        for fpath in validation_files:
+            try:
+                with open(fpath, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, dict):
+                        disk_validation_reports.append(data)
+                        doc_id = data.get("documentId")
+                        if doc_id:
+                            disk_validation_map[doc_id] = data
+            except Exception as e:
+                logger.warning(f"Error reading validation report file {fpath}: {e}")
 
     # 3. Synchronize Active Document Set
     if external_documents is not None:
