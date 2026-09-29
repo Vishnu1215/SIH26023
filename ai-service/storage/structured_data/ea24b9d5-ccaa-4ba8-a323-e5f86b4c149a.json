@@ -1,0 +1,22 @@
+{
+  "documentId": "ea24b9d5-ccaa-4ba8-a323-e5f86b4c149a",
+  "reportTitle": "03 Cmpdi Exploratory Drilling 2024 25",
+  "reportType": "General Mining Document",
+  "financialYear": null,
+  "reportDate": null,
+  "issuingOrganization": null,
+  "subsidiary": null,
+  "mineName": null,
+  "mineType": null,
+  "region": null,
+  "district": null,
+  "state": null,
+  "coalProduction": 4.2,
+  "overburdenRemoval": null,
+  "targetProduction": null,
+  "achievedProduction": null,
+  "percentageAchievement": null,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 4,
+  "extractedAt": "2026-09-29T16:51:15.326989+00:00"
+}

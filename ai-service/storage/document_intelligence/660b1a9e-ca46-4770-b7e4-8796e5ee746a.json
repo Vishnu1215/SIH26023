@@ -1,0 +1,128 @@
+{
+  "documentId": "660b1a9e-ca46-4770-b7e4-8796e5ee746a",
+  "reportTitle": "06 Ps023 Official Data Extract Test",
+  "processedAt": "2026-09-29T16:51:19.399009+00:00",
+  "processingTimeMs": 3.95,
+  "classification": {
+    "documentCategory": "Policy",
+    "classificationConfidence": 65,
+    "classificationReason": "Title/filename contains 'act'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [
+    "SCCL",
+    "Chhattisgarh",
+    "2023-24",
+    "Ps023",
+    "Official",
+    "Data",
+    "Extract",
+    "Test",
+    "None"
+  ],
+  "entities": {
+    "organizations": [
+      "SCCL"
+    ],
+    "subsidiaries": [
+      "SCCL"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [
+      "2023-24"
+    ],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Policy document records statutory operations for SCCL during Financial Year 2023-24. Operational data pertains to Chhattisgarh. Data integrity audit classifies this record as Error (Score: 75/100) with 1 statutory error(s), 1 warning(s). Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "8bb4d6c7-9db1-4ef8-9101-d48347e0f754",
+        "documentTitle": "01 Coal Production Official Extract",
+        "subsidiary": "SCCL",
+        "financialYear": "2023-24",
+        "similarityScore": 45,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)",
+          "FY (2023-24)"
+        ]
+      },
+      {
+        "documentId": "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      },
+      {
+        "documentId": "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      },
+      {
+        "documentId": "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      },
+      {
+        "documentId": "114d9ce8-d0c2-4506-8877-134085bbb62a",
+        "documentTitle": "05 Cmpdi Exploration State Distribution 2024 25",
+        "subsidiary": "CIL",
+        "financialYear": "N/A",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      }
+    ],
+    "totalRelated": 5
+  },
+  "structuredData": {
+    "documentId": "660b1a9e-ca46-4770-b7e4-8796e5ee746a",
+    "reportTitle": "06 Ps023 Official Data Extract Test",
+    "reportType": "Ministry Report",
+    "financialYear": "2023-24",
+    "reportDate": null,
+    "issuingOrganization": "SCCL",
+    "subsidiary": "SCCL",
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": "Chhattisgarh",
+    "coalProduction": null,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 7,
+    "extractedAt": "2026-09-29T16:51:19.280741+00:00"
+  },
+  "validationScore": 75,
+  "validationStatus": "Error"
+}

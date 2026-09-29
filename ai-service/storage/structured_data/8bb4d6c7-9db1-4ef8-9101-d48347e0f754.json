@@ -1,0 +1,22 @@
+{
+  "documentId": "8bb4d6c7-9db1-4ef8-9101-d48347e0f754",
+  "reportTitle": "01 Coal Production Official Extract",
+  "reportType": "General Mining Document",
+  "financialYear": "2023-24",
+  "reportDate": null,
+  "issuingOrganization": "SCCL",
+  "subsidiary": "SCCL",
+  "mineName": null,
+  "mineType": null,
+  "region": null,
+  "district": null,
+  "state": null,
+  "coalProduction": null,
+  "overburdenRemoval": null,
+  "targetProduction": null,
+  "achievedProduction": null,
+  "percentageAchievement": null,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 6,
+  "extractedAt": "2026-09-29T16:51:13.758444+00:00"
+}

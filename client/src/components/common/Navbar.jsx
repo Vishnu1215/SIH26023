@@ -11,13 +11,14 @@ import {
   Sun,
   Moon,
   CheckCircle2,
-  FileText
+  FileText,
+  Menu
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth.js';
 import { ROUTES } from '../../constants/routes.js';
 import { useTheme } from '../../utils/theme.js';
 
-export default function Navbar() {
+export default function Navbar({ onToggleSidebar, isSidebarCollapsed = false }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { theme, isDark, toggleTheme } = useTheme();
@@ -70,6 +71,28 @@ export default function Navbar() {
 
       <header className="top-navbar">
         <div className="navbar-left">
+          {onToggleSidebar && (
+            <button
+              type="button"
+              onClick={onToggleSidebar}
+              className="navbar-sidebar-toggle"
+              title={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+              style={{
+                padding: '6px',
+                color: 'var(--text-primary)',
+                borderRadius: '4px',
+                border: '1px solid var(--border-default)',
+                backgroundColor: 'var(--bg-card-subtle)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <Menu size={16} />
+            </button>
+          )}
+
           {/* Government of India State Emblem Area */}
           <div className="gov-identity-block">
             {/* Authentic State Emblem of India Silhouette / Seal */}

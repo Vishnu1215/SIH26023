@@ -1,0 +1,70 @@
+{
+  "documentId": "098f0895-c208-448a-a04d-5b3f68b18193",
+  "reportTitle": "02 Coal Imports Official Extract",
+  "processedAt": "2026-09-29T16:51:15.033121+00:00",
+  "processingTimeMs": 5.98,
+  "classification": {
+    "documentCategory": "Policy",
+    "classificationConfidence": 65,
+    "classificationReason": "Title/filename contains 'act'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.5
+    }
+  ],
+  "keywords": [
+    "2021-22",
+    "None",
+    "Coal",
+    "Imports",
+    "Official",
+    "Extract"
+  ],
+  "entities": {
+    "organizations": [
+      "Coal India",
+      "Coal India Limited"
+    ],
+    "subsidiaries": [],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [
+      "2021-22"
+    ],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Policy document records statutory operations for Coal India Limited during Financial Year 2021-22. Data integrity audit classifies this record as Error (Score: 60/100) with 1 statutory error(s), 4 warning(s). Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [],
+    "totalRelated": 0
+  },
+  "structuredData": {
+    "documentId": "098f0895-c208-448a-a04d-5b3f68b18193",
+    "reportTitle": "02 Coal Imports Official Extract",
+    "reportType": "General Mining Document",
+    "financialYear": "2021-22",
+    "reportDate": null,
+    "issuingOrganization": "Coal India Limited",
+    "subsidiary": null,
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": null,
+    "coalProduction": null,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 5,
+    "extractedAt": "2026-09-29T16:51:14.494817+00:00"
+  },
+  "validationScore": 60,
+  "validationStatus": "Error"
+}

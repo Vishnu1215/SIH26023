@@ -1,0 +1,55 @@
+{
+  "documentId": "660b1a9e-ca46-4770-b7e4-8796e5ee746a",
+  "validationStatus": "Error",
+  "validationScore": 75,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 75/100)\n\nPrimary Issue:\nMandatory field 'coalProduction' is missing.\n\nWarnings:\n• Mine name unavailable.",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001"
+  ],
+  "errorCount": 1,
+  "warningCount": 1,
+  "infoCount": 0,
+  "validationTime": 0.009,
+  "validatedAt": "2026-09-29T16:51:19.291711+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-29T16:51:19.291711+00:00",
+      "score": 75,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 1
+    }
+  ]
+}

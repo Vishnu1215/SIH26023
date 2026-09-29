@@ -49,12 +49,15 @@ import {
 import {
   ProductionTrendChart,
   HorizontalBarChart,
-  ValidationStatusDonut
+  ValidationStatusDonut,
+  LineChart,
+  ProgressBar
 } from '../components/common/Charts.jsx';
 import { usePlatformSync, emitPlatformUpdate } from '../utils/syncBus.js';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const [chartMode, setChartMode] = useState('line'); // 'line' | 'bar'
   const [analytics, setAnalytics] = useState(null);
   const [activities, setActivities] = useState([]);
   const [reportsCount, setReportsCount] = useState(0);
@@ -318,14 +321,14 @@ export default function DashboardPage() {
       </div>
 
       {/* ========================================================= */}
-      {/* 2. Executive KPI Row (5 Focused Executive Cards)           */}
+      {/* 2. Executive KPI Row (Exactly 4 Core Ministry KPIs)       */}
       {/* ========================================================= */}
-      <div className="exec-kpi-grid">
-        {/* 1. Documents Processed */}
+      <div className="exec-kpi-grid" style={{ gridTemplateColumns: 'repeat(4, minmax(0, 1fr))' }}>
+        {/* 1. Documents */}
         <ExecutiveKpiWidget
-          title="Documents Processed"
+          title="Documents"
           value={formatCount(totalDocsCount)}
-          subtitle="Active mining dossiers"
+          subtitle="Processed dossiers"
           icon={FileText}
           badge={`${formatCount(totalDocsCount)} Ingested`}
           trend="+4.8%"
@@ -335,67 +338,47 @@ export default function DashboardPage() {
           onClick={() => navigate('/documents')}
         />
 
-        {/* 2. Validation Success */}
+        {/* 2. Validation Rate */}
         <ExecutiveKpiWidget
-          title="Validation Success"
+          title="Validation Rate"
           value={formatPercent(val.validationAccuracy || 98.4)}
-          subtitle="DGMS rule conformance"
+          subtitle="DGMS rule compliance"
           icon={ShieldCheck}
           badge={(val.validationAccuracy ?? 98.4) >= 80 ? 'Compliant' : 'Review'}
           trend="Audited"
           trendDirection="up"
           color="emerald"
           progressPct={val.validationAccuracy || 98.4}
-          onClick={() => navigate('/validation')}
+          onClick={() => navigate('/documents')}
         />
 
-        {/* 3. AI Accuracy */}
+        {/* 3. Compliance Score */}
         <ExecutiveKpiWidget
-          title="AI Accuracy"
-          value="99.2%"
-          subtitle="OCR & entity fidelity"
-          icon={Sparkles}
-          badge="Gemini & OCR"
-          trend="Verified"
+          title="Compliance Score"
+          value={`${Math.round(val.averageValidationScore || quality.averageScore || 97.6)}/100`}
+          subtitle="Statutory integrity"
+          icon={Award}
+          badge="Verified"
+          trend="Deterministic"
           trendDirection="up"
           color="blue"
-          progressPct={99.2}
-          onClick={() => navigate('/intelligence')}
+          progressPct={val.averageValidationScore || quality.averageScore || 97.6}
+          onClick={() => navigate('/recommendations')}
         />
 
         {/* 4. Processing Time */}
         <ExecutiveKpiWidget
           title="Processing Time"
           value={docs.averageOcrTime ? formatTime(docs.averageOcrTime) : '1.2s'}
-          subtitle="Average pipeline latency"
+          subtitle="Pipeline latency"
           icon={Clock}
           badge="Real-time"
-          trend="Deterministic"
+          trend="Air-Gapped"
           trendDirection="neutral"
           color="navy"
           progressPct={85}
+          onClick={() => navigate('/settings')}
         />
-
-        {/* 5. Operational Risk */}
-        {(() => {
-          const riskLevel = recsSummary?.riskLevel || 'Low';
-          const riskPct = riskLevel === 'High' ? 78 : riskLevel === 'Medium' ? 42 : 18;
-          const riskColor = riskLevel === 'Low' ? 'emerald' : riskLevel === 'Medium' ? 'amber' : 'rose';
-          return (
-            <ExecutiveKpiWidget
-              title="Operational Risk"
-              value={`${riskLevel} (${riskPct}%)`}
-              subtitle="Mine safety index"
-              icon={AlertTriangle}
-              badge={riskLevel === 'Low' ? 'Safe' : riskLevel === 'Medium' ? 'Moderate' : 'Critical'}
-              trend={riskLevel === 'Low' ? 'Stable' : 'Monitor'}
-              trendDirection={riskLevel === 'Low' ? 'up' : 'down'}
-              color={riskColor}
-              progressPct={riskPct}
-              onClick={() => navigate('/recommendations')}
-            />
-          );
-        })()}
       </div>
 
       {/* ========================================================= */}
@@ -410,9 +393,47 @@ export default function DashboardPage() {
             icon={TrendingUp}
             badge="Million Tonnes (MT)"
             accentColor="var(--gov-navy-800)"
+            actions={
+              <div style={{ display: 'inline-flex', borderRadius: '4px', border: '1px solid var(--border-default)', overflow: 'hidden' }}>
+                <button
+                  type="button"
+                  onClick={() => setChartMode('line')}
+                  style={{
+                    padding: '3px 8px',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    border: 'none',
+                    cursor: 'pointer',
+                    backgroundColor: chartMode === 'line' ? 'var(--gov-navy-800)' : 'var(--bg-card)',
+                    color: chartMode === 'line' ? '#ffffff' : 'var(--text-secondary)'
+                  }}
+                >
+                  Line
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setChartMode('bar')}
+                  style={{
+                    padding: '3px 8px',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    border: 'none',
+                    cursor: 'pointer',
+                    backgroundColor: chartMode === 'bar' ? 'var(--gov-navy-800)' : 'var(--bg-card)',
+                    color: chartMode === 'bar' ? '#ffffff' : 'var(--text-secondary)'
+                  }}
+                >
+                  Bar
+                </button>
+              </div>
+            }
           >
-            {/* Trajectory Bar Chart */}
-            <ProductionTrendChart data={charts.productionTrend || []} height={210} />
+            {/* Trajectory Chart (Line or Bar) */}
+            {chartMode === 'line' ? (
+              <LineChart data={charts.productionTrend || []} xKey="financialYear" yKey="production" height={210} unit="MT" />
+            ) : (
+              <ProductionTrendChart data={charts.productionTrend || []} height={210} />
+            )}
 
             {/* Target Fulfillment Equation Strip */}
             <div

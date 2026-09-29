@@ -1,0 +1,101 @@
+{
+  "documentId": "cafdac89-97f7-4fe9-8e90-2b8e32f76bc7",
+  "reportTitle": "04 Cmpdi Exploration Blocks 2024 25",
+  "processedAt": "2026-09-29T16:51:16.724387+00:00",
+  "processingTimeMs": 4.46,
+  "classification": {
+    "documentCategory": "Geological Report",
+    "classificationConfidence": 65,
+    "classificationReason": "Title/filename contains 'exploration'"
+  },
+  "topics": [
+    {
+      "topic": "Exploration",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "CIL",
+    "Cmpdi",
+    "Exploration",
+    "Blocks",
+    "None"
+  ],
+  "entities": {
+    "organizations": [
+      "CIL",
+      "CMPDI"
+    ],
+    "subsidiaries": [
+      "CIL",
+      "CMPDI"
+    ],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Geological Report document records statutory operations for CIL for standard operational monitoring. Data integrity audit classifies this record as Error (Score: 40/100) with 2 statutory error(s), 4 warning(s). Primary analytical subject matter centers on Exploration.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b",
+        "documentTitle": "Chap2Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (CIL)"
+        ]
+      },
+      {
+        "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (CIL)"
+        ]
+      },
+      {
+        "documentId": "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (CIL)"
+        ]
+      }
+    ],
+    "totalRelated": 3
+  },
+  "structuredData": {
+    "documentId": "cafdac89-97f7-4fe9-8e90-2b8e32f76bc7",
+    "reportTitle": "04 Cmpdi Exploration Blocks 2024 25",
+    "reportType": "General Mining Document",
+    "financialYear": null,
+    "reportDate": null,
+    "issuingOrganization": "CIL",
+    "subsidiary": "CIL",
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": null,
+    "coalProduction": null,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 5,
+    "extractedAt": "2026-09-29T16:51:16.344431+00:00"
+  },
+  "validationScore": 40,
+  "validationStatus": "Error"
+}

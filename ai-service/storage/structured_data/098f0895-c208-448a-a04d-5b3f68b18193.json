@@ -1,0 +1,22 @@
+{
+  "documentId": "098f0895-c208-448a-a04d-5b3f68b18193",
+  "reportTitle": "02 Coal Imports Official Extract",
+  "reportType": "General Mining Document",
+  "financialYear": "2021-22",
+  "reportDate": null,
+  "issuingOrganization": "Coal India Limited",
+  "subsidiary": null,
+  "mineName": null,
+  "mineType": null,
+  "region": null,
+  "district": null,
+  "state": null,
+  "coalProduction": null,
+  "overburdenRemoval": null,
+  "targetProduction": null,
+  "achievedProduction": null,
+  "percentageAchievement": null,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 5,
+  "extractedAt": "2026-09-29T16:51:14.494817+00:00"
+}

@@ -1,0 +1,103 @@
+{
+  "documentId": "8bb4d6c7-9db1-4ef8-9101-d48347e0f754",
+  "reportTitle": "01 Coal Production Official Extract",
+  "processedAt": "2026-09-29T16:51:14.361647+00:00",
+  "processingTimeMs": 98.7,
+  "classification": {
+    "documentCategory": "Production Report",
+    "classificationConfidence": 80,
+    "classificationReason": "Title/filename contains 'production'; Title/filename contains 'coal production'"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "SCCL",
+    "2023-24",
+    "Coal",
+    "Production",
+    "Official",
+    "Extract",
+    "None"
+  ],
+  "entities": {
+    "organizations": [
+      "SCCL"
+    ],
+    "subsidiaries": [
+      "SCCL"
+    ],
+    "states": [],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [
+      "2023-24"
+    ],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Production Report document records statutory operations for SCCL during Financial Year 2023-24. Data integrity audit classifies this record as Error (Score: 65/100) with 1 statutory error(s), 3 warning(s). Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      },
+      {
+        "documentId": "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      },
+      {
+        "documentId": "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      }
+    ],
+    "totalRelated": 3
+  },
+  "structuredData": {
+    "documentId": "8bb4d6c7-9db1-4ef8-9101-d48347e0f754",
+    "reportTitle": "01 Coal Production Official Extract",
+    "reportType": "General Mining Document",
+    "financialYear": "2023-24",
+    "reportDate": null,
+    "issuingOrganization": "SCCL",
+    "subsidiary": "SCCL",
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": null,
+    "coalProduction": null,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 6,
+    "extractedAt": "2026-09-29T16:51:13.758444+00:00"
+  },
+  "validationScore": 65,
+  "validationStatus": "Error"
+}

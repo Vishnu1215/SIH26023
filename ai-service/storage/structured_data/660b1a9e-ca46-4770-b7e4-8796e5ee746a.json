@@ -1,0 +1,22 @@
+{
+  "documentId": "660b1a9e-ca46-4770-b7e4-8796e5ee746a",
+  "reportTitle": "06 Ps023 Official Data Extract Test",
+  "reportType": "Ministry Report",
+  "financialYear": "2023-24",
+  "reportDate": null,
+  "issuingOrganization": "SCCL",
+  "subsidiary": "SCCL",
+  "mineName": null,
+  "mineType": null,
+  "region": null,
+  "district": null,
+  "state": "Chhattisgarh",
+  "coalProduction": null,
+  "overburdenRemoval": null,
+  "targetProduction": null,
+  "achievedProduction": null,
+  "percentageAchievement": null,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 7,
+  "extractedAt": "2026-09-29T16:51:19.280741+00:00"
+}

@@ -1,0 +1,14 @@
+state | resource_type | exploration_blocks
+Chhattisgarh | Coal | 27
+Madhya Pradesh | Coal | 30
+Maharashtra | Coal | 21
+Jharkhand | Coal | 20
+West Bengal | Coal | 10
+Odisha | Coal | 9
+Assam | Coal | 8
+Nagaland | Coal | 4
+Mizoram | Coal | 1
+Telangana | Coal | 1
+Rajasthan | Lignite | 3
+Tamil Nadu | Lignite | 1
+Jharkhand | Non-coal | 1

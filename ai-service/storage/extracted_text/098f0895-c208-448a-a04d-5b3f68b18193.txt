@@ -1,0 +1,21 @@
+commodity | financial_year | quantity_mt
+Coking Coal | 2021-22 | 57.16
+Coking Coal | 2022-23 | 56.05
+Coking Coal | 2023-24 | 58.81
+Coking Coal | 2024-25 | 57.58
+Coking Coal | 2025-26 | 66.33
+Non-Coking Coal | 2021-22 | 151.77
+Non-Coking Coal | 2022-23 | 181.62
+Non-Coking Coal | 2023-24 | 205.72
+Non-Coking Coal | 2024-25 | 186.05
+Non-Coking Coal | 2025-26 | 180.04
+Total Coal Import | 2021-22 | 208.93
+Total Coal Import | 2022-23 | 237.67
+Total Coal Import | 2023-24 | 264.53
+Total Coal Import | 2024-25 | 243.63
+Total Coal Import | 2025-26 | 246.37
+Coke | 2021-22 | 2.48
+Coke | 2022-23 | 3.63
+Coke | 2023-24 | 3.96
+Coke | 2024-25 | 4.88
+Coke | 2025-26 | 2.12

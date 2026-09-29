@@ -297,3 +297,191 @@ export function ValidationStatusDonut({ data = [], total = 0, accuracy = 0, scor
     </div>
   );
 }
+
+/**
+ * Enterprise Production Trend Line Chart (SVG Line with Gradient Fill)
+ */
+export function LineChart({
+  data = [],
+  xKey = 'financialYear',
+  yKey = 'production',
+  height = 220,
+  strokeColor = '#1e3a8a',
+  fillColor = '#3b82f6',
+  unit = 'MT'
+}) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="empty-chart-box">
+        <span>No trend time-series data available.</span>
+      </div>
+    );
+  }
+
+  const values = data.map(d => Number(d[yKey]) || 0);
+  const maxVal = Math.max(...values, 1);
+  const minVal = 0;
+  const paddingLeft = 50;
+  const paddingRight = 25;
+  const paddingTop = 20;
+  const paddingBottom = 35;
+  const width = Math.max(420, data.length * 75);
+  const chartW = width - paddingLeft - paddingRight;
+  const chartH = height - paddingTop - paddingBottom;
+
+  const points = data.map((d, i) => {
+    const x = paddingLeft + (i / Math.max(data.length - 1, 1)) * chartW;
+    const y = paddingTop + chartH - ((Number(d[yKey]) || 0) / maxVal) * chartH;
+    return { x, y, label: d[xKey], val: Number(d[yKey]) || 0 };
+  });
+
+  const pathD = points.reduce((acc, p, i) => {
+    return `${acc} ${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+  }, '');
+
+  const areaD = points.length > 0
+    ? `${pathD} L ${points[points.length - 1].x.toFixed(1)} ${(paddingTop + chartH).toFixed(1)} L ${points[0].x.toFixed(1)} ${(paddingTop + chartH).toFixed(1)} Z`
+    : '';
+
+  return (
+    <div className="chart-container" style={{ width: '100%', overflowX: 'auto' }}>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="executive-svg-chart"
+        style={{ width: '100%', height: `${height}px`, minWidth: '320px' }}
+      >
+        <defs>
+          <linearGradient id="areaGradientGov" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={fillColor} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={fillColor} stopOpacity="0.0" />
+          </linearGradient>
+        </defs>
+
+        {/* Horizontal gridlines */}
+        {[0, 0.25, 0.5, 0.75, 1].map((pct, idx) => {
+          const y = paddingTop + chartH - pct * chartH;
+          const labelVal = Math.round(pct * maxVal);
+          return (
+            <g key={idx}>
+              <line
+                x1={paddingLeft}
+                y1={y}
+                x2={width - paddingRight}
+                y2={y}
+                stroke="#e2e8f0"
+                strokeDasharray="3 3"
+                strokeWidth="1"
+              />
+              <text
+                x={paddingLeft - 8}
+                y={y + 3}
+                textAnchor="end"
+                fill="#64748b"
+                style={{ fontSize: '10px', fontFamily: 'var(--font-mono, monospace)' }}
+              >
+                {labelVal >= 1000 ? `${(labelVal / 1000).toFixed(1)}k` : labelVal}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Area under curve */}
+        {areaD && <path d={areaD} fill="url(#areaGradientGov)" />}
+
+        {/* Main Line */}
+        {pathD && (
+          <path
+            d={pathD}
+            fill="none"
+            stroke={strokeColor}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
+
+        {/* Data points */}
+        {points.map((p, i) => (
+          <g key={i} className="chart-point-group">
+            <circle
+              cx={p.x}
+              cy={p.y}
+              r="4.5"
+              fill="#ffffff"
+              stroke={strokeColor}
+              strokeWidth="2.5"
+            >
+              <title>{`${p.label}: ${p.val.toLocaleString()} ${unit}`}</title>
+            </circle>
+            {/* Value label */}
+            <text
+              x={p.x}
+              y={p.y - 8}
+              textAnchor="middle"
+              fill="#0f172a"
+              style={{ fontSize: '10px', fontWeight: 700, fontFamily: 'var(--font-sans)' }}
+            >
+              {p.val >= 1000 ? `${(p.val / 1000).toFixed(1)}k` : Math.round(p.val)}
+            </text>
+            {/* X-axis label */}
+            <text
+              x={p.x}
+              y={height - 10}
+              textAnchor="middle"
+              fill="#475569"
+              style={{ fontSize: '11px', fontWeight: 600 }}
+            >
+              {p.label}
+            </text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+/**
+ * Minimalist Clean Progress Indicator
+ */
+export function ProgressBar({ value = 0, max = 100, label, color = 'emerald', height = 6 }) {
+  const pct = Math.min(100, Math.max(0, Math.round((value / (max || 1)) * 100)));
+  const colorMap = {
+    emerald: '#10b981',
+    navy: '#0f2e5a',
+    blue: '#2563eb',
+    amber: '#f59e0b',
+    rose: '#ef4444'
+  };
+  const activeColor = colorMap[color] || colorMap.emerald;
+
+  return (
+    <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      {label && (
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+          <span>{label}</span>
+          <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{pct}%</span>
+        </div>
+      )}
+      <div
+        style={{
+          width: '100%',
+          height: `${height}px`,
+          backgroundColor: '#e2e8f0',
+          borderRadius: '9999px',
+          overflow: 'hidden'
+        }}
+      >
+        <div
+          style={{
+            width: `${pct}%`,
+            height: '100%',
+            backgroundColor: activeColor,
+            borderRadius: '9999px',
+            transition: 'width 250ms ease'
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+

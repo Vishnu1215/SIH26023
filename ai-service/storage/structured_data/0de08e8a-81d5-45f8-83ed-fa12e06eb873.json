@@ -1,0 +1,22 @@
+{
+  "documentId": "0de08e8a-81d5-45f8-83ed-fa12e06eb873",
+  "reportTitle": "Ps023 Real World Test Bundle",
+  "reportType": "General Mining Document",
+  "financialYear": "2023-24",
+  "reportDate": null,
+  "issuingOrganization": "SCCL",
+  "subsidiary": "SCCL",
+  "mineName": null,
+  "mineType": null,
+  "region": null,
+  "district": null,
+  "state": "Chhattisgarh",
+  "coalProduction": 1047.52,
+  "overburdenRemoval": null,
+  "targetProduction": null,
+  "achievedProduction": null,
+  "percentageAchievement": null,
+  "productionUnit": "MT",
+  "extractedFieldsCount": 8,
+  "extractedAt": "2026-09-29T16:51:21.948628+00:00"
+}

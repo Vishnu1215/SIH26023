@@ -1,23 +1,23 @@
 {
   "status": "success",
-  "lastUpdated": "2026-09-29T16:09:08.898389+00:00",
+  "lastUpdated": "2026-09-29T16:51:22.175047+00:00",
   "summary": {
-    "overallRisk": 46.3,
+    "overallRisk": 58.3,
     "riskLevel": "Medium",
-    "totalRecommendations": 4,
-    "highPriorityRecommendations": 1,
-    "totalAlerts": 2,
+    "totalRecommendations": 5,
+    "highPriorityRecommendations": 2,
+    "totalAlerts": 3,
     "criticalAlertsCount": 0,
     "insightsCount": 9
   },
   "risk": {
-    "overallRisk": 46.3,
+    "overallRisk": 58.3,
     "riskLevel": "Medium",
     "riskBreakdown": {
       "productionRisk": 100.0,
-      "validationRisk": 23.3,
+      "validationRisk": 53.8,
       "qualityRisk": 15.0,
-      "completenessRisk": 50.0,
+      "completenessRisk": 79.2,
       "processingRisk": 0.0
     },
     "riskFactors": [
@@ -30,13 +30,13 @@
       {
         "factor": "Statutory Validation Discrepancies",
         "impact": "High",
-        "score": 23.3,
-        "description": "0 document(s) flagged with validation rule issues; overall validation accuracy is 66.7%."
+        "score": 53.8,
+        "description": "0 document(s) flagged with validation rule issues; overall validation accuracy is 23.1%."
       },
       {
         "factor": "Statutory Field Omissions",
         "impact": "Medium",
-        "score": 50.0,
+        "score": 79.2,
         "description": "Multiple reporting records lack complete Financial Year, Colliery Name, or State attributes."
       }
     ]
@@ -45,68 +45,86 @@
     {
       "id": "REC-VAL-001",
       "title": "Enforce Document Validation Before Statutory Report Compilation",
-      "description": "Overall statutory validation accuracy is 66.7%, with 0 document(s) violating DGMS/CMPDI statutory rules (VR-001..VR-010).",
+      "description": "Overall statutory validation accuracy is 23.1%, with 0 document(s) violating DGMS/CMPDI statutory rules (VR-001..VR-010).",
       "category": "Validation",
       "priority": "Critical",
       "severity": "Critical",
       "confidence": 0.99,
-      "reason": "Statutory validation accuracy of 66.7% is below the 85% compliance threshold.",
+      "reason": "Statutory validation accuracy of 23.1% is below the 85% compliance threshold.",
       "supportingMetrics": {
-        "validationAccuracy": 66.7,
+        "validationAccuracy": 23.1,
         "invalidDocumentsCount": 0,
-        "validDocumentsCount": 2
+        "validDocumentsCount": 3
       },
       "recommendedAction": "1. Review non-compliant records in the Validation Inspector. 2. Verify colliery tonnage numbers and target arithmetic. 3. Re-validate documents after correcting optical or structural extraction flaws.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
+      "generatedAt": "2026-09-29T16:51:22.171726+00:00"
     },
     {
       "id": "REC-QUAL-002",
       "title": "Review Extraction Rules for Missing Statutory Metadata Fields",
-      "description": "Field completeness score is 83.3%. 1 document(s) lack required Financial Year, State, or Colliery tags.",
+      "description": "Field completeness score is 41.7%. 7 document(s) lack required Financial Year, State, or Colliery tags.",
       "category": "Data Quality",
-      "priority": "Medium",
-      "severity": "Medium",
+      "priority": "High",
+      "severity": "High",
       "confidence": 0.96,
-      "reason": "Field completeness of 83.3% falls below the 85% data governance standard.",
+      "reason": "Field completeness of 41.7% falls below the 85% data governance standard.",
       "supportingMetrics": {
-        "completenessPercentage": 83.3,
-        "missingFinancialYearCount": 0,
-        "missingStateCount": 3,
-        "missingMineCount": 3
+        "completenessPercentage": 41.7,
+        "missingFinancialYearCount": 3,
+        "missingStateCount": 7,
+        "missingMineCount": 9
       },
       "recommendedAction": "1. Update domain regular expressions in entity_extractor.py to capture varied date & state header layouts. 2. Expand coal colliery gazetteer mappings for regional mine names. 3. Re-run structured extraction.",
       "affectedDocuments": [
-        "Chap5Annualreport2026En",
-        "Chap5Annualreport2026En",
-        "Chap5Annualreport2026En",
+        "03 Cmpdi Exploratory Drilling 2024 25",
+        "04 Cmpdi Exploration Blocks 2024 25",
+        "05 Cmpdi Exploration State Distribution 2024 25",
         "Chap5Annualreport2026En",
         "Chap5Annualreport2026En"
       ],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
+      "generatedAt": "2026-09-29T16:51:22.171726+00:00"
     },
     {
       "id": "REC-OPS-003",
-      "title": "Diversify Reporting Intake to Mitigate Dependency on CIL",
-      "description": "CIL contributes 100.0% of all reported coal production in the repository. Several major coalfields (MCL, NCL, CCL) are underrepresented.",
+      "title": "Diversify Reporting Intake to Mitigate Dependency on SCCL",
+      "description": "SCCL contributes 99.0% of all reported coal production in the repository. Several major coalfields (MCL, NCL, CCL) are underrepresented.",
       "category": "Operational",
       "priority": "Medium",
       "severity": "Medium",
       "confidence": 0.94,
-      "reason": "Output concentration of 100.0% in a single subsidiary represents potential data skew.",
+      "reason": "Output concentration of 99.0% in a single subsidiary represents potential data skew.",
       "supportingMetrics": {
-        "dominantSubsidiary": "CIL",
-        "dominantSharePct": 100.0,
-        "reportingSubsidiariesCount": 2
+        "dominantSubsidiary": "SCCL",
+        "dominantSharePct": 99.0,
+        "reportingSubsidiariesCount": 3
       },
       "recommendedAction": "1. Ingest pending monthly production statements from eastern and central subsidiaries (MCL, CCL, WCL, ECL). 2. Verify that network folder watchers are polling subsidiary network drives.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [
-        "CIL"
+        "SCCL"
       ],
-      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
+      "generatedAt": "2026-09-29T16:51:22.171726+00:00"
+    },
+    {
+      "id": "REC-OBR-005",
+      "title": "Audit Overburden Removal Reporting in Open Cast Mining Returns",
+      "description": "Substantial coal production is recorded without corresponding Overburden Removal (OBR) metrics, risking non-compliance with DGMS mine safety guidelines.",
+      "category": "Compliance",
+      "priority": "Medium",
+      "severity": "Medium",
+      "confidence": 0.91,
+      "reason": "Zero reported overburden removal volume alongside active open-cast extraction.",
+      "supportingMetrics": {
+        "totalCoalProduction": 1057.92,
+        "overburdenRemoval": 0
+      },
+      "recommendedAction": "1. Verify whether colliery returns include Form-A OBR tables. 2. Ensure stripping ratio calculations are extracted and validated.",
+      "affectedDocuments": [],
+      "affectedSubsidiaries": [],
+      "generatedAt": "2026-09-29T16:51:22.171726+00:00"
     },
     {
       "id": "REC-REP-004",
@@ -123,34 +141,50 @@
       "recommendedAction": "1. Generate Geological Report and Financial Year Review via the Report Generator module.",
       "affectedDocuments": [],
       "affectedSubsidiaries": [],
-      "generatedAt": "2026-09-29T16:09:08.897916+00:00"
+      "generatedAt": "2026-09-29T16:51:22.171726+00:00"
     }
   ],
   "alerts": [
     {
       "id": "ALT-META-001",
-      "title": "Missing State / Jurisdiction in 3 Record(s)",
-      "description": "3 files lack explicit state attribution, affecting state-level royalty and production breakdowns.",
-      "severity": "Yellow",
+      "title": "Missing Financial Year in 3 Document(s)",
+      "description": "3 records do not contain a recognized financial year string, preventing accurate fiscal year consolidation.",
+      "severity": "Orange",
       "source": "storage/structured_data/",
-      "recommendation": "Update colliery gazetteer mappings so mine names automatically resolve to their host states.",
-      "timestamp": "2026-09-29T16:09:08.897865+00:00",
+      "recommendation": "Re-extract or manually assign the statutory financial year tag to ensure accurate chronological rollups.",
+      "timestamp": "2026-09-29T16:51:22.171686+00:00",
       "affectedEntities": [
-        "Chap5Annualreport2026En",
-        "Chap5Annualreport2026En",
-        "Chap5Annualreport2026En"
+        "03 Cmpdi Exploratory Drilling 2024 25",
+        "04 Cmpdi Exploration Blocks 2024 25",
+        "05 Cmpdi Exploration State Distribution 2024 25"
       ]
     },
     {
-      "id": "ALT-CONC-002",
-      "title": "High Output Concentration in CIL",
-      "description": "CIL accounts for 100.0% of national reported coal output. Other active subsidiaries show minimal or missing returns in current database.",
+      "id": "ALT-META-002",
+      "title": "Missing State / Jurisdiction in 7 Record(s)",
+      "description": "7 files lack explicit state attribution, affecting state-level royalty and production breakdowns.",
+      "severity": "Yellow",
+      "source": "storage/structured_data/",
+      "recommendation": "Update colliery gazetteer mappings so mine names automatically resolve to their host states.",
+      "timestamp": "2026-09-29T16:51:22.171686+00:00",
+      "affectedEntities": [
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En",
+        "Chap5Annualreport2026En",
+        "01 Coal Production Official Extract",
+        "02 Coal Imports Official Extract"
+      ]
+    },
+    {
+      "id": "ALT-CONC-003",
+      "title": "High Output Concentration in SCCL",
+      "description": "SCCL accounts for 99.0% of national reported coal output. Other active subsidiaries show minimal or missing returns in current database.",
       "severity": "Yellow",
       "source": "storage/analytics/dashboard.json (rankings)",
       "recommendation": "Verify whether monthly returns from other CIL subsidiaries (MCL, NCL, CCL, WCL, ECL) are awaiting ingestion.",
-      "timestamp": "2026-09-29T16:09:08.897865+00:00",
+      "timestamp": "2026-09-29T16:51:22.171686+00:00",
       "affectedEntities": [
-        "CIL"
+        "SCCL"
       ]
     }
   ],
@@ -158,7 +192,7 @@
     {
       "id": "INS-001",
       "title": "National Target Achievement",
-      "statement": "Total reported coal production stands at 3.10 MT across verified mining returns.",
+      "statement": "Total reported coal production stands at 1,057.92 MT across verified mining returns.",
       "category": "Production",
       "impact": "Action Required",
       "icon": "Target",
@@ -168,21 +202,21 @@
     {
       "id": "INS-002",
       "title": "Production Leader",
-      "statement": "CIL is the top producing subsidiary, yielding 3.10 MT (100.0% of national reported output).",
+      "statement": "SCCL is the top producing subsidiary, yielding 1,047.52 MT (99.0% of national reported output).",
       "category": "Subsidiaries",
       "impact": "Highlight",
       "icon": "Award",
-      "metric": "CIL (100.0%)",
+      "metric": "SCCL (99.0%)",
       "source": "storage/analytics/dashboard.json (rankings)"
     },
     {
       "id": "INS-003",
       "title": "Statutory Validation Compliance",
-      "statement": "Statutory validation accuracy across files is 66.7%, with 2 certified valid returns and 0 flagged for review.",
+      "statement": "Statutory validation accuracy across files is 23.1%, with 3 certified valid returns and 0 flagged for review.",
       "category": "Validation",
       "impact": "Warning",
       "icon": "ShieldCheck",
-      "metric": "66.7% Accuracy",
+      "metric": "23.1% Accuracy",
       "source": "storage/validation/"
     },
     {
@@ -198,17 +232,17 @@
     {
       "id": "INS-005",
       "title": "Geographical Concentration",
-      "statement": "Chhattisgarh accounts for the primary share of mining operations with 2 reporting document(s) and 3.10 MT produced.",
+      "statement": "Chhattisgarh accounts for the primary share of mining operations with 6 reporting document(s) and 1,053.72 MT produced.",
       "category": "Geography",
       "impact": "Informational",
       "icon": "MapPin",
-      "metric": "Chhattisgarh (2 Docs)",
+      "metric": "Chhattisgarh (6 Docs)",
       "source": "storage/analytics/dashboard.json (states)"
     },
     {
       "id": "INS-006",
       "title": "Document Distribution",
-      "statement": "'Unknown' documents constitute the majority of processed records (3 files, 100.0% of total).",
+      "statement": "'Unknown' documents constitute the majority of processed records (13 files, 100.0% of total).",
       "category": "Operations",
       "impact": "Informational",
       "icon": "FileText",
@@ -218,11 +252,11 @@
     {
       "id": "INS-007",
       "title": "Subsidiary Representation",
-      "statement": "2 Coal India subsidiary entities are currently reporting verified performance returns into the centralized registry.",
+      "statement": "3 Coal India subsidiary entities are currently reporting verified performance returns into the centralized registry.",
       "category": "Subsidiaries",
       "impact": "Highlight",
       "icon": "Building2",
-      "metric": "2 Subsidiaries Reporting",
+      "metric": "3 Subsidiaries Reporting",
       "source": "storage/analytics/dashboard.json"
     },
     {
@@ -248,31 +282,31 @@
   ],
   "trends": {
     "productionTrend": {
-      "trend": "Stable",
-      "percentageChange": 0.0,
-      "reason": "Current baseline reflects consolidated production volume of 3.10 MT across active records.",
+      "trend": "Declining",
+      "percentageChange": -32.3,
+      "reason": "Coal production fell by 32.3% compared to preceding reporting interval 2025–26.",
       "supportingMetrics": {
-        "latestProduction": 3.1,
-        "historicalPeriods": 1,
+        "latestProduction": 4.2,
+        "historicalPeriods": 4,
         "achievementPct": 0.0
       }
     },
     "validationTrend": {
       "trend": "Declining",
-      "currentAccuracy": 66.7,
-      "reason": "Validation accuracy stands at 66.7%, impacted by 0 non-compliant document returns.",
+      "currentAccuracy": 23.1,
+      "reason": "Validation accuracy stands at 23.1%, impacted by 0 non-compliant document returns.",
       "supportingMetrics": {
-        "validDocuments": 2,
+        "validDocuments": 3,
         "invalidDocuments": 0,
-        "accuracy": 66.7
+        "accuracy": 23.1
       }
     },
     "documentIngestionTrend": {
-      "trend": "Stable",
-      "totalDocuments": 6,
-      "reason": "Ingestion volume is steady with 6 documents currently indexed and structured.",
+      "trend": "Increasing",
+      "totalDocuments": 12,
+      "reason": "Active ingestion repository contains 12 verified files, reflecting comprehensive data intake.",
       "supportingMetrics": {
-        "indexedCount": 6,
+        "indexedCount": 12,
         "categoriesCovered": 1
       }
     },
@@ -286,8 +320,23 @@
     },
     "historicalSeries": [
       {
+        "period": "2021–22",
+        "production": 0.0,
+        "documents": 1
+      },
+      {
+        "period": "2023–24",
+        "production": 1047.52,
+        "documents": 3
+      },
+      {
         "period": "2025–26",
-        "production": 3.1,
+        "production": 6.2,
+        "documents": 6
+      },
+      {
+        "period": "Unknown FY",
+        "production": 4.2,
         "documents": 3
       }
     ]

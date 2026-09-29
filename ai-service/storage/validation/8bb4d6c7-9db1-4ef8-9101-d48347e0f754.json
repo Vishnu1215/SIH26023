@@ -1,0 +1,83 @@
+{
+  "documentId": "8bb4d6c7-9db1-4ef8-9101-d48347e0f754",
+  "validationStatus": "Error",
+  "validationScore": 65,
+  "validationSummary": "Validation completed.\n\nStatus: Error (Score: 65/100)\n\nPrimary Issue:\nMandatory field 'coalProduction' is missing.\n\nWarnings:\n• Mine name unavailable.\n• State unavailable.\n• Specific Report Type missing or unspecified.",
+  "validationMessages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "reportType",
+      "severity": "Warning",
+      "message": "Specific Report Type missing or unspecified."
+    }
+  ],
+  "messages": [
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "coalProduction",
+      "severity": "Error",
+      "message": "Mandatory field 'coalProduction' is missing."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "mineName",
+      "severity": "Warning",
+      "message": "Mine name unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "state",
+      "severity": "Warning",
+      "message": "State unavailable."
+    },
+    {
+      "ruleId": "VAL001",
+      "rule": "VAL001",
+      "field": "reportType",
+      "severity": "Warning",
+      "message": "Specific Report Type missing or unspecified."
+    }
+  ],
+  "rulesTriggered": [
+    "VAL001"
+  ],
+  "errorCount": 1,
+  "warningCount": 3,
+  "infoCount": 0,
+  "validationTime": 0.0953,
+  "validatedAt": "2026-09-29T16:51:13.937010+00:00",
+  "validationHistory": [
+    {
+      "validatedAt": "2026-09-29T16:51:13.937010+00:00",
+      "score": 65,
+      "status": "Error",
+      "errorCount": 1,
+      "warningCount": 3
+    }
+  ]
+}

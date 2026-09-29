@@ -776,47 +776,115 @@ export default function QAPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Bar Form */}
+        {/* Input Bar Form - Large ChatGPT-style Box */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleAsk();
           }}
-          className="card"
           style={{
             marginTop: '16px',
-            padding: '10px 14px',
+            backgroundColor: 'var(--bg-card)',
+            border: '1.5px solid var(--border-default)',
+            borderRadius: '12px',
+            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.05)',
             display: 'flex',
-            alignItems: 'center',
-            gap: '10px',
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-default)'
+            flexDirection: 'column',
+            transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+            overflow: 'hidden'
+          }}
+          onFocusCapture={(e) => {
+            e.currentTarget.style.borderColor = 'var(--gov-navy-800)';
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(15, 46, 90, 0.1)';
+          }}
+          onBlurCapture={(e) => {
+            e.currentTarget.style.borderColor = 'var(--border-default)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(15, 23, 42, 0.05)';
           }}
         >
-          <Search size={18} color="var(--text-muted)" />
-          <input
-            type="text"
-            placeholder="Ask anything... e.g. 'Which subsidiary produced the highest coal?' or 'Validation accuracy'"
+          <textarea
+            placeholder="Ask Coal Intelligence any statutory or production question... (e.g. 'Compare target vs actual production across all subsidiaries for FY 2024-25')"
             value={inputQuestion}
             onChange={(e) => setInputQuestion(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleAsk();
+              }
+            }}
             disabled={loading}
+            rows={2}
             style={{
-              flex: 1,
+              width: '100%',
+              minHeight: '64px',
+              maxHeight: '180px',
+              padding: '14px 16px',
               border: 'none',
               outline: 'none',
-              fontSize: '0.92rem',
+              fontSize: '13.5px',
+              lineHeight: 1.5,
               background: 'transparent',
-              color: 'var(--text-primary)'
+              color: 'var(--text-primary)',
+              fontFamily: 'inherit',
+              resize: 'none',
+              boxSizing: 'border-box'
             }}
           />
-          <Button
-            variant="primary"
-            icon={loading ? Loader2 : Send}
-            loading={loading}
-            disabled={loading || !inputQuestion.trim()}
+
+          {/* Bottom Toolbar inside Input Box */}
+          <div
+            style={{
+              padding: '8px 14px',
+              backgroundColor: 'var(--bg-card-subtle)',
+              borderTop: '1px solid var(--border-subtle)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '10px'
+            }}
           >
-            Ask
-          </Button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: 'var(--text-muted)' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 600, color: 'var(--gov-navy-800)' }}>
+                <ShieldCheck size={13} color="var(--tri-green)" />
+                Single Source of Truth Grounding
+              </span>
+              <span>&bull;</span>
+              <span>Shift + Enter for new line</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {inputQuestion && (
+                <button
+                  type="button"
+                  onClick={() => setInputQuestion('')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                    padding: '4px 6px'
+                  }}
+                >
+                  Clear
+                </button>
+              )}
+              <Button
+                variant="primary"
+                size="sm"
+                icon={loading ? Loader2 : Send}
+                loading={loading}
+                disabled={loading || !inputQuestion.trim()}
+                style={{
+                  borderRadius: '8px',
+                  padding: '6px 14px',
+                  fontWeight: 700
+                }}
+              >
+                Send
+              </Button>
+            </div>
+          </div>
         </form>
       </div>
 

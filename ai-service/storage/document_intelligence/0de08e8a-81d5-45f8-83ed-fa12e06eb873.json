@@ -1,0 +1,133 @@
+{
+  "documentId": "0de08e8a-81d5-45f8-83ed-fa12e06eb873",
+  "reportTitle": "Ps023 Real World Test Bundle",
+  "processedAt": "2026-09-29T16:51:22.238316+00:00",
+  "processingTimeMs": 8.23,
+  "classification": {
+    "documentCategory": "Production Report",
+    "classificationConfidence": 62,
+    "classificationReason": "Extracted quantitative production fields (Coal/Target/OBR)"
+  },
+  "topics": [
+    {
+      "topic": "Coal Production",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "SCCL",
+    "Chhattisgarh",
+    "2023-24",
+    "Coal Production",
+    "Ps023",
+    "Real",
+    "World",
+    "Test",
+    "Bundle",
+    "None"
+  ],
+  "entities": {
+    "organizations": [
+      "SCCL"
+    ],
+    "subsidiaries": [
+      "SCCL"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [],
+    "mines": [],
+    "measurements": [
+      "1047.52 MT"
+    ],
+    "financialYears": [
+      "2023-24"
+    ],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Production Report document records statutory operations for SCCL during Financial Year 2023-24. Operational data pertains to Chhattisgarh. Key physical metrics record total coal production of 1,047.52 MT. Data integrity audit classifies this record as Warning (Score: 90/100) with 2 warning(s). Primary analytical subject matter centers on Coal Production.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "660b1a9e-ca46-4770-b7e4-8796e5ee746a",
+        "documentTitle": "06 Ps023 Official Data Extract Test",
+        "subsidiary": "SCCL",
+        "financialYear": "2023-24",
+        "similarityScore": 60,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)",
+          "FY (2023-24)",
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "8bb4d6c7-9db1-4ef8-9101-d48347e0f754",
+        "documentTitle": "01 Coal Production Official Extract",
+        "subsidiary": "SCCL",
+        "financialYear": "2023-24",
+        "similarityScore": 45,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)",
+          "FY (2023-24)"
+        ]
+      },
+      {
+        "documentId": "0ecd4359-3668-457e-b65f-5abcae57babd",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      },
+      {
+        "documentId": "80efe9b0-ba2f-4632-9d3d-bcbac24a153d",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      },
+      {
+        "documentId": "f4b6ffaa-d4fb-42da-976c-d2ba71832c3a",
+        "documentTitle": "Chap5Annualreport2026En",
+        "subsidiary": "SCCL",
+        "financialYear": "2025-26",
+        "similarityScore": 25,
+        "sharedAttributes": [
+          "Subsidiary (SCCL)"
+        ]
+      }
+    ],
+    "totalRelated": 5
+  },
+  "structuredData": {
+    "documentId": "0de08e8a-81d5-45f8-83ed-fa12e06eb873",
+    "reportTitle": "Ps023 Real World Test Bundle",
+    "reportType": "General Mining Document",
+    "financialYear": "2023-24",
+    "reportDate": null,
+    "issuingOrganization": "SCCL",
+    "subsidiary": "SCCL",
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": "Chhattisgarh",
+    "coalProduction": 1047.52,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 8,
+    "extractedAt": "2026-09-29T16:51:21.948628+00:00"
+  },
+  "validationScore": 90,
+  "validationStatus": "Warning"
+}

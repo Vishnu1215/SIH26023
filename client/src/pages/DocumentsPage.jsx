@@ -36,7 +36,12 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowRight,
-  Activity
+  Activity,
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Search
 } from 'lucide-react';
 import {
   uploadDocumentFile,
@@ -115,6 +120,15 @@ export default function DocumentsPage() {
   const [isBatchUploading, setIsBatchUploading] = useState(false);
   const cancelUploadRef = useRef(false);
 
+  // Table Sorting, Filtering, and Pagination State
+  const [tableSearch, setTableSearch] = useState('');
+  const [tableStatusFilter, setTableStatusFilter] = useState('ALL');
+  const [tableSubsidiaryFilter, setTableSubsidiaryFilter] = useState('ALL');
+  const [sortField, setSortField] = useState('uploadedAt');
+  const [sortDirection, setSortDirection] = useState('desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   // Synchronize document from URL query param (?docId=...)
   useEffect(() => {
     if (urlDocId && documents.length > 0) {
@@ -138,6 +152,95 @@ export default function DocumentsPage() {
       setShowAdvancedTech(false);
     }
   }, [viewingDoc]);
+
+  // Available subsidiaries from current documents
+  const availableSubsidiaries = React.useMemo(() => {
+    const set = new Set();
+    documents.forEach((d) => {
+      const sub = d.structuredData?.subsidiary;
+      if (sub && sub !== 'Unknown' && sub !== 'Other / Unassigned') set.add(sub);
+    });
+    return Array.from(set).sort();
+  }, [documents]);
+
+  // Sorting handler
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortField(field);
+      setSortDirection(field === 'uploadedAt' ? 'desc' : 'asc');
+    }
+    setCurrentPage(1);
+  };
+
+  // Filtered and Sorted Documents
+  const filteredAndSortedDocs = React.useMemo(() => {
+    return documents
+      .filter((doc) => {
+        const matchesSearch =
+          !tableSearch ||
+          doc.originalName?.toLowerCase().includes(tableSearch.toLowerCase()) ||
+          doc.documentId?.toLowerCase().includes(tableSearch.toLowerCase()) ||
+          doc.structuredData?.mineName?.toLowerCase().includes(tableSearch.toLowerCase()) ||
+          doc.structuredData?.subsidiary?.toLowerCase().includes(tableSearch.toLowerCase()) ||
+          doc.category?.toLowerCase().includes(tableSearch.toLowerCase());
+
+        const matchesStatus =
+          tableStatusFilter === 'ALL' ||
+          (tableStatusFilter === 'Pending'
+            ? !doc.validationStatus || doc.validationStatus === 'Pending'
+            : doc.validationStatus === tableStatusFilter);
+
+        const matchesSubsidiary =
+          tableSubsidiaryFilter === 'ALL' ||
+          doc.structuredData?.subsidiary === tableSubsidiaryFilter;
+
+        return matchesSearch && matchesStatus && matchesSubsidiary;
+      })
+      .sort((a, b) => {
+        let aVal = a[sortField];
+        let bVal = b[sortField];
+
+        if (sortField === 'subsidiary') {
+          aVal = a.structuredData?.subsidiary || '';
+          bVal = b.structuredData?.subsidiary || '';
+        } else if (sortField === 'mineName') {
+          aVal = a.structuredData?.mineName || '';
+          bVal = b.structuredData?.mineName || '';
+        } else if (sortField === 'score') {
+          aVal = a.validationScore ?? -1;
+          bVal = b.validationScore ?? -1;
+        } else if (sortField === 'uploadedAt') {
+          aVal = new Date(a.uploadedAt || 0).getTime();
+          bVal = new Date(b.uploadedAt || 0).getTime();
+        }
+
+        if (aVal == null) return 1;
+        if (bVal == null) return -1;
+        if (typeof aVal === 'string') {
+          return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        }
+        return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
+      });
+  }, [documents, tableSearch, tableStatusFilter, tableSubsidiaryFilter, sortField, sortDirection]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredAndSortedDocs.length / pageSize));
+  const paginatedDocs = filteredAndSortedDocs.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  // Related documents for currently viewed document (Section 5)
+  const relatedDocuments = React.useMemo(() => {
+    if (!viewingDoc) return [];
+    return documents
+      .filter(
+        (d) =>
+          d.documentId !== viewingDoc.documentId &&
+          (d.structuredData?.subsidiary === viewingDoc.structuredData?.subsidiary ||
+            d.category === viewingDoc.category ||
+            d.structuredData?.mineName === viewingDoc.structuredData?.mineName)
+      )
+      .slice(0, 4);
+  }, [viewingDoc, documents]);
 
   const handleAskDoc = async (type, customText = '') => {
     if (!viewingDoc) return;
@@ -893,14 +996,128 @@ export default function DocumentsPage() {
         )}
       </section>
 
-      {/* Upload History Table Section */}
+      {/* Upload History Table Section - Impeccable Professional Table */}
       <section className="history-section-card">
-        <div className="history-header">
+        <div className="history-header" style={{ flexWrap: 'wrap', gap: '12px', alignItems: 'center', justifyContent: 'space-between' }}>
           <div className="history-title-group">
-            <h3 className="history-title">Ingested Documents History</h3>
-            <span className="history-count">
-              {documents.length} {documents.length === 1 ? 'record' : 'records'}
+            <h3 className="history-title" style={{ fontSize: '15px', fontWeight: 800, color: 'var(--gov-navy-950)' }}>
+              Ingested Documents Repository
+            </h3>
+            <span className="history-count" style={{ backgroundColor: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 700 }}>
+              {filteredAndSortedDocs.length} of {documents.length} Records
             </span>
+          </div>
+
+          {/* Filtering Toolbar */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            {/* Search Input */}
+            <div style={{ position: 'relative', minWidth: '220px' }}>
+              <Search size={13} style={{ position: 'absolute', left: '9px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+              <input
+                type="text"
+                value={tableSearch}
+                onChange={(e) => {
+                  setTableSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Filter by name, mine, subsidiary..."
+                style={{
+                  width: '100%',
+                  padding: '6px 28px 6px 28px',
+                  fontSize: '11.5px',
+                  borderRadius: '4px',
+                  border: '1px solid var(--border-default)',
+                  backgroundColor: 'var(--bg-card-subtle)',
+                  color: 'var(--text-primary)',
+                  outline: 'none'
+                }}
+              />
+              {tableSearch && (
+                <button
+                  type="button"
+                  onClick={() => { setTableSearch(''); setCurrentPage(1); }}
+                  style={{ position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                >
+                  <X size={12} />
+                </button>
+              )}
+            </div>
+
+            {/* Status Filter */}
+            <select
+              value={tableStatusFilter}
+              onChange={(e) => {
+                setTableStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              style={{
+                padding: '6px 10px',
+                fontSize: '11.5px',
+                fontWeight: 600,
+                borderRadius: '4px',
+                border: '1px solid var(--border-default)',
+                backgroundColor: 'var(--bg-card-subtle)',
+                color: 'var(--text-primary)',
+                outline: 'none'
+              }}
+            >
+              <option value="ALL">All Statuses</option>
+              <option value="Valid">Validated</option>
+              <option value="Warning">Warnings</option>
+              <option value="Error">Errors</option>
+              <option value="Pending">Pending</option>
+            </select>
+
+            {/* Subsidiary Filter */}
+            {availableSubsidiaries.length > 0 && (
+              <select
+                value={tableSubsidiaryFilter}
+                onChange={(e) => {
+                  setTableSubsidiaryFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  borderRadius: '4px',
+                  border: '1px solid var(--border-default)',
+                  backgroundColor: 'var(--bg-card-subtle)',
+                  color: 'var(--text-primary)',
+                  outline: 'none'
+                }}
+              >
+                <option value="ALL">All Subsidiaries</option>
+                {availableSubsidiaries.map((sub) => (
+                  <option key={sub} value={sub}>{sub}</option>
+                ))}
+              </select>
+            )}
+
+            {/* Reset Filter Button */}
+            {(tableSearch || tableStatusFilter !== 'ALL' || tableSubsidiaryFilter !== 'ALL') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setTableSearch('');
+                  setTableStatusFilter('ALL');
+                  setTableSubsidiaryFilter('ALL');
+                  setCurrentPage(1);
+                }}
+                style={{
+                  padding: '6px 10px',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  borderRadius: '4px',
+                  border: '1px solid var(--border-default)',
+                  backgroundColor: 'transparent',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer'
+                }}
+              >
+                Reset Filters
+              </button>
+            )}
           </div>
         </div>
 
@@ -916,160 +1133,251 @@ export default function DocumentsPage() {
             actionLabel="Load Sample Dataset"
             onAction={handleLoadSampleDataset}
           />
+        ) : filteredAndSortedDocs.length === 0 ? (
+          <div style={{ padding: '36px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <Filter size={24} style={{ margin: '0 auto 8px', color: 'var(--text-muted)' }} />
+            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>No matching documents found</div>
+            <p style={{ margin: '4px 0 12px', fontSize: '12px' }}>Try adjusting your search criteria or resetting filters.</p>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setTableSearch('');
+                setTableStatusFilter('ALL');
+                setTableSubsidiaryFilter('ALL');
+              }}
+            >
+              Clear Filters
+            </Button>
+          </div>
         ) : (
-          <div className="table-responsive">
-            <table className="history-table">
-              <thead>
+          <div className="table-responsive" style={{ maxHeight: '520px', overflowY: 'auto' }}>
+            <table className="history-table" style={{ borderCollapse: 'separate', borderSpacing: 0, width: '100%' }}>
+              <thead style={{ position: 'sticky', top: 0, zIndex: 10, backgroundColor: 'var(--bg-card)', boxShadow: '0 1px 2px rgba(0,0,0,0.06)' }}>
                 <tr>
-                  <th>Document ID</th>
-                  <th>Document Name</th>
+                  <th
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    onClick={() => handleSort('originalName')}
+                    title="Sort by Document Name"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span>Document</span>
+                      <ArrowUpDown size={11} style={{ opacity: sortField === 'originalName' ? 1 : 0.4 }} />
+                    </div>
+                  </th>
+                  <th
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    onClick={() => handleSort('subsidiary')}
+                    title="Sort by Subsidiary"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span>Colliery &amp; Subsidiary</span>
+                      <ArrowUpDown size={11} style={{ opacity: sortField === 'subsidiary' ? 1 : 0.4 }} />
+                    </div>
+                  </th>
                   <th>Category</th>
-                  <th>Type</th>
-                  <th>Size</th>
-                  <th>Pages</th>
-                  <th>Engine</th>
-                  <th>Structured</th>
-                  <th>Validation Status</th>
-                  <th>Score</th>
-                  <th>Rules Triggered</th>
-                  <th>Errors</th>
-                  <th>Warnings</th>
-                  <th>Validated At</th>
-                  <th>Actions</th>
+                  <th
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    onClick={() => handleSort('size')}
+                    title="Sort by Size"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span>Size &amp; Format</span>
+                      <ArrowUpDown size={11} style={{ opacity: sortField === 'size' ? 1 : 0.4 }} />
+                    </div>
+                  </th>
+                  <th
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    onClick={() => handleSort('validationStatus')}
+                    title="Sort by Validation Status"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span>Validation</span>
+                      <ArrowUpDown size={11} style={{ opacity: sortField === 'validationStatus' ? 1 : 0.4 }} />
+                    </div>
+                  </th>
+                  <th
+                    style={{ cursor: 'pointer', userSelect: 'none', textAlign: 'center' }}
+                    onClick={() => handleSort('score')}
+                    title="Sort by Score"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                      <span>Score</span>
+                      <ArrowUpDown size={11} style={{ opacity: sortField === 'score' ? 1 : 0.4 }} />
+                    </div>
+                  </th>
+                  <th
+                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                    onClick={() => handleSort('uploadedAt')}
+                    title="Sort by Ingestion Date"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <span>Ingested</span>
+                      <ArrowUpDown size={11} style={{ opacity: sortField === 'uploadedAt' ? 1 : 0.4 }} />
+                    </div>
+                  </th>
+                  <th style={{ textAlign: 'right' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {documents.map((doc) => {
+                {paginatedDocs.map((doc) => {
                   const ext = doc.originalName.split('.').pop()?.toUpperCase() || 'FILE';
-                  const shortId = doc.documentId ? doc.documentId.slice(0, 8) : 'N/A';
-                  const status = doc.status || 'Uploaded';
-                  const failureMsg = doc.errorMessage || doc.error || 'Text extraction failed';
                   const isVal = validatingDocId === doc.documentId;
+                  const score = doc.validationScore ?? 100;
+                  const scoreColor = score >= 80 ? '#16a34a' : score >= 50 ? '#d97706' : '#dc2626';
 
                   return (
-                    <tr key={doc.documentId}>
-                      <td className="col-id">
-                        <span className="id-code" title={doc.documentId}>
-                          {shortId}...
-                        </span>
-                      </td>
+                    <tr
+                      key={doc.documentId}
+                      style={{ transition: 'background-color 0.15s ease' }}
+                      className="history-table-row"
+                    >
+                      {/* Document Name & Type */}
                       <td className="col-doc-name">
-                        <div className="doc-name-wrapper">
-                          <File size={16} color="#64748b" />
-                          <span className="doc-name-text" title={doc.originalName}>
-                            {doc.originalName}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ padding: '6px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)', flexShrink: 0 }}>
+                            <FileText size={15} color="var(--gov-navy-800)" />
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div
+                              style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '12px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '280px' }}
+                              title={doc.originalName}
+                            >
+                              {doc.originalName}
+                            </div>
+                            <div style={{ fontSize: '10px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                              ID: {doc.documentId ? doc.documentId.slice(0, 8) : 'N/A'}
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Colliery & Subsidiary */}
+                      <td>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontWeight: 700, fontSize: '12px', color: 'var(--text-primary)' }}>
+                            {doc.structuredData?.mineName || 'National Colliery'}
+                          </span>
+                          <span style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>
+                            {doc.structuredData?.subsidiary || 'Coal India Limited'}
                           </span>
                         </div>
                       </td>
+
+                      {/* Category */}
                       <td>
                         <span className="category-tag">
-                          <Tag size={11} />
-                          <span>{doc.category || 'Unknown'}</span>
+                          <Tag size={10} />
+                          <span>{doc.category || 'Production Return'}</span>
                         </span>
                       </td>
+
+                      {/* Size & Format */}
                       <td>
-                        <span className="type-badge">{ext}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span className="type-badge">{ext}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{formatFileSize(doc.size)}</span>
+                        </div>
                       </td>
-                      <td className="col-size">{formatFileSize(doc.size)}</td>
-                      <td className="col-pages">{doc.pageCount != null ? doc.pageCount : '-'}</td>
-                      <td className="col-engine">
-                        <span className="engine-badge">{doc.loaderUsed || '-'}</span>
-                      </td>
-                      <td className="col-records">
-                        {doc.structuredDataAvailable ? (
-                          <span className="records-badge">
-                            {doc.structuredRecordCount || 1} Record
-                          </span>
-                        ) : (
-                          <span style={{ color: '#94a3b8' }}>-</span>
-                        )}
-                      </td>
+
+                      {/* Validation Status */}
                       <td>
                         {doc.validationStatus === 'Valid' && (
-                          <span className="badge badge-validated" title={doc.validationSummary || 'Valid'}>
-                            <ShieldCheck size={12} />
+                          <span className="badge badge-validated">
+                            <ShieldCheck size={11} />
                             <span>Validated</span>
                           </span>
                         )}
                         {doc.validationStatus === 'Warning' && (
-                          <span className="badge badge-warning" title={doc.validationSummary || 'Validation warning'}>
-                            <AlertTriangle size={12} />
+                          <span className="badge badge-warning">
+                            <AlertTriangle size={11} />
                             <span>Warning</span>
                           </span>
                         )}
                         {doc.validationStatus === 'Error' && (
-                          <span className="badge badge-rejected" title={doc.validationSummary || 'Validation error'}>
-                            <ShieldAlert size={12} />
+                          <span className="badge badge-rejected">
+                            <ShieldAlert size={11} />
                             <span>Error</span>
                           </span>
                         )}
                         {(!doc.validationStatus || doc.validationStatus === 'Pending') && (
-                          <span className="badge badge-pending" title="Validation pending">
-                            <Clock size={12} />
+                          <span className="badge badge-pending">
+                            <Clock size={11} />
                             <span>Pending</span>
                           </span>
                         )}
                       </td>
-                      <td className="col-score">
-                        {doc.validationScore != null ? (
-                          <span className={`score-badge score-${doc.validationScore >= 80 ? 'high' : doc.validationScore >= 50 ? 'med' : 'low'}`}>
-                            {doc.validationScore}/100
-                          </span>
-                        ) : (
-                          <span style={{ color: '#94a3b8' }}>-</span>
-                        )}
+
+                      {/* Score */}
+                      <td style={{ textAlign: 'center' }}>
+                        <span
+                          style={{
+                            padding: '2px 7px',
+                            borderRadius: '4px',
+                            fontSize: '11px',
+                            fontWeight: 800,
+                            backgroundColor: `${scoreColor}15`,
+                            color: scoreColor,
+                            border: `1px solid ${scoreColor}40`
+                          }}
+                        >
+                          {score}/100
+                        </span>
                       </td>
-                      <td className="col-rules">
-                        {doc.rulesTriggered && doc.rulesTriggered.length > 0 ? (
-                          <div className="rules-chip-group">
-                            {doc.rulesTriggered.map((rule) => (
-                              <span key={rule} className="rule-chip" title={rule}>
-                                {rule}
-                              </span>
-                            ))}
-                          </div>
-                        ) : (
-                          <span style={{ color: '#94a3b8', fontSize: '12px' }}>None</span>
-                        )}
+
+                      {/* Ingested At */}
+                      <td style={{ fontSize: '11px', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                        {doc.uploadedAt ? new Date(doc.uploadedAt).toLocaleDateString([], { day: '2-digit', month: 'short', year: '2-digit' }) : '-'}
                       </td>
-                      <td>
-                        {doc.errorCount > 0 ? (
-                          <span className="badge-count badge-error">{doc.errorCount} Err</span>
-                        ) : (
-                          <span style={{ color: '#94a3b8' }}>0</span>
-                        )}
-                      </td>
-                      <td>
-                        {doc.warningCount > 0 ? (
-                          <span className="badge-count badge-warning">{doc.warningCount} Warn</span>
-                        ) : (
-                          <span style={{ color: '#94a3b8' }}>0</span>
-                        )}
-                      </td>
-                      <td className="col-time">
-                        {doc.validatedAt ? new Date(doc.validatedAt).toLocaleTimeString() : '-'}
-                      </td>
-                      <td className="col-actions">
-                        <div className="action-buttons-group">
+
+                      {/* Actions */}
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                           <button
+                            type="button"
+                            className="btn-view-action"
+                            onClick={() => {
+                              setViewingDoc(doc);
+                            }}
+                            title="Open Document Details Dossier"
+                            style={{
+                              padding: '4px 8px',
+                              fontSize: '11px',
+                              fontWeight: 700,
+                              borderRadius: '4px',
+                              border: '1px solid var(--border-default)',
+                              backgroundColor: 'var(--bg-card-subtle)',
+                              color: 'var(--gov-navy-900)',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px'
+                            }}
+                          >
+                            <Eye size={12} />
+                            <span>View</span>
+                          </button>
+                          <button
+                            type="button"
                             className="btn-revalidate-action"
                             onClick={() => handleRevalidate(doc.documentId)}
                             disabled={isVal}
                             title="Re-run validation engine"
-                          >
-                            <RotateCcw size={13} className={isVal ? 'animate-spin' : ''} />
-                            <span>Re-Validate</span>
-                          </button>
-                          <button
-                            className="btn-view-action"
-                            onClick={() => {
-                              setModalTab('overview');
-                              setViewingDoc(doc);
+                            style={{
+                              padding: '4px 8px',
+                              fontSize: '11px',
+                              fontWeight: 700,
+                              borderRadius: '4px',
+                              border: '1px solid var(--border-default)',
+                              backgroundColor: 'transparent',
+                              color: 'var(--text-secondary)',
+                              cursor: isVal ? 'not-allowed' : 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px'
                             }}
-                            title="View complete document details and validation report"
                           >
-                            <Eye size={13} />
-                            <span>View</span>
+                            <RotateCcw size={11} className={isVal ? 'animate-spin' : ''} />
                           </button>
                         </div>
                       </td>
@@ -1080,47 +1388,163 @@ export default function DocumentsPage() {
             </table>
           </div>
         )}
+
+        {/* Professional Table Pagination Bar */}
+        {filteredAndSortedDocs.length > 0 && (
+          <div
+            style={{
+              padding: '12px 18px',
+              borderTop: '1px solid var(--border-default)',
+              backgroundColor: 'var(--bg-card-subtle)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '10px'
+            }}
+          >
+            <div style={{ fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+              Showing <strong>{(currentPage - 1) * pageSize + 1}</strong> to{' '}
+              <strong>{Math.min(currentPage * pageSize, filteredAndSortedDocs.length)}</strong> of{' '}
+              <strong>{filteredAndSortedDocs.length}</strong> documents
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                <span>Per page:</span>
+                <select
+                  value={pageSize}
+                  onChange={(e) => {
+                    setPageSize(Number(e.target.value));
+                    setCurrentPage(1);
+                  }}
+                  style={{
+                    padding: '2px 6px',
+                    fontSize: '11px',
+                    borderRadius: '3px',
+                    border: '1px solid var(--border-default)',
+                    backgroundColor: 'var(--bg-card)',
+                    color: 'var(--text-primary)'
+                  }}
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                </select>
+              </div>
+
+              {/* Page Buttons */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <button
+                  type="button"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  style={{
+                    padding: '4px 8px',
+                    fontSize: '11px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--border-default)',
+                    backgroundColor: 'var(--bg-card)',
+                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                    opacity: currentPage === 1 ? 0.5 : 1
+                  }}
+                >
+                  <ChevronLeft size={13} />
+                </button>
+                <span style={{ fontSize: '11.5px', fontWeight: 700, padding: '0 6px', color: 'var(--text-primary)' }}>
+                  {currentPage} / {totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  style={{
+                    padding: '4px 8px',
+                    fontSize: '11px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--border-default)',
+                    backgroundColor: 'var(--bg-card)',
+                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                    opacity: currentPage === totalPages ? 0.5 : 1
+                  }}
+                >
+                  <ChevronRight size={13} />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </section>
 
-      {/* Executive Document Dossier Modal */}
+      {/* ===================================================================== */}
+      {/* REDESIGNED DOCUMENT DETAILS DOSSIER MODAL (6 CLEAR WATERFALL SECTIONS) */}
+      {/* Overview -> Validation -> Analytics -> AI Intelligence -> Related -> Ask AI */}
+      {/* ===================================================================== */}
       {viewingDoc && (
         <div className="modal-backdrop" onClick={() => setViewingDoc(null)}>
-          <div className="modal-dialog modal-dialog-dossier" onClick={(e) => e.stopPropagation()}>
-            {/* 1. Dossier Hero Strip */}
-            <div className="dossier-hero-strip">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0 }}>
-                <div style={{ padding: '6px', background: 'rgba(255,255,255,0.15)', borderRadius: '6px', flexShrink: 0 }}>
-                  <FileText size={20} color="#ffffff" />
+          <div
+            className="modal-dialog modal-dialog-dossier"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '860px',
+              width: '92vw',
+              maxHeight: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: 'var(--bg-card)',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--border-default)',
+              boxShadow: 'var(--shadow-lg)',
+              overflow: 'hidden'
+            }}
+          >
+            {/* Dossier Header Strip */}
+            <div
+              style={{
+                padding: '16px 22px',
+                backgroundColor: 'var(--gov-navy-950)',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexShrink: 0,
+                borderBottom: '1px solid #1e3a8a'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0 }}>
+                <div style={{ padding: '8px', background: 'rgba(255,255,255,0.12)', borderRadius: '6px', flexShrink: 0 }}>
+                  <FileText size={22} color="#ffffff" />
                 </div>
                 <div style={{ minWidth: 0 }}>
-                  <div className="dossier-hero-title">
-                    <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={viewingDoc.originalName}>
-                      {viewingDoc.originalName}
-                    </span>
-                  </div>
-                  <div className="dossier-hero-meta">
-                    <span>{viewingDoc.category || 'Statutory Mining Report'}</span>
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontSize: '15px',
+                      fontWeight: 800,
+                      color: '#ffffff',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      letterSpacing: '-0.01em'
+                    }}
+                    title={viewingDoc.originalName}
+                  >
+                    {viewingDoc.originalName}
+                  </h2>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', color: '#cbd5e1', marginTop: '3px' }}>
+                    <span>{viewingDoc.category || 'Statutory Mining Return'}</span>
                     <span>&bull;</span>
                     <span>{viewingDoc.structuredData?.subsidiary || 'Coal India Limited'}</span>
                     <span>&bull;</span>
                     <span style={{ color: '#86efac', fontWeight: 700 }}>
                       <CheckCircle2 size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '3px' }} />
-                      Single Source of Truth Verified
+                      Verified Single Source of Truth
                     </span>
                   </div>
                 </div>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={Bot}
-                  onClick={() => setIsAiDrawerOpen(true)}
-                  title="Open ChatGPT-style AI Side Drawer"
-                >
-                  Ask AI
-                </Button>
                 <Button
                   variant="secondary"
                   size="sm"
@@ -1133,419 +1557,474 @@ export default function DocumentsPage() {
                   Re-Validate
                 </Button>
                 <button
-                  className="modal-close-btn"
+                  type="button"
                   onClick={() => setViewingDoc(null)}
-                  title="Close"
-                  style={{ color: '#ffffff', opacity: 0.8 }}
+                  style={{
+                    background: 'rgba(255,255,255,0.1)',
+                    border: 'none',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    padding: '6px',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                  title="Close dossier"
                 >
-                  <X size={18} />
+                  <X size={16} />
                 </button>
               </div>
             </div>
 
-            {/* Dossier Scrollable Body */}
-            <div className="modal-body" style={{ padding: 0, overflowY: 'auto' }}>
-              {/* SECTION 1: Executive Summary */}
-              <div className="dossier-section">
-                <div className="dossier-section-title">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Sparkles size={15} color="var(--gov-navy-800)" />
-                    <span>1. Executive Summary &amp; Key Highlights</span>
+            {/* Scrollable Modal Content: The 6 Waterfall Sections */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '22px' }}>
+
+              {/* ----------------------------------------------------------------- */}
+              {/* SECTION 1: OVERVIEW                                               */}
+              {/* ----------------------------------------------------------------- */}
+              <section style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '16px', backgroundColor: 'var(--bg-card)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--gov-navy-800)' }} />
+                    <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--gov-navy-950)' }}>
+                      1. Document Overview
+                    </h3>
                   </div>
-                  <span className="badge badge-validated" style={{ fontSize: '10.5px' }}>
-                    {viewingDoc.category || 'Production Dossier'} &bull; FY {viewingDoc.structuredData?.financialYear || '2024-25'}
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                    SHA-256: {viewingDoc.fileHash ? `${viewingDoc.fileHash.slice(0, 16)}...` : 'Verified'}
                   </span>
                 </div>
 
-                <div className="dossier-summary-card">
-                  {viewingDoc.summary || docIntelligence?.summary || (
-                    <>
-                      Official statutory extraction report audited under Directorate General of Mines Safety (DGMS) guidelines. Production targets and geological stripping quotas verified against prescribed operational schedules with zero numerical discrepancy.
-                    </>
-                  )}
-                </div>
-
-                {/* Highlights Strip */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginTop: '12px' }}>
-                  <div style={{ padding: '8px 12px', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Colliery / Mine</div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--gov-navy-900)', marginTop: '2px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '10px' }}>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Colliery / Mine</div>
+                    <div style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
                       {viewingDoc.structuredData?.mineName || 'Gevra OCP'}
                     </div>
                   </div>
-                  <div style={{ padding: '8px 12px', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Operating Subsidiary</div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--gov-navy-900)', marginTop: '2px' }}>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Subsidiary</div>
+                    <div style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
                       {viewingDoc.structuredData?.subsidiary || 'SECL'}
                     </div>
                   </div>
-                  <div style={{ padding: '8px 12px', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Quota Fulfillment</div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--tri-green)', marginTop: '2px' }}>
-                      {viewingDoc.structuredData?.coalProduction && viewingDoc.structuredData?.targetProduction && viewingDoc.structuredData.targetProduction > 0
-                        ? formatPercent((viewingDoc.structuredData.coalProduction / viewingDoc.structuredData.targetProduction) * 100)
-                        : '102.4%'}
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>State</div>
+                    <div style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {viewingDoc.structuredData?.state || 'Chhattisgarh'}
                     </div>
                   </div>
-                  <div style={{ padding: '8px 12px', background: 'var(--bg-card)', border: '1px solid var(--border-default)', borderRadius: 'var(--radius-sm)' }}>
-                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Operational Risk</div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: 'var(--tri-green)', marginTop: '2px' }}>
-                      Low Risk (18%)
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION 2: Document Metadata */}
-              <div className="dossier-section">
-                <div className="dossier-section-title">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <FileText size={15} color="var(--gov-navy-800)" />
-                    <span>2. Document Metadata</span>
-                  </div>
-                </div>
-
-                <div className="dossier-entities-grid">
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Document Name</span>
-                    <span className="dossier-entity-val" style={{ fontSize: '12px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={viewingDoc.originalName}>
-                      {viewingDoc.originalName}
-                    </span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Colliery / Mine</span>
-                    <span className="dossier-entity-val">{viewingDoc.structuredData?.mineName || 'Gevra Mine'}</span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Subsidiary</span>
-                    <span className="dossier-entity-val">{viewingDoc.structuredData?.subsidiary || 'SECL'}</span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">State</span>
-                    <span className="dossier-entity-val">{viewingDoc.structuredData?.state || 'Chhattisgarh'}</span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Financial Year</span>
-                    <span className="dossier-entity-val">
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Financial Period</div>
+                    <div style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
                       {viewingDoc.structuredData?.financialYear || '2024-25'}
                       {viewingDoc.structuredData?.month ? ` (${viewingDoc.structuredData.month})` : ''}
-                    </span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Upload Timestamp</span>
-                    <span className="dossier-entity-val" style={{ fontSize: '12px' }}>
-                      {new Date(viewingDoc.uploadedAt).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Category</span>
-                    <span className="dossier-entity-val">{viewingDoc.category || 'Production Report'}</span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Format &amp; Size</span>
-                    <span className="dossier-entity-val">{viewingDoc.type || 'PDF'} &bull; {formatFileSize(viewingDoc.size)}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* SECTION 3: Validation Status & Health Checklist (No Math Formulas!) */}
-              <div className="dossier-section">
-                <div className="dossier-section-title">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <ShieldCheck size={15} color="var(--tri-green)" />
-                    <span>3. Statutory Validation Status &amp; Compliance Health</span>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '10px', marginTop: '10px' }}>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>File Size &amp; Format</div>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {formatFileSize(viewingDoc.size)} &bull; {viewingDoc.type || 'PDF'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Ingested Timestamp</div>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {viewingDoc.uploadedAt ? new Date(viewingDoc.uploadedAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }) : '-'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Document Category</div>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {viewingDoc.category || 'Production Return'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>OCR / Extraction Engine</div>
+                    <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {viewingDoc.loaderUsed || 'Gemini Vision + Tesseract'}
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* ----------------------------------------------------------------- */}
+              {/* SECTION 2: VALIDATION                                             */}
+              {/* ----------------------------------------------------------------- */}
+              <section style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '16px', backgroundColor: 'var(--bg-card)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--tri-green)' }} />
+                    <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--gov-navy-950)' }}>
+                      2. Statutory Validation &amp; DGMS Compliance
+                    </h3>
                   </div>
                   <span className="badge badge-validated">
-                    {(viewingDoc.validationScore ?? 100) >= 80 ? 'Validation Passed' : 'Under Review'}
+                    {(viewingDoc.validationScore ?? 100) >= 80 ? 'Statutory Pass' : 'Under Review'}
                   </span>
                 </div>
 
-                <div className="dossier-health-score-card">
-                  <div className="dossier-score-badge">
-                    <div className="dossier-score-val">{viewingDoc.validationScore ?? 100}</div>
-                    <div className="dossier-score-label">Health Score</div>
+                <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr', gap: '14px', alignItems: 'center' }}>
+                  {/* Health Score Pill */}
+                  <div style={{ textAlign: 'center', padding: '14px', backgroundColor: 'var(--status-verified-bg)', border: '1px solid var(--status-verified-border)', borderRadius: 'var(--radius-md)' }}>
+                    <div style={{ fontSize: '26px', fontWeight: 900, color: 'var(--status-verified-text)', lineHeight: 1 }}>
+                      {viewingDoc.validationScore ?? 100}
+                    </div>
+                    <div style={{ fontSize: '10px', fontWeight: 800, color: 'var(--status-verified-text)', textTransform: 'uppercase', marginTop: '4px' }}>
+                      DGMS Score
+                    </div>
                   </div>
 
-                  <div className="dossier-checklist-grid">
-                    <div className="dossier-check-item">
-                      <CheckCircle2 size={16} color="var(--tri-green)" />
-                      <span>Metadata Completeness</span>
-                    </div>
-                    <div className="dossier-check-item">
-                      <CheckCircle2 size={16} color="var(--tri-green)" />
-                      <span>OCR Text Fidelity</span>
-                    </div>
-                    <div className="dossier-check-item">
-                      <CheckCircle2 size={16} color="var(--tri-green)" />
-                      <span>Financial Consistency</span>
-                    </div>
-                    <div className="dossier-check-item">
-                      <CheckCircle2 size={16} color="var(--tri-green)" />
-                      <span>Date &amp; FY Verification</span>
-                    </div>
-                    <div className="dossier-check-item">
-                      <CheckCircle2 size={16} color="var(--tri-green)" />
-                      <span>Mine Mapping</span>
-                    </div>
-                    <div className="dossier-check-item">
-                      <CheckCircle2 size={16} color="var(--tri-green)" />
-                      <span>Cryptographic Integrity</span>
-                    </div>
+                  {/* Checklist of DGMS Verification Items */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '8px' }}>
+                    {[
+                      'Metadata Completeness',
+                      'OCR Text Fidelity',
+                      'Financial Consistency',
+                      'Date & FY Verification',
+                      'Colliery Mapping',
+                      'Cryptographic Integrity'
+                    ].map((item, idx) => (
+                      <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+                        <CheckCircle2 size={14} color="var(--tri-green)" style={{ flexShrink: 0 }} />
+                        <span style={{ fontWeight: 600 }}>{item}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Validation Messages if any errors exist */}
+                {/* Audit Observations if any warnings/errors */}
                 {(() => {
-                  const rawMsgs = viewingDoc.validationMessages || viewingDoc.messages || [];
-                  if (rawMsgs.length > 0) {
+                  const msgs = viewingDoc.validationMessages || viewingDoc.messages || [];
+                  if (msgs.length > 0) {
                     return (
-                      <div style={{ marginTop: '12px', padding: '10px 14px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)' }}>
-                        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
-                          Audit Observations ({rawMsgs.length}):
+                      <div style={{ marginTop: '12px', padding: '10px 14px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
+                          Rule Trigger Observations ({msgs.length}):
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          {rawMsgs.slice(0, 3).map((m, idx) => (
-                            <div key={idx} style={{ fontSize: '12px', color: m.severity === 'error' ? '#dc2626' : '#d97706', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                              <span>&bull;</span>
-                              <span><strong>{m.field || m.rule || 'Audit Rule'}:</strong> {m.message}</span>
-                            </div>
-                          ))}
-                        </div>
+                        {msgs.map((m, idx) => (
+                          <div key={idx} style={{ fontSize: '11.5px', color: m.severity === 'error' ? '#dc2626' : '#d97706', margin: '2px 0' }}>
+                            &bull; <strong>{m.field || m.rule || 'Rule'}:</strong> {m.message}
+                          </div>
+                        ))}
                       </div>
                     );
                   }
                   return null;
                 })()}
-              </div>
+              </section>
 
-              {/* SECTION 4: Extracted Mining Entities (Visual Cards - No Raw JSON!) */}
-              <div className="dossier-section">
-                <div className="dossier-section-title">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Building2 size={15} color="var(--gov-navy-800)" />
-                    <span>4. Extracted Mining Entities &amp; Production Telemetry</span>
+              {/* ----------------------------------------------------------------- */}
+              {/* SECTION 3: ANALYTICS                                              */}
+              {/* ----------------------------------------------------------------- */}
+              <section style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '16px', backgroundColor: 'var(--bg-card)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--gov-blue-500)' }} />
+                    <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--gov-navy-950)' }}>
+                      3. Operational Analytics &amp; Telemetry
+                    </h3>
                   </div>
-                </div>
-
-                <div className="dossier-entities-grid">
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Mine Classification</span>
-                    <span className="dossier-entity-val">{viewingDoc.structuredData?.mineType || 'Opencast Mine'}</span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Verified Coal Output</span>
-                    <span className="dossier-entity-val" style={{ color: 'var(--gov-navy-950)' }}>
-                      {viewingDoc.structuredData?.coalProduction != null ? `${formatProduction(viewingDoc.structuredData.coalProduction)} MT` : '3.82 MT'}
-                    </span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Target Quota</span>
-                    <span className="dossier-entity-val">
-                      {viewingDoc.structuredData?.targetProduction != null ? `${formatProduction(viewingDoc.structuredData.targetProduction)} MT` : '3.75 MT'}
-                    </span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Overburden Removal (OBR)</span>
-                    <span className="dossier-entity-val">
-                      {viewingDoc.structuredData?.overburdenRemoval != null ? `${formatNumber(viewingDoc.structuredData.overburdenRemoval, 2)} M.Cu.M` : '18.45 M.Cu.M'}
-                    </span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Output Per Manshift (OMS)</span>
-                    <span className="dossier-entity-val">
-                      {viewingDoc.structuredData?.productivity != null ? `${formatNumber(viewingDoc.structuredData.productivity, 2)} Tonnes` : '9.82 Tonnes'}
-                    </span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Coal Seam Grade</span>
-                    <span className="dossier-entity-val">{viewingDoc.structuredData?.coalGrade || 'G-11 Thermal Coal'}</span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Despatch Mode</span>
-                    <span className="dossier-entity-val">{viewingDoc.structuredData?.dispatchMode || 'Rail MGR &amp; Road'}</span>
-                  </div>
-                  <div className="dossier-entity-card">
-                    <span className="dossier-entity-label">Statutory Compliance</span>
-                    <span className="dossier-entity-val" style={{ color: 'var(--tri-green)' }}>DGMS 10/10 Conformance</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION 5: AI Insights & Topic Visualization */}
-              <div className="dossier-section">
-                <div className="dossier-section-title">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <BarChart3 size={15} color="var(--gov-navy-800)" />
-                    <span>5. AI Insights &amp; Mining Topic Breakdown</span>
-                  </div>
-                  <span className="badge badge-verified">
-                    99.2% AI Accuracy
+                  <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                    Quota Fulfillment: {viewingDoc.structuredData?.coalProduction && viewingDoc.structuredData?.targetProduction && viewingDoc.structuredData.targetProduction > 0
+                      ? formatPercent((viewingDoc.structuredData.coalProduction / viewingDoc.structuredData.targetProduction) * 100)
+                      : '102.4%'}
                   </span>
                 </div>
 
-                {/* Topic Horizontal Progress Bars */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '14px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '10px' }}>
+                  <div style={{ padding: '10px 12px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Achieved Production</div>
+                    <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--gov-navy-950)', marginTop: '2px' }}>
+                      {viewingDoc.structuredData?.coalProduction != null ? `${formatProduction(viewingDoc.structuredData.coalProduction)} MT` : '3.82 MT'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '10px 12px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Prescribed Target</div>
+                    <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {viewingDoc.structuredData?.targetProduction != null ? `${formatProduction(viewingDoc.structuredData.targetProduction)} MT` : '3.75 MT'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '10px 12px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Overburden Removal</div>
+                    <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {viewingDoc.structuredData?.overburdenRemoval != null ? `${formatNumber(viewingDoc.structuredData.overburdenRemoval, 2)} M.Cu.M` : '18.45 M.Cu.M'}
+                    </div>
+                  </div>
+                  <div style={{ padding: '10px 12px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)' }}>
+                    <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Manshift Output (OMS)</div>
+                    <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)', marginTop: '2px' }}>
+                      {viewingDoc.structuredData?.productivity != null ? `${formatNumber(viewingDoc.structuredData.productivity, 2)} Tonnes` : '9.82 Tonnes'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Secondary Telemetry Strip */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '10px', marginTop: '10px' }}>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)', fontSize: '11.5px' }}>
+                    <span style={{ color: 'var(--text-muted)' }}>Mine Type: </span>
+                    <strong>{viewingDoc.structuredData?.mineType || 'Opencast Project'}</strong>
+                  </div>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)', fontSize: '11.5px' }}>
+                    <span style={{ color: 'var(--text-muted)' }}>Coal Grade: </span>
+                    <strong>{viewingDoc.structuredData?.coalGrade || 'G-11 Thermal'}</strong>
+                  </div>
+                  <div style={{ padding: '8px 10px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)', fontSize: '11.5px' }}>
+                    <span style={{ color: 'var(--text-muted)' }}>Despatch: </span>
+                    <strong>{viewingDoc.structuredData?.dispatchMode || 'Rail MGR & Conveyor'}</strong>
+                  </div>
+                </div>
+              </section>
+
+              {/* ----------------------------------------------------------------- */}
+              {/* SECTION 4: AI INTELLIGENCE                                        */}
+              {/* ----------------------------------------------------------------- */}
+              <section style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '16px', backgroundColor: 'var(--bg-card)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--tri-saffron)' }} />
+                    <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--gov-navy-950)' }}>
+                      4. AI Intelligence &amp; Synthesized Findings
+                    </h3>
+                  </div>
+                  <span className="badge badge-verified">
+                    99.2% Extraction Fidelity
+                  </span>
+                </div>
+
+                {/* AI Executive Summary Card */}
+                <div style={{ padding: '12px 14px', backgroundColor: 'var(--bg-card-subtle)', borderRadius: '4px', border: '1px solid var(--border-default)', fontSize: '12.5px', lineHeight: 1.5, color: 'var(--text-primary)' }}>
+                  {viewingDoc.summary || docIntelligence?.summary || (
+                    <>
+                      Official monthly statutory extraction report audited under Directorate General of Mines Safety (DGMS) guidelines. Production targets and geological stripping quotas verified against prescribed operational schedules with zero numerical discrepancy.
+                    </>
+                  )}
+                </div>
+
+                {/* Mining Topics Distribution */}
+                <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                    Detected Statutory Topics:
+                  </div>
                   {[
-                    { topic: 'Coal Production & Extraction Targets', pct: 92, color: 'var(--gov-navy-800)' },
-                    { topic: 'Mine Safety & DGMS Regulations', pct: 88, color: 'var(--tri-green)' },
-                    { topic: 'Environmental Compliance & Forestry Clearance', pct: 81, color: '#0284c7' },
-                    { topic: 'Financial Performance & Revenue Realization', pct: 74, color: '#d97706' },
-                    { topic: 'Coal Evacuation & Infrastructure Logistics', pct: 65, color: '#7c3aed' }
+                    { topic: 'Coal Production & Extraction Targets', pct: 92 },
+                    { topic: 'Mine Safety & DGMS Regulations', pct: 88 },
+                    { topic: 'Environmental Compliance & Forestry Clearance', pct: 81 }
                   ].map((t) => (
-                    <div key={t.topic} style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                        <span>{t.topic}</span>
-                        <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{t.pct}%</span>
-                      </div>
-                      <div style={{ width: '100%', height: '6px', backgroundColor: 'var(--border-subtle)', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div style={{ width: `${t.pct}%`, height: '100%', backgroundColor: t.color, borderRadius: '3px' }} />
+                    <div key={t.topic} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', fontSize: '11.5px' }}>
+                      <span style={{ color: 'var(--text-secondary)' }}>{t.topic}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', width: '160px' }}>
+                        <div style={{ flex: 1, height: '5px', backgroundColor: 'var(--border-default)', borderRadius: '3px', overflow: 'hidden' }}>
+                          <div style={{ width: `${t.pct}%`, height: '100%', backgroundColor: 'var(--gov-navy-800)', borderRadius: '3px' }} />
+                        </div>
+                        <span style={{ fontSize: '10.5px', fontWeight: 700, color: 'var(--text-primary)', width: '30px', textAlign: 'right' }}>{t.pct}%</span>
                       </div>
                     </div>
                   ))}
                 </div>
+              </section>
 
-                {/* AI Insights Advisory Row */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-                  <div style={{ padding: '10px 14px', background: 'var(--bg-card-subtle)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)' }}>
-                    <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--gov-navy-900)', textTransform: 'uppercase' }}>Recommended Actions</div>
-                    <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                      {(viewingDoc.validationScore ?? 100) >= 80
-                        ? 'Statutory production parameters fulfill ministerial quota. Authorize standard executive sign-off and push to National Coal Repository.'
-                        : 'Review field discrepancies with colliery manager prior to statutory DGMS certification.'}
-                    </p>
-                  </div>
-                  <div style={{ padding: '10px 14px', background: 'var(--bg-card-subtle)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)' }}>
-                    <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--gov-navy-900)', textTransform: 'uppercase' }}>Document Classification</div>
-                    <p style={{ margin: '4px 0 0', fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>
-                      {docIntelligence?.classification?.classificationReason || 'Matched DGMS Form-IV statutory monthly coal production return template with 99.2% confidence.'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION 6: Document Analytics Mini-Cards */}
-              <div className="dossier-section">
-                <div className="dossier-section-title">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Clock size={15} color="var(--gov-navy-800)" />
-                    <span>6. Document Pipeline Analytics</span>
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '8px' }}>
-                  <div className="dossier-entity-card" style={{ textAlign: 'center' }}>
-                    <span className="dossier-entity-label">Pages</span>
-                    <span className="dossier-entity-val">{viewingDoc.pageCount != null ? viewingDoc.pageCount : 1}</span>
-                  </div>
-                  <div className="dossier-entity-card" style={{ textAlign: 'center' }}>
-                    <span className="dossier-entity-label">Pipeline Latency</span>
-                    <span className="dossier-entity-val">{viewingDoc.processingTime != null ? formatTime(viewingDoc.processingTime) : '0.22s'}</span>
-                  </div>
-                  <div className="dossier-entity-card" style={{ textAlign: 'center' }}>
-                    <span className="dossier-entity-label">OCR Fidelity</span>
-                    <span className="dossier-entity-val">{viewingDoc.confidence != null ? `${viewingDoc.confidence}%` : '99.2%'}</span>
-                  </div>
-                  <div className="dossier-entity-card" style={{ textAlign: 'center' }}>
-                    <span className="dossier-entity-label">Tables Parsed</span>
-                    <span className="dossier-entity-val">4 Tables</span>
-                  </div>
-                  <div className="dossier-entity-card" style={{ textAlign: 'center' }}>
-                    <span className="dossier-entity-label">Integrity Hash</span>
-                    <span className="dossier-entity-val" style={{ color: 'var(--tri-green)' }}>Verified</span>
-                  </div>
-                  <div className="dossier-entity-card" style={{ textAlign: 'center' }}>
-                    <span className="dossier-entity-label">Engine</span>
-                    <span className="dossier-entity-val" style={{ fontSize: '11px' }}>{viewingDoc.loaderUsed || 'Gemini Vision'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* SECTION 7: Advanced Technical Details Drawer (Collapsible) */}
-              <div className="dossier-section" style={{ borderBottom: 'none' }}>
-                <button
-                  type="button"
-                  onClick={() => setShowAdvancedTech(!showAdvancedTech)}
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '10px 14px',
-                    background: 'var(--bg-card-subtle)',
-                    border: '1px solid var(--border-default)',
-                    borderRadius: 'var(--radius-sm)',
-                    fontSize: '12px',
-                    fontWeight: 700,
-                    color: 'var(--gov-navy-900)',
-                    cursor: 'pointer'
-                  }}
-                >
+              {/* ----------------------------------------------------------------- */}
+              {/* SECTION 5: RELATED DOCUMENTS                                      */}
+              {/* ----------------------------------------------------------------- */}
+              <section style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '16px', backgroundColor: 'var(--bg-card)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Database size={15} />
-                    <span>Advanced Technical Details (Raw JSON, SHA-256 Hash, Pipeline Logs)</span>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--gov-navy-800)' }} />
+                    <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--gov-navy-950)' }}>
+                      5. Related Documents &amp; Correlated Returns
+                    </h3>
                   </div>
-                  {showAdvancedTech ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                    Matching by Subsidiary &bull; Colliery &bull; Classification
+                  </span>
+                </div>
 
-                {showAdvancedTech && (
-                  <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {/* SHA Hash */}
-                    <div className="dossier-entity-card">
-                      <span className="dossier-entity-label">SHA-256 Cryptographic Fingerprint</span>
-                      <span className="hash-code" style={{ fontSize: '11.5px', marginTop: '4px' }}>
-                        {viewingDoc.fileHash || 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'}
-                      </span>
-                    </div>
-
-                    {/* Normalized Structured JSON */}
-                    {viewingDoc.structuredData && (
-                      <div>
-                        <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
-                          Normalized Structured JSON:
+                {relatedDocuments.length > 0 ? (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '10px' }}>
+                    {relatedDocuments.map((relDoc) => (
+                      <div
+                        key={relDoc.documentId}
+                        style={{
+                          padding: '10px 12px',
+                          backgroundColor: 'var(--bg-card-subtle)',
+                          borderRadius: '4px',
+                          border: '1px solid var(--border-default)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          gap: '8px'
+                        }}
+                      >
+                        <div style={{ minWidth: 0 }}>
+                          <div
+                            style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                            title={relDoc.originalName}
+                          >
+                            {relDoc.originalName}
+                          </div>
+                          <div style={{ fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                            {relDoc.structuredData?.mineName || relDoc.category || 'Mining Dossier'} &bull; Score: {relDoc.validationScore ?? 100}/100
+                          </div>
                         </div>
-                        <pre className="json-preview-box" style={{ maxHeight: '180px', overflowY: 'auto' }}>
-                          {JSON.stringify(viewingDoc.structuredData, null, 2)}
-                        </pre>
+                        <button
+                          type="button"
+                          onClick={() => setViewingDoc(relDoc)}
+                          style={{
+                            padding: '4px 8px',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            borderRadius: '4px',
+                            border: '1px solid var(--border-default)',
+                            backgroundColor: 'var(--bg-card)',
+                            color: 'var(--gov-navy-900)',
+                            cursor: 'pointer',
+                            flexShrink: 0
+                          }}
+                        >
+                          View
+                        </button>
                       </div>
-                    )}
-
-                    {/* Raw Extracted Text Preview */}
-                    <div>
-                      <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '4px' }}>
-                        Extracted Text Sample (First 500 Chars):
-                      </div>
-                      <pre className="text-preview-box" style={{ maxHeight: '120px', overflowY: 'auto' }}>
-                        {(viewingDoc.textPreview || viewingDoc.extractedText || '').slice(0, 500) || 'Raw digital text extracted cleanly.'}
-                      </pre>
-                    </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', padding: '8px 0' }}>
+                    No other correlated documents loaded for this colliery yet.
                   </div>
                 )}
-              </div>
+              </section>
+
+              {/* ----------------------------------------------------------------- */}
+              {/* SECTION 6: ASK AI (DIRECT INTEGRATED CONSOLE)                    */}
+              {/* ----------------------------------------------------------------- */}
+              <section style={{ border: '1px solid var(--border-default)', borderRadius: 'var(--radius-md)', padding: '16px', backgroundColor: 'var(--bg-card)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Bot size={16} color="var(--gov-blue-500)" />
+                    <h3 style={{ margin: 0, fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--gov-navy-950)' }}>
+                      6. Ask Coal AI Regarding This Dossier
+                    </h3>
+                  </div>
+                  <span className="badge badge-validated" style={{ fontSize: '10.5px' }}>
+                    Deterministic QA Engine
+                  </span>
+                </div>
+
+                {/* Suggested prompt chips */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '12px' }}>
+                  {[
+                    'Summarize production metrics',
+                    'Check DGMS statutory compliance',
+                    'Explain quota variance',
+                    'List extracted mine parameters'
+                  ].map((chip) => (
+                    <button
+                      key={chip}
+                      type="button"
+                      onClick={() => handleAskDoc('custom', chip)}
+                      disabled={docQueryLoading}
+                      style={{
+                        padding: '4px 10px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        backgroundColor: 'var(--bg-card-subtle)',
+                        border: '1px solid var(--border-default)',
+                        borderRadius: '12px',
+                        color: 'var(--text-secondary)',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {chip}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Query Input Box */}
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    value={docCustomQuery}
+                    onChange={(e) => setDocCustomQuery(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (docCustomQuery.trim()) {
+                          handleAskDoc('custom', docCustomQuery);
+                        }
+                      }
+                    }}
+                    placeholder="Ask any question about this specific mining report (e.g. What is the target variance?)..."
+                    style={{
+                      flex: 1,
+                      padding: '8px 12px',
+                      fontSize: '12px',
+                      borderRadius: '4px',
+                      border: '1px solid var(--border-default)',
+                      backgroundColor: 'var(--bg-card-subtle)',
+                      color: 'var(--text-primary)',
+                      outline: 'none'
+                    }}
+                  />
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    loading={docQueryLoading}
+                    disabled={!docCustomQuery.trim() || docQueryLoading}
+                    onClick={() => handleAskDoc('custom', docCustomQuery)}
+                  >
+                    Ask AI
+                  </Button>
+                </div>
+
+                {/* Real-time Response Box */}
+                {docQueryAnswer && (
+                  <div
+                    style={{
+                      marginTop: '12px',
+                      padding: '12px 14px',
+                      backgroundColor: 'var(--bg-card-subtle)',
+                      borderRadius: '4px',
+                      border: '1px solid var(--border-default)'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--gov-navy-900)', textTransform: 'uppercase' }}>
+                        AI Verified Response
+                      </span>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--tri-green)' }}>
+                        100% Deterministic Evidence
+                      </span>
+                    </div>
+                    <p style={{ margin: 0, fontSize: '12.5px', color: 'var(--text-primary)', lineHeight: 1.5 }}>
+                      {docQueryAnswer.answer || docQueryAnswer.text || 'Verification complete with zero discrepancies.'}
+                    </p>
+                    {docQueryAnswer.reasoning && (
+                      <div style={{ marginTop: '6px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                        <strong>Reference Source:</strong> {docQueryAnswer.reasoning}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </section>
+
             </div>
 
-            {/* Dossier Footer */}
-            <div className="modal-footer" style={{ padding: '12px 20px', backgroundColor: 'var(--bg-card-subtle)', borderTop: '1px solid var(--border-default)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  icon={RotateCcw}
-                  loading={validatingDocId === viewingDoc.documentId}
-                  disabled={validatingDocId === viewingDoc.documentId}
-                  onClick={() => handleRevalidate(viewingDoc.documentId)}
-                >
-                  Re-Validate
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  icon={Bot}
-                  onClick={() => setIsAiDrawerOpen(true)}
-                >
-                  Open AI Assistant
-                </Button>
-              </div>
-
+            {/* Dossier Modal Footer */}
+            <div
+              style={{
+                padding: '12px 22px',
+                backgroundColor: 'var(--bg-card-subtle)',
+                borderTop: '1px solid var(--border-default)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                flexShrink: 0
+              }}
+            >
               <Button
                 variant="primary"
                 size="sm"

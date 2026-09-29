@@ -1,52 +1,56 @@
 {
   "status": "success",
   "analyticsVersion": 1,
-  "generatedAt": "2026-09-29T16:09:08.633293+00:00",
-  "lastRefresh": "2026-09-29T16:09:08.633293+00:00",
-  "generationTime": 0.0647,
-  "documentsProcessed": 3,
-  "totalDocuments": 3,
+  "generatedAt": "2026-09-29T16:51:22.576915+00:00",
+  "lastRefresh": "2026-09-29T16:51:22.576915+00:00",
+  "generationTime": 0.0085,
+  "documentsProcessed": 10,
+  "totalDocuments": 10,
   "documents": {
-    "documentsUploaded": 3,
-    "totalDocuments": 3,
-    "documentsProcessed": 3,
-    "totalProcessed": 3,
+    "documentsUploaded": 10,
+    "totalDocuments": 10,
+    "documentsProcessed": 10,
+    "totalProcessed": 10,
     "documentsFailed": 0,
     "totalFailed": 0,
-    "ocrComplete": 3,
-    "structuredRecords": 3,
-    "structuredRecordsExtracted": 3,
-    "validatedDocuments": 3,
+    "ocrComplete": 10,
+    "structuredRecords": 10,
+    "structuredRecordsExtracted": 10,
+    "validatedDocuments": 10,
     "pendingDocuments": 0,
     "duplicateDocuments": 0,
     "statesCovered": 1,
     "byCategory": {
-      "Unknown": 3
+      "Unknown": 10
     },
     "categories": {
-      "Unknown": 3
+      "Unknown": 10
     },
     "byFileType": {
-      "pdf": 3
+      "xlsx": 1,
+      "pdf": 4,
+      "csv": 5
     },
     "fileTypes": {
-      "pdf": 3
+      "xlsx": 1,
+      "pdf": 4,
+      "csv": 5
     },
-    "averageOcrTime": 1.283,
-    "averageValidationTime": 0.0207,
+    "averageOcrTime": 1.321,
+    "averageValidationTime": 0.0404,
     "averageExtractionTime": 0.05
   },
   "production": {
-    "totalCoalProduction": 3.1,
+    "totalCoalProduction": 1054.82,
     "totalTargetProduction": 0,
     "totalAchievedProduction": 0,
     "targetVariance": 0,
     "remainingTarget": 0.0,
     "bestPerformingRecord": {
-      "name": "Gevra",
-      "mineName": "Gevra",
-      "subsidiary": "CIL",
-      "production": 3.1
+      "name": "SCCL",
+      "mineName": "-",
+      "subsidiary": "SCCL",
+      "production": 1047.52
     },
     "lowestPerformingRecord": {
       "name": "Gevra",
@@ -54,15 +58,25 @@
       "subsidiary": "CIL",
       "production": 3.1
     },
-    "averageProduction": 3.1,
-    "highestProduction": 3.1,
+    "averageProduction": 351.61,
+    "highestProduction": 1047.52,
     "lowestProduction": 3.1,
     "productionAchievement": 0.0,
     "productionAchievementPct": 0.0,
     "productionAchievementPercentage": 0.0,
-    "productionCount": 1,
+    "productionCount": 3,
     "productionUnit": "MT",
     "productionTrend": [
+      {
+        "financialYear": "2021–22",
+        "production": 0.0,
+        "documents": 1
+      },
+      {
+        "financialYear": "2023–24",
+        "production": 1047.52,
+        "documents": 3
+      },
       {
         "financialYear": "2025–26",
         "production": 3.1,
@@ -71,38 +85,38 @@
     ]
   },
   "validation": {
-    "totalValidated": 3,
-    "validatedDocuments": 3,
+    "totalValidated": 10,
+    "validatedDocuments": 10,
     "validDocuments": 2,
-    "warningDocuments": 1,
-    "errorDocuments": 0,
-    "averageValidationScore": 96.7,
-    "overallQualityRating": "Excellent",
-    "qualityRating": "Excellent",
-    "manualReviewRequired": 0,
+    "warningDocuments": 2,
+    "errorDocuments": 6,
+    "averageValidationScore": 72.5,
+    "overallQualityRating": "Average",
+    "qualityRating": "Average",
+    "manualReviewRequired": 6,
     "highestScore": 100,
-    "lowestScore": 90,
-    "totalErrors": 0,
-    "totalWarnings": 2,
-    "validationAccuracy": 66.7,
-    "validationAccuracyPercentage": 66.7,
-    "validationAccuracyPct": 66.7
+    "lowestScore": 40,
+    "totalErrors": 8,
+    "totalWarnings": 23,
+    "validationAccuracy": 20.0,
+    "validationAccuracyPercentage": 20.0,
+    "validationAccuracyPct": 20.0
   },
   "quality": {
-    "missingFieldsPercentage": 43.8,
-    "fieldCompletenessPercentage": 56.2,
-    "averageFieldCompleteness": 56.2,
-    "averageStructuredFields": 9.0,
+    "missingFieldsPercentage": 58.1,
+    "fieldCompletenessPercentage": 41.9,
+    "averageFieldCompleteness": 41.9,
+    "averageStructuredFields": 6.7,
     "totalStandardFields": 16,
-    "missingMandatoryFields": 2,
+    "missingMandatoryFields": 27,
     "duplicateDocuments": 0,
     "duplicateRecords": 0,
     "unknownUnits": 0,
     "lowOcrConfidence": 0,
     "lowOcrConfidenceCount": 0,
-    "documentsRequiringReview": 0,
-    "manualReviewRequired": 0,
-    "failedValidationPercentage": 0.0,
+    "documentsRequiringReview": 6,
+    "manualReviewRequired": 6,
+    "failedValidationPercentage": 60.0,
     "ocrConfidenceDistribution": {
       "lowConfidence": 0,
       "moderateConfidence": 0,
@@ -112,45 +126,80 @@
   },
   "subsidiaries": [
     {
-      "subsidiary": "CIL",
-      "documents": 2,
-      "production": 3.1,
-      "averageProduction": 1.55,
+      "subsidiary": "SCCL",
+      "documents": 4,
+      "production": 1047.52,
+      "averageProduction": 261.88,
       "unit": "MT",
       "rank": 1,
-      "contributionPct": 100.0
+      "contributionPct": 99.3
     },
     {
-      "subsidiary": "SCCL",
-      "documents": 1,
-      "production": 0.0,
-      "averageProduction": 0.0,
+      "subsidiary": "Other / Unassigned",
+      "documents": 3,
+      "production": 4.2,
+      "averageProduction": 1.4,
       "unit": "MT",
       "rank": 2,
-      "contributionPct": 0.0
+      "contributionPct": 0.4
+    },
+    {
+      "subsidiary": "CIL",
+      "documents": 3,
+      "production": 3.1,
+      "averageProduction": 1.03,
+      "unit": "MT",
+      "rank": 3,
+      "contributionPct": 0.3
     }
   ],
   "states": [
     {
       "state": "Chhattisgarh",
-      "documents": 2,
-      "production": 3.1,
-      "averageProduction": 1.55,
+      "documents": 5,
+      "production": 1050.62,
+      "averageProduction": 210.12,
       "unit": "MT",
       "rank": 1,
-      "contributionPct": 100.0
+      "contributionPct": 99.6
     },
     {
       "state": "Not Available",
-      "documents": 1,
-      "production": 0.0,
-      "averageProduction": 0.0,
+      "documents": 5,
+      "production": 4.2,
+      "averageProduction": 0.84,
       "unit": "MT",
       "rank": 2,
-      "contributionPct": 0.0
+      "contributionPct": 0.4
     }
   ],
   "financialYears": [
+    {
+      "financialYear": "2021–22",
+      "documents": 1,
+      "production": 0.0,
+      "targetProduction": 0,
+      "averageAchievement": 0.0,
+      "achievementPercentage": 0.0,
+      "averageValidationScore": 60.0,
+      "qualityRating": "Average",
+      "averageQuality": "Average",
+      "unit": "MT",
+      "rank": 1
+    },
+    {
+      "financialYear": "2023–24",
+      "documents": 3,
+      "production": 1047.52,
+      "targetProduction": 0,
+      "averageAchievement": 0.0,
+      "achievementPercentage": 0.0,
+      "averageValidationScore": 76.7,
+      "qualityRating": "Average",
+      "averageQuality": "Average",
+      "unit": "MT",
+      "rank": 2
+    },
     {
       "financialYear": "2025–26",
       "documents": 3,
@@ -162,7 +211,20 @@
       "qualityRating": "Excellent",
       "averageQuality": "Excellent",
       "unit": "MT",
-      "rank": 1
+      "rank": 3
+    },
+    {
+      "financialYear": "Unknown FY",
+      "documents": 3,
+      "production": 4.2,
+      "targetProduction": 0,
+      "averageAchievement": 0.0,
+      "achievementPercentage": 0.0,
+      "averageValidationScore": 48.3,
+      "qualityRating": "Poor",
+      "averageQuality": "Poor",
+      "unit": "MT",
+      "rank": 4
     }
   ],
   "rankings": {
@@ -188,36 +250,67 @@
     ],
     "topSubsidiaries": [
       {
-        "subsidiary": "CIL",
-        "documents": 2,
-        "production": 3.1,
-        "averageProduction": 1.55,
+        "subsidiary": "SCCL",
+        "documents": 4,
+        "production": 1047.52,
+        "averageProduction": 261.88,
         "unit": "MT",
         "rank": 1,
-        "contributionPct": 100.0
+        "contributionPct": 99.3
       },
       {
-        "subsidiary": "SCCL",
-        "documents": 1,
-        "production": 0.0,
-        "averageProduction": 0.0,
+        "subsidiary": "Other / Unassigned",
+        "documents": 3,
+        "production": 4.2,
+        "averageProduction": 1.4,
         "unit": "MT",
         "rank": 2,
-        "contributionPct": 0.0
+        "contributionPct": 0.4
+      },
+      {
+        "subsidiary": "CIL",
+        "documents": 3,
+        "production": 3.1,
+        "averageProduction": 1.03,
+        "unit": "MT",
+        "rank": 3,
+        "contributionPct": 0.3
       }
     ],
     "topStates": [
       {
         "state": "Chhattisgarh",
-        "documents": 2,
-        "production": 3.1,
-        "averageProduction": 1.55,
+        "documents": 5,
+        "production": 1050.62,
+        "averageProduction": 210.12,
         "unit": "MT",
         "rank": 1,
-        "contributionPct": 100.0
+        "contributionPct": 99.6
       }
     ],
     "topReports": [
+      {
+        "documentId": "0de08e8a-81d5-45f8-83ed-fa12e06eb873",
+        "reportTitle": "Ps023 Real World Test Bundle",
+        "subsidiary": "SCCL",
+        "mineName": "-",
+        "state": "Chhattisgarh",
+        "financialYear": "2023-24",
+        "production": 1047.52,
+        "unit": "MT",
+        "rank": 1
+      },
+      {
+        "documentId": "ea24b9d5-ccaa-4ba8-a323-e5f86b4c149a",
+        "reportTitle": "03 Cmpdi Exploratory Drilling 2024 25",
+        "subsidiary": "Not Available",
+        "mineName": "-",
+        "state": "Not Available",
+        "financialYear": "-",
+        "production": 4.2,
+        "unit": "MT",
+        "rank": 2
+      },
       {
         "documentId": "bed37a79-8105-4765-8e62-2510d348d6d3",
         "reportTitle": "Chap3Annualreport2026En",
@@ -227,12 +320,22 @@
         "financialYear": "2025-26",
         "production": 3.1,
         "unit": "MT",
-        "rank": 1
+        "rank": 3
       }
     ]
   },
   "charts": {
     "productionTrend": [
+      {
+        "financialYear": "2021–22",
+        "production": 0.0,
+        "documents": 1
+      },
+      {
+        "financialYear": "2023–24",
+        "production": 1047.52,
+        "documents": 3
+      },
       {
         "financialYear": "2025–26",
         "production": 3.1,
@@ -241,24 +344,30 @@
     ],
     "subsidiaryDistribution": [
       {
-        "name": "CIL",
-        "production": 3.1,
-        "documents": 2,
-        "contributionPct": 100.0
+        "name": "SCCL",
+        "production": 1047.52,
+        "documents": 4,
+        "contributionPct": 99.3
       },
       {
-        "name": "SCCL",
-        "production": 0.0,
-        "documents": 1,
-        "contributionPct": 0.0
+        "name": "Other / Unassigned",
+        "production": 4.2,
+        "documents": 3,
+        "contributionPct": 0.4
+      },
+      {
+        "name": "CIL",
+        "production": 3.1,
+        "documents": 3,
+        "contributionPct": 0.3
       }
     ],
     "stateDistribution": [
       {
         "name": "Chhattisgarh",
-        "production": 3.1,
-        "documents": 2,
-        "contributionPct": 100.0
+        "production": 1050.62,
+        "documents": 5,
+        "contributionPct": 99.6
       }
     ],
     "validationScoreDistribution": [
@@ -269,19 +378,27 @@
       },
       {
         "category": "Warning",
-        "count": 1,
+        "count": 2,
         "color": "#d97706"
       },
       {
         "category": "Error",
-        "count": 0,
+        "count": 6,
         "color": "#dc2626"
       }
     ],
     "documentTypeDistribution": [
       {
+        "type": "XLSX",
+        "count": 1
+      },
+      {
         "type": "PDF",
-        "count": 3
+        "count": 4
+      },
+      {
+        "type": "CSV",
+        "count": 5
       }
     ]
   }

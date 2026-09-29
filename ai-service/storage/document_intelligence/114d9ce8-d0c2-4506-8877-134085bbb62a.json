@@ -1,0 +1,104 @@
+{
+  "documentId": "114d9ce8-d0c2-4506-8877-134085bbb62a",
+  "reportTitle": "05 Cmpdi Exploration State Distribution 2024 25",
+  "processedAt": "2026-09-29T16:51:16.999812+00:00",
+  "processingTimeMs": 8.7,
+  "classification": {
+    "documentCategory": "Geological Report",
+    "classificationConfidence": 65,
+    "classificationReason": "Title/filename contains 'exploration'"
+  },
+  "topics": [
+    {
+      "topic": "Exploration",
+      "weight": 0.95
+    }
+  ],
+  "keywords": [
+    "Chhattisgarh",
+    "None",
+    "Cmpdi",
+    "Exploration",
+    "State",
+    "Distribution"
+  ],
+  "entities": {
+    "organizations": [
+      "CMPDI",
+      "Coal India",
+      "Coal India Limited"
+    ],
+    "subsidiaries": [
+      "CMPDI"
+    ],
+    "states": [
+      "Chhattisgarh"
+    ],
+    "districts": [],
+    "mines": [],
+    "measurements": [],
+    "financialYears": [],
+    "dates": [],
+    "mineTypes": []
+  },
+  "summary": "This Geological Report document records statutory operations for Coal India Limited for standard operational monitoring. Operational data pertains to Chhattisgarh. Data integrity audit classifies this record as Error (Score: 45/100) with 2 statutory error(s), 3 warning(s). Primary analytical subject matter centers on Exploration.",
+  "relationships": {
+    "relatedDocuments": [
+      {
+        "documentId": "1b113b2c-2fef-4407-8dc2-e36cf56f8e6b",
+        "documentTitle": "Chap2Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "3b38ec57-0e7e-46b2-8167-3f9251d018cf",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      },
+      {
+        "documentId": "bed37a79-8105-4765-8e62-2510d348d6d3",
+        "documentTitle": "Chap3Annualreport2026En",
+        "subsidiary": "CIL",
+        "financialYear": "2025-26",
+        "similarityScore": 15,
+        "sharedAttributes": [
+          "State (Chhattisgarh)"
+        ]
+      }
+    ],
+    "totalRelated": 3
+  },
+  "structuredData": {
+    "documentId": "114d9ce8-d0c2-4506-8877-134085bbb62a",
+    "reportTitle": "05 Cmpdi Exploration State Distribution 2024 25",
+    "reportType": "General Mining Document",
+    "financialYear": null,
+    "reportDate": null,
+    "issuingOrganization": "Coal India Limited",
+    "subsidiary": null,
+    "mineName": null,
+    "mineType": null,
+    "region": null,
+    "district": null,
+    "state": "Chhattisgarh",
+    "coalProduction": null,
+    "overburdenRemoval": null,
+    "targetProduction": null,
+    "achievedProduction": null,
+    "percentageAchievement": null,
+    "productionUnit": "MT",
+    "extractedFieldsCount": 5,
+    "extractedAt": "2026-09-29T16:51:16.807590+00:00"
+  },
+  "validationScore": 45,
+  "validationStatus": "Error"
+}
